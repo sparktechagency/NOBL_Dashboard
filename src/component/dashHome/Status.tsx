@@ -1,0 +1,158 @@
+import React, { useState } from "react";
+import SelectBox from "../share/SelectBox";
+import { HiMiniUsers } from "react-icons/hi2";
+import { FaArrowTrendUp } from "react-icons/fa6";
+import { SiPaypal } from "react-icons/si";
+import { FcComboChart } from "react-icons/fc";
+import "./Style_dashboard.css";
+
+// import { useGetAllStatusApiQuery } from "../redux/Features/getAllStatusApi";
+
+// Define a type for the API response
+interface StatusAttributes {
+  totalEarnings: number;
+  allUsers: number;
+  paidUsers: number;
+}
+
+interface StatusData {
+  data: {
+    attributes: StatusAttributes;
+  };
+}
+
+const cardData = [
+  {
+    id: 1,
+    icon: (
+      <svg
+        width="63"
+        height="62"
+        viewBox="0 0 63 62"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="0.5" width="62" height="62" rx="31" fill="#4B5320" />
+        <path
+          d="M38.5 40.5333V44H14V40.5333C14 40.5333 14 33.6 26.25 33.6C38.5 33.6 38.5 40.5333 38.5 40.5333ZM32.375 24.0667C32.375 22.8668 32.0158 21.6939 31.3428 20.6963C30.6697 19.6986 29.7131 18.921 28.5939 18.4619C27.4747 18.0027 26.2432 17.8825 25.0551 18.1166C23.8669 18.3507 22.7756 18.9285 21.919 19.7769C21.0624 20.6254 20.479 21.7064 20.2427 22.8832C20.0064 24.06 20.1277 25.2798 20.5912 26.3883C21.0548 27.4969 21.8399 28.4443 22.8471 29.111C23.8544 29.7776 25.0386 30.1334 26.25 30.1334C27.8745 30.1334 29.4324 29.4942 30.581 28.3565C31.7297 27.2188 32.375 25.6757 32.375 24.0667ZM38.395 33.6C39.4708 34.4247 40.3511 35.4728 40.9739 36.6706C41.5968 37.8685 41.947 39.187 42 40.5333V44H49V40.5333C49 40.5333 49 34.2414 38.395 33.6ZM36.75 18.0001C35.5456 17.9945 34.3679 18.3511 33.3725 19.0227C34.4355 20.4939 35.0071 22.2576 35.0071 24.0667C35.0071 25.8758 34.4355 27.6396 33.3725 29.1107C34.3679 29.7823 35.5456 30.1389 36.75 30.1334C38.3745 30.1334 39.9324 29.4942 41.081 28.3565C42.2297 27.2188 42.875 25.6757 42.875 24.0667C42.875 22.4577 42.2297 20.9147 41.081 19.7769C39.9324 18.6392 38.3745 18.0001 36.75 18.0001Z"
+          fill="white"
+        />
+      </svg>
+    ),
+    title: "Total Users",
+    value: "2000",
+  },
+  {
+    id: 2,
+    icon: (
+      <svg
+        width="63"
+        height="62"
+        viewBox="0 0 63 62"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="0.5" width="62" height="62" rx="31" fill="#4B5320" />
+        <path
+          d="M20.8438 18C19.5591 18 18.3271 18.5136 17.4187 19.4279C16.5103 20.3421 16 21.5821 16 22.875V39.125C16 40.4179 16.5103 41.6579 17.4187 42.5721C18.3271 43.4864 19.5591 44 20.8438 44H42.1562C43.4409 44 44.6729 43.4864 45.5813 42.5721C46.4897 41.6579 47 40.4179 47 39.125V22.875C47 21.5821 46.4897 20.3421 45.5813 19.4279C44.6729 18.5136 43.4409 18 42.1562 18H20.8438ZM26.3333 26.1263C26.3335 25.9017 26.3914 25.681 26.5015 25.4856C26.6116 25.2903 26.7702 25.1269 26.9617 25.0116C27.1531 24.8963 27.3711 24.8328 27.5942 24.8274C27.8173 24.8221 28.0379 24.875 28.2347 24.981L37.2763 29.856C37.4823 29.9671 37.6546 30.1323 37.7746 30.3341C37.8947 30.5359 37.9581 30.7667 37.9581 31.0019C37.9581 31.2372 37.8947 31.468 37.7746 31.6698C37.6546 31.8716 37.4823 32.0368 37.2763 32.1479L28.2347 37.0229C28.0377 37.129 27.8168 37.1819 27.5935 37.1764C27.3702 37.171 27.1521 37.1073 26.9606 36.9916C26.769 36.876 26.6105 36.7123 26.5006 36.5166C26.3906 36.3209 26.333 36.0998 26.3333 35.875V26.1263Z"
+          fill="white"
+        />
+      </svg>
+    ),
+    title: "Total Videos",
+    value: "100",
+  },
+  {
+    id: 3,
+    icon: (
+      <svg
+        width="63"
+        height="62"
+        viewBox="0 0 63 62"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="0.5" width="62" height="62" rx="31" fill="#4B5320" />
+        <path
+          d="M21.3889 44C20.5944 44 19.9146 43.7174 19.3493 43.1521C18.7841 42.5868 18.501 41.9065 18.5 41.1111V20.8889C18.5 20.0944 18.7831 19.4146 19.3493 18.8493C19.9156 18.2841 20.5954 18.001 21.3889 18H41.6111C42.4056 18 43.0859 18.2831 43.6521 18.8493C44.2183 19.4156 44.501 20.0954 44.5 20.8889V41.1111C44.5 41.9056 44.2174 42.5859 43.6521 43.1521C43.0868 43.7183 42.4065 44.001 41.6111 44H21.3889ZM22.8333 38.2222H40.1667L34.75 31L30.4167 36.7778L27.1667 32.4444L22.8333 38.2222Z"
+          fill="white"
+        />
+      </svg>
+    ),
+    title: "Total Images",
+    value: "500",
+  },
+  {
+    id: 4,
+    icon: (
+      <svg
+        width="63"
+        height="62"
+        viewBox="0 0 63 62"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="0.5" width="62" height="62" rx="31" fill="#4B5320" />
+        <path
+          d="M34.3136 30.5667L29.3335 25.5032V30.2417C29.3335 30.3279 29.3677 30.4105 29.4287 30.4715C29.4896 30.5324 29.5723 30.5667 29.6585 30.5667H34.3136Z"
+          fill="white"
+        />
+        <path
+          d="M27.6001 31.65V24.9333H20.8834C20.711 24.9333 20.5457 25.0018 20.4238 25.1237C20.3019 25.2456 20.2334 25.4109 20.2334 25.5833V43.35C20.2334 43.5224 20.3019 43.6877 20.4238 43.8096C20.5457 43.9315 20.711 44 20.8834 44H34.3167C34.4891 44 34.6545 43.9315 34.7764 43.8096C34.8983 43.6877 34.9667 43.5224 34.9667 43.35V32.3H28.2501C28.0777 32.3 27.9124 32.2315 27.7905 32.1096C27.6686 31.9877 27.6001 31.8224 27.6001 31.65ZM37.4584 23.6333H42.1135L37.1334 18.5698V23.3083C37.1334 23.3945 37.1677 23.4772 37.2286 23.5381C37.2896 23.5991 37.3722 23.6333 37.4584 23.6333Z"
+          fill="white"
+        />
+        <path
+          d="M36.0501 25.3667C35.8777 25.3667 35.7123 25.2982 35.5904 25.1763C35.4685 25.0544 35.4001 24.8891 35.4001 24.7167V18H26.95C26.7777 18 26.6123 18.0685 26.4904 18.1904C26.3685 18.3123 26.3 18.4776 26.3 18.65V23.2H28.5816C28.8728 23.2011 29.1609 23.2598 29.4293 23.3727C29.6978 23.4855 29.9413 23.6503 30.1459 23.8576L36.0587 29.8701C36.4713 30.2886 36.7016 30.8533 36.6995 31.4409V38.8H42.1167C42.2891 38.8 42.4545 38.7315 42.5764 38.6096C42.6982 38.4877 42.7667 38.3224 42.7667 38.15V25.3667H36.0501Z"
+          fill="white"
+        />
+      </svg>
+    ),
+    title: "Total Documents",
+    value: "250",
+  },
+];
+
+const Status: React.FC = () => {
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string | undefined>();
+  // Uncomment the next line when using the actual API
+  // const { data, isSuccess, isError, isLoading } = useGetAllStatusApiQuery();
+
+  // For mock data demonstration
+  // Replace this with the actual API response when needed
+
+  // Uncomment the following block if using the API response
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
+  const handleCardClick = (cardIndex: number) => {
+    setSelectedCard(cardIndex);
+  };
+  const handleSelectChange = (value: string) => {
+    setSelectedValue(value);
+    console.log("Selected", value);
+  };
+
+  const selectOptions = [
+    { value: "1", label: "week" },
+    { value: "2", label: "Month" },
+    { value: "3", label: "Year" },
+  ];
+  return (
+    <div className="rounded-xl">
+      <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-4  mt-[12px]">
+        {cardData.map((card, index) => (
+          <div key={index} className="bg-white w-[360px] py-6 flex justify-center items-center rounded-lg shadow-sm">
+          <div className="flex flex-col justify-center items-center text-center">
+            <div className="mb-3">{card.icon}</div>
+            <p className="py-1 font-roboto text-[#777777] font-normal text-base">{card.title}</p>
+            <h3 className="font-roboto font-bold text-[28px]">{card.value}</h3>
+          </div>
+        </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Status;
