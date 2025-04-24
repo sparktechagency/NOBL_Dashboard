@@ -22,6 +22,9 @@ import Users from "../pages/Users";
 import PhotoLibrary from "../pages/PhotoLibrary";
 import Videos from "../pages/Videos";
 import Documents from "../pages/Documents";
+import AboutUs from "../pages/AboutUs";
+import TermsAndConditions from "../pages/TermsAndConditions";
+import ChangePassword from "../pages/ChangePassword";
 
 
 
@@ -72,21 +75,21 @@ const router = createBrowserRouter([
                 element: <SettingsPage />,
             },
             {
-                path: "/settings/personalInformation",
-                element: <Settings_personalInformation />,
+                path: "/settings/aboutUS",
+                element: <AboutUs />,
             },
             {
-                path: "/settings/faq",
-                element: <SettingsFaq />,
+                path: "/settings/termsAndCondintion",
+                element: <TermsAndConditions />,
             },
             {
-                path: "/settings/termsAndCondition",
-                element: <SettingsTermsAndConditions />
+                path: "/settings/chagePassword",
+                element: <ChangePassword />
             },
-            {
-                path: "settings/termsAndCondition/edittermsAndConditions",
-                element: <EditTermsAndCondition />
-            },
+            // {
+            //     path: "settings/termsAndCondition/edittermsAndConditions",
+            //     element: <EditTermsAndCondition />
+            // },
         ]
     },
     {
