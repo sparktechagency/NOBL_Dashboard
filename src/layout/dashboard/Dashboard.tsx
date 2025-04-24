@@ -508,6 +508,7 @@ const Dashboard: React.FC = () => {
                         fontWeight:
                           location.pathname === child.path ? "bold" : "normal",
                         fontSize: "16px",
+                        paddingRight: "50px",
                       }}
                     >
                       <Link to={child.path}>{child.title}</Link>
