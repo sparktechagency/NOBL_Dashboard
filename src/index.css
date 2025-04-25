@@ -81,3 +81,28 @@
 .ant-menu-submenu-selected {
   /* background-color: #1890ff !important; */
 }
+
+/* AboutUS page  style*/
+.ql-toolbar {
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin-bottom: 24px;
+  border: 1px solid white !important;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.ql-formats {
+  padding: 10px;
+}
+.ql-container {
+  background-color: #ffffff;
+  border-radius: 5px;
+  min-height: 422px;
+  border: 1px solid white !important;
+}
+/* .ant-row .ant-form-item-row{
+  display: flex !important;
+  flex-direction: column !important;
+  
+} */

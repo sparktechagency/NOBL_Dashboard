@@ -28,17 +28,16 @@ const VerifyEmail: React.FC = () => {
   };
 
   return (
-    <AuthWrapper>
-      <div className="text-center mb-12">
-      <div className="flex py-8">
-          <div className="flex items-center mx-auto gap-2">
-            <img src={logo} alt="Logo" className="w-20" />
-            <h1 className="font-bold text-3xl">Choozy</h1>
-          </div>
+    <AuthWrapper className="py-32 px-20">
+      <div className="text-center mb-12 ">
+        <div className="flex py-8 justify-center ">
+          <h3 className="font-semibold text-2xl text-[#333333]">
+            Verification code
+          </h3>
         </div>
-        <p>
-          We sent a reset link to {"fahim"}, enter the 5-digit code mentioned in
-          the email.
+        <p className="text-sm font-normal mb-6 text-[#5C5C5C] ">
+          We sent a reset link to contact@dscode...com <br />
+          enter 5 digit code that is mentioned in the email
         </p>
       </div>
 
@@ -52,16 +51,18 @@ const VerifyEmail: React.FC = () => {
         onChange={onChange}
       />
 
-      <Button
-        className="bg-[#4964C6] h-12 text-white text-lg w-full mt-14"
-        onClick={handleVerify}
-      >
-        Verify Code
-      </Button>
+      <div className="flex justify-center pt-11">
+        <Button
+          className="bg-[#4B5320] h-12 text-sm text-white font-bold  "
+          htmlType="submit"
+        >
+          Verify Code
+        </Button>
+      </div>
 
-      <p className="text-center mt-10">
+      <p className="text-center mt-10 text-sm font-normal mb-6 text-[#5C5C5C]">
         You have not received the email?
-        <Button className="pl-0" type="link">
+        <Button className="pl-1 text-[#00B047] " type="link">
           Resend
         </Button>
       </p>

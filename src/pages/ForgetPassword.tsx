@@ -18,32 +18,31 @@ const ForgetPassword: React.FC = () => {
   };
 
   return (
-    <AuthWrapper>
-      <div className="text-center mb-12">
-      <div className="flex py-8">
-          <div className="flex items-center mx-auto gap-2">
-            <img src={logo} alt="Logo" className="w-20" />
-            <h1 className="font-bold text-3xl">Choozy</h1>
-          </div>
-        </div>
-        <p>Please enter your email and click send</p>
-      </div>
+    <AuthWrapper className="py-64 px-24 flex flex-col bg-[#ffffff]  justify-center shadow-lg border">
+      <p className="font-popping font-semibold text-2xl text-[#333333 mb-6 ]">
+        Forgot password ?
+      </p>
       <Form<ForgetPasswordFormValues> layout="vertical" onFinish={onFinish}>
         <Form.Item
           label="Email"
           name="email"
           rules={[{ required: true, message: "Please enter your email" }]}
         >
-          <Input placeholder="Enter your email" style={{ height: "50px" }} />
+          <Input
+            placeholder="abidhasan@gmail.com"
+            style={{ height: "50px", width: "481px" }}
+          />
         </Form.Item>
 
         <Form.Item>
-          <Button
-            className="bg-[#4964C6] h-12 text-white text-lg w-full mt-6"
-            htmlType="submit"
-          >
-            Submit
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              className="bg-[#4B5320] h-12 text-sm text-white font-bold  mt-6"
+              htmlType="submit"
+            >
+              Send Code
+            </Button>
+          </div>
         </Form.Item>
       </Form>
     </AuthWrapper>

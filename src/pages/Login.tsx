@@ -20,16 +20,17 @@ const Login: React.FC = () => {
   };
 
   return (
-    <AuthWrapper>
+    <AuthWrapper className=" py-28 px-24">
       <div className="text-center mb-12">
         {/* <Title>Login</Title> */}
-        <div className="flex py-8">
-          <div className="flex items-center mx-auto gap-2">
-            <img src={logo} alt="Logo" className="w-20" />
-            <h1 className="font-bold text-3xl">Choozy</h1>
-          </div>
+        <div className="flex py-6 justify-center">
+          <h3 className="font-semibold text-2xl text-[#333333]">
+            Log in to your account
+          </h3>
         </div>
-        <p>Please enter your email and password to continue</p>
+        <p className="text-sm font-normal mb-6 text-[#5C5C5C] ">
+          Please enter your email and password to continue
+        </p>
       </div>
       <Form<LoginFormValues> layout="vertical" onFinish={onFinish}>
         <Form.Item
@@ -37,36 +38,41 @@ const Login: React.FC = () => {
           name="email"
           rules={[{ required: true, message: "Please enter your email" }]}
         >
-          <Input placeholder="Enter your email" style={{ height: "50px" }} />
+          <Input
+            placeholder="abidhasan@gmail.com"
+            style={{ height: "50px", width: "481px" }}
+          />
         </Form.Item>
         <Form.Item
           label="Password"
           name="password"
           rules={[{ required: true, message: "Please enter your password" }]}
         >
-          <Input.Password
-            placeholder="Enter your password"
-            style={{ height: "50px" }}
-          />
+          <Input.Password placeholder="**********" style={{ height: "50px", width: "481px" }} />
         </Form.Item>
         <Form.Item>
           <div className="flex justify-between items-center">
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox className="text-[#818181]">Remember me</Checkbox>
             </Form.Item>
 
-            <Link className="login-form-forgot" to="/auth/forget-password">
+            <Link
+              className="login-form-forgot text-[#4B5320]"
+              to="/auth/forget-password"
+            >
               Forgot password
             </Link>
           </div>
         </Form.Item>
         <Form.Item>
-          <Button
-           className="bg-[#4964C6] h-12 text-white text-lg w-full mt-6"
-            htmlType="submit"
-          >
-            Sign In
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              className="bg-[#4B5320] h-12 text-sm text-white font-bold  mt-6"
+              htmlType="submit"
+            >
+              Sign in
+            </Button>
+          </div>
         </Form.Item>
       </Form>
     </AuthWrapper>

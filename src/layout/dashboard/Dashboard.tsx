@@ -417,7 +417,7 @@ const content = (
   </div>
 );
 
-const Dashboard: React.FC = () => {   
+const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -509,22 +509,36 @@ const Dashboard: React.FC = () => {
         return (
           <>
             <h1 className="text-[#333333] font-semibold text-[30px]">
-              aboutUS
+              About Us
             </h1>
             <p className="font-normal text-lg -mt-3 mb-4">
-              You can upload & manage the links from here.
+              You can manage the about us section of your app from here.
             </p>
           </>
         );
-      default:
+      case "/settings/termsAndCondintion":
         return (
           <h1 className="text-[#333333] font-semibold text-[24px]">
             <>
               <h1 className="text-[#333333] font-semibold text-[30px]">
-                Videos
+                Terms & Conditions
               </h1>
               <p className="font-normal text-lg -mt-3 mb-4">
-                You can upload & manage videos from here.
+                You can manage the terms & conditions section of your app from
+                here.
+              </p>
+            </>
+          </h1>
+        );
+      case "/settings/chagePassword":
+        return (
+          <h1 className="text-[#333333] font-semibold text-[24px]">
+            <>
+              <h1 className="text-[#333333] font-semibold text-[30px]">
+                My Profile
+              </h1>
+              <p className="font-normal text-lg -mt-3 mb-4">
+                You can manage your admin profile from here.
               </p>
             </>
           </h1>
