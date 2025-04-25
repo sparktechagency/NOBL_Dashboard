@@ -115,8 +115,7 @@ const router = createBrowserRouter([
           {
             path: "/auth/set-new-password",
             element: <SetNewPassword />,
-          },
-                 
+          },      
         ],
       },
 ])

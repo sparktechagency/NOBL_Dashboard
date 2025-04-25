@@ -3,7 +3,7 @@ import AuthWrapper from "../component/share/AuthWrapper";
 import Title from "../component/share/Title";
 import { Button, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/Images/logoChoozy.svg";
+
 
 // Assuming `Input.OTP` is a custom input component
 interface OTPInputProps {

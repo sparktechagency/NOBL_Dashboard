@@ -3,7 +3,8 @@ import AuthWrapper from "../component/share/AuthWrapper";
 import Title from "../component/share/Title";
 import { Button, Checkbox, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/Images/logoChoozy.svg";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 interface LoginFormValues {
   email: string;
@@ -46,9 +47,12 @@ const Login: React.FC = () => {
         <Form.Item
           label="Password"
           name="password"
+          
           rules={[{ required: true, message: "Please enter your password" }]}
         >
-          <Input.Password placeholder="**********" style={{ height: "50px", width: "481px" }} />
+          <Input.Password
+          iconRender={(visible) => (visible ? <FaEye /> : <FaEyeSlash/>)}
+          placeholder="**********" style={{ height: "50px", width: "481px" }} />
         </Form.Item>
         <Form.Item>
           <div className="flex justify-between items-center">

@@ -1,79 +1,156 @@
-import React, { useState } from 'react';
-import { Table } from 'antd';
-import type { TableColumnsType, TableProps } from 'antd';
+import React from "react";
+import { Table, Button, Space, Image } from "antd";
+import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
+import userPageAvater  from "../../assets/Images/dashboard/userPageAvater.png";
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
 
-const columns: TableColumnsType<DataType> = [
+const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
+    title: "Sl. no.",
+    dataIndex: "serial",
+    key: "serial",
+    align: "center",
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
+    title: "Name",
+    dataIndex: "name",
+    key: "Name",
+    render: (name: any) => (
+      <Space>
+        <Image width={40} src={name.thumbnail} alt="thumbnail" />
+        <span>{name.title}</span>
+      </Space>
+    ),
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    align: "center",
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    key: "address",
+    align: "center",
+  },
+  {
+    title: "Action",
+    key: "action",
+    align: "center",
+    render: (_, record) => (
+      <Space size="middle">
+        {/* view icon */}
+        <div>
+          <svg
+            width="37"
+            height="37"
+            viewBox="0 0 37 37"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="37" height="37" rx="5" fill="#FFF3EB" />
+            <path
+              d="M18 15.8C17.132 15.8 16.2996 16.1371 15.6858 16.7373C15.0721 17.3374 14.7273 18.1513 14.7273 19C14.7273 19.8487 15.0721 20.6626 15.6858 21.2627C16.2996 21.8629 17.132 22.2 18 22.2C18.868 22.2 19.7004 21.8629 20.3142 21.2627C20.9279 20.6626 21.2727 19.8487 21.2727 19C21.2727 18.1513 20.9279 17.3374 20.3142 16.7373C19.7004 16.1371 18.868 15.8 18 15.8ZM18 24.3333C16.5534 24.3333 15.166 23.7714 14.1431 22.7712C13.1201 21.771 12.5455 20.4145 12.5455 19C12.5455 17.5855 13.1201 16.229 14.1431 15.2288C15.166 14.2286 16.5534 13.6667 18 13.6667C19.4466 13.6667 20.834 14.2286 21.8569 15.2288C22.8799 16.229 23.4545 17.5855 23.4545 19C23.4545 20.4145 22.8799 21.771 21.8569 22.7712C20.834 23.7714 19.4466 24.3333 18 24.3333ZM18 11C12.5455 11 7.88727 14.3173 6 19C7.88727 23.6827 12.5455 27 18 27C23.4545 27 28.1127 23.6827 30 19C28.1127 14.3173 23.4545 11 18 11Z"
+              fill="#F96D10"
+            />
+          </svg>
+        </div>
+        <div>
+          <svg
+            width="37"
+            height="37"
+            viewBox="0 0 37 37"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="37" height="37" rx="5" fill="#FFE6E6" />
+            <path
+              d="M23 16V26H15V16H23ZM21.5 10H16.5L15.5 11H12V13H26V11H22.5L21.5 10ZM25 14H13V26C13 27.1 13.9 28 15 28H23C24.1 28 25 27.1 25 26V14Z"
+              fill="#FF0000"
+            />
+          </svg>
+        </div>
+      </Space>
+    ),
   },
 ];
 
-const dataSource = Array.from({ length: 46 }).map<DataType>((_, i) => ({
-  key: i,
-  name: `Edward King ${i}`,
-  age: 32,
-  address: `London, Park Lane no. ${i}`,
-}));
+const data = [
+  {
+    key: "1",
+    serial: "001",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 1",
+    },
+    email: "example@gmail.com",
+  },
+  {
+    key: "2",
+    serial: "002",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 2",
+    },
+    email: "example@gmail.com",
+  },
+  {
+    key: "3",
+    serial: "003",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 3",
+    },
+    email: "example@gmail.com",
+  },
+  {
+    key: "4",
+    serial: "004",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 4",
+    },
+    email: "example@gmail.com",
+  },
+  {
+    key: "5",
+    serial: "005",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 5",
+    },
+    email: "example@gmail.com",
+  },
+  {
+    key: "6",
+    serial: "006",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 6",
+    },
+    email: "example@gmail.com",
+  },
+  {
+    key: "7",
+    serial: "007",
+    name: {
+      thumbnail:userPageAvater,
+      title: "Training Video Part 7",
+    },
+    email: "example@gmail.com",
+  },
+];
 
 const UserTable: React.FC = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection: TableRowSelection<DataType> = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: 'odd',
-        text: 'Select Odd Row',
-        onSelect: (changeableRowKeys) => {
-          const newSelectedRowKeys = changeableRowKeys.filter((_, index) => index % 2 === 0);
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: 'even',
-        text: 'Select Even Row',
-        onSelect: (changeableRowKeys) => {
-          const newSelectedRowKeys = changeableRowKeys.filter((_, index) => index % 2 !== 0);
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
-  };
-
   return (
-    <Table<DataType>
-      rowSelection={rowSelection}
+    <Table
       columns={columns}
-      dataSource={dataSource}
-      rowClassName={() => 'custom-row'}
-      pagination={{ pageSize: 10 }}
+      rowClassName={() => "table-row-gap"}
+      className="custom-ant-table"
+      dataSource={data}
+      pagination={false}
     />
   );
 };
