@@ -27,7 +27,6 @@ const Videos = () => {
     "Closing Lines",
     "Area Management",
     "How to use your IPad Resources",
-    // তোমার আগে দেওয়া category গুলোও
     "PayScale’s",
     "Binder",
     "Slicks",

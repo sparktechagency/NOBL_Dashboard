@@ -1,13 +1,13 @@
 import React from "react";
 import { Table, Button, Space, Image } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import img1 from "../../assets/Images/videos/Rectangle 8.png";
-import img2 from "../../assets/Images/videos/Rectangle 8 (1).png";
-import img3 from "../../assets/Images/videos/Rectangle 8 (2).png";
-import img4 from "../../assets/Images/videos/Rectangle 8 (3).png";
-import img5 from "../../assets/Images/videos/Rectangle 8 (4).png";
-import img6 from "../../assets/Images/videos/Rectangle 8 (5).png";
-import img7 from "../../assets/Images/videos/Rectangle 8 (6).png";
+import img1 from "../../assets/Images/dashboard/pdf.png";
+import img2 from "../../assets/Images/dashboard/pdf.png";
+import img3 from "../../assets/Images/dashboard/pdf.png";
+import img4 from "../../assets/Images/dashboard/pdf.png";
+import img5 from "../../assets/Images/dashboard/pdf.png";
+import img6 from "../../assets/Images/dashboard/pdf.png";
+import img7 from "../../assets/Images/dashboard/pdf.png";
 const columns = [
   {
     title: "Sl. no.",
@@ -16,20 +16,26 @@ const columns = [
     align: "center",
   },
   {
-    title: "Video",
-    dataIndex: "video",
-    key: "video",
-    render: (video: any) => (
+    title: "Document",
+    dataIndex: "document",
+    key: "document",
+    render: (document: any) => (
       <Space>
-        <Image width={40} src={video.thumbnail} alt="thumbnail" />
-        <span>{video.title}</span>
+        <Image width={40} src={document.thumbnail} alt="thumbnail" />
+        <span>{document.title}</span>
       </Space>
     ),
   },
   {
+    title: "Document Type",
+    dataIndex: "documentType",
+    key: "document Type",
+    align: "center",
+  },
+  {
     title: "Category",
     dataIndex: "category",
-    key: "category",
+    key: "document Type",
     align: "center",
   },
   {
@@ -97,71 +103,86 @@ const data = [
   {
     key: "1",
     serial: "001",
-    video: {
+    document: {
       thumbnail: img1,
       title: "Training Video Part 1",
     },
-    category: "Welcome to NOBL",
+    documentType: ".pdf",
+    category: "PayScale's to NOBL",
   },
   {
     key: "2",
     serial: "002",
-    video: {
+    document: {
       thumbnail: img2,
-      title: "Training Video Part 2",
+      title: "Training document Part 2",
     },
-    category: "Amply Value",
+    documentType: ".pdf",
+    category: "PayScale's Value",
   },
   {
     key: "3",
     serial: "003",
-    video: {
+    document: {
       thumbnail: img3,
-      title: "Training Video Part 3",
+      title: "Training document Part 3",
     },
-    category: "Introduction",
+    documentType: ".pdf",
+    category: "PayScale's",
   },
   {
     key: "4",
     serial: "004",
-    video: {
+    document: {
       thumbnail: img4,
-      title: "Training Video Part 4",
+      title: "Training document Part 4",
     },
-    category: "Key to success in this industry",
+    documentType: ".pdf",
+    documentType: ".pdf",
+    category: "PayScalespdf",
   },
   {
     key: "5",
     serial: "005",
-    video: {
+    document: {
       thumbnail: img5,
-      title: "Training Video Part 5",
+      title: "Training document Part 5",
     },
-    category: "Introduction",
+    documentType: ".pdf",
+    category: "PayScale's",
   },
   {
     key: "6",
     serial: "006",
-    video: {
+    document: {
       thumbnail: img6,
-      title: "Training Video Part 6",
+      title: "Training document Part 6",
     },
-    category: "Transitioning",
+    documentType: ".pdf",
+    category: "PayScale's",
   },
   {
     key: "7",
     serial: "007",
-    video: {
+    document: {
       thumbnail: img7,
-      title: "Training Video Part 7",
+      title: "Training document Part 7",
     },
-    category: "Building Value",
+    documentType: ".pdf",
+    category: "PayScale's Value",
   },
 ];
 
 const DocumentTable: React.FC = () => {
-  return <Table columns={columns}  rowClassName={() => "table-row-gap"}
-  className="custom-ant-table" dataSource={data} pagination={false} />;
+  return (
+    <Table
+      columns={columns}
+      rowClassName={() => "table-row-gap"}
+      className="custom-ant-table"
+      dataSource={data}
+      pagination={false}
+    />
+  );
 };
 
 export default DocumentTable;

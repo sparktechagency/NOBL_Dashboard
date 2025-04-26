@@ -115,11 +115,12 @@
   margin-top: 40px !important;
  }
 
- .ant-menu-item .ant-menu-item-selected a{
-  background-color: #4B5320 !important;
-  background: #4B5320 !important;
- }
  .videoStyle video{
-  border: 2px !important;
-  border-radius: 10px !important;
- }
+   border: 2px !important;
+   border-radius: 10px !important;
+  }
+
+
+.ant-menu-submenu .ant-menu-submenu-inline .ant-menu-submenu-selected {
+  background-color: "red" !important;
+}

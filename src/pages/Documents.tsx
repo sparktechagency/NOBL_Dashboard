@@ -33,9 +33,21 @@ const Documents = () => {
           {/* Add mamber icon */}
           <button
             // onClick={showModal}
-            className="font-semibold ml-7 text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
+            className="font-semibold ml-7 flex gap-3 justify-between items-center text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
           >
-            + Add a new Document
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.57143 11.4286H0V8.57143H8.57143V0H11.4286V8.57143H20V11.4286H11.4286V20H8.57143V11.4286Z"
+                fill="white"
+              />
+            </svg>
+            Add a new Document
           </button>
         </div>
         <div>

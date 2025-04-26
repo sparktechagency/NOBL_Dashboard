@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Modal, Upload, Select, Button } from "antd";
 import { UploadOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import Input from "antd/es/input/Input";
+import { FaPause, FaPlay } from "react-icons/fa";
+import video from "../../assets/Images/dashboard/video.mp4";
 
 const { Option } = Select;
 
-interface VideoModalProps {
+interface VideoEditModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const VideoModal: React.FC<VideoModalProps> = ({
+const VideoEditModal: React.FC<VideoEditModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
@@ -21,39 +23,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
   const handleUpload = () => {
     // TODO: handle file and category submission
     setIsModalOpen(false);
-  };
-
-  //   th
-  const fileList = [
-    {
-      uid: -1,
-      name: "xxx.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: -2,
-      name: "yyy.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ];
-
-  const props = {
-    action: "//jsonplaceholder.typicode.com/posts/",
-    listType: "picture",
-    defaultFileList: [...fileList],
-  };
-
-  const props2 = {
-    action: "//jsonplaceholder.typicode.com/posts/",
-    listType: "picture",
-    defaultFileList: [...fileList],
-    className: "upload-list-inline",
   };
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -68,8 +37,49 @@ const VideoModal: React.FC<VideoModalProps> = ({
 
     // Create a preview URL and save to state
     setPreviewImage(URL.createObjectURL(file));
-    return false; // prevents auto upload
+    return false;
   };
+
+  // video control
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const categories = [
+    "All",
+    "Welcome to NOBL",
+    "Introduction",
+    "Key to success in this industry",
+    "Door approach / Pitch",
+    "Transitioning",
+    "Building Value",
+    "Qualify Questions",
+    "Buying Atmosphere",
+    "Amply Value",
+    "Drop Price / Compare Price",
+    "Closing Lines",
+    "Area Management",
+    "How to use your IPad Resources",
+    "PayScale’s",
+    "Binder",
+    "Slicks",
+    "Career Progress Sheets",
+    "Agreements Examples",
+    "BASAFASA Information",
+    "Blitz Trips",
+    "Incentives",
+    "Playbook",
+  ];
 
   return (
     <Modal
@@ -77,12 +87,11 @@ const VideoModal: React.FC<VideoModalProps> = ({
       footer={null}
       closable={false}
       onCancel={handleCancel}
-      className="rounded-lg"
+      className="rounded-lg "
       width={1026}
     >
       <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
-        <div></div>
-        <h2 className="text-lg font-semibold">Add a new video</h2>
+        <h2 className="text-lg font-semibold">Add a new Photo</h2>
         <CloseCircleOutlined
           onClick={handleCancel}
           className="text-white text-xl cursor-pointer"
@@ -91,28 +100,41 @@ const VideoModal: React.FC<VideoModalProps> = ({
 
       <div className=" bg-white rounded-b-lg space-y-5 p-16">
         <div className="flex justify-between">
-          <Upload.Dragger
-            name="file"
-            accept="video/*"
-            multiple={false}
-            className="border border-dashed rounded-md p-16"
-          >
-            <div className="flex justify-center items-center ">
-              <p className="ant-upload-drag-icon p-1 border rounded-lg w-[162px]">
-                <UploadOutlined
-                  style={{
-                    fontSize: "18px",
-                    color: "#697B8C",
-                    paddingRight: "10px",
-                  }}
+          {/* Video */}
+          <div className="relative w-full videoStyle flex justify-center flex-1 items-center ">
+            <video
+              ref={videoRef}
+              src={video}
+              className="w-full max-w-[600px] "
+              style={{ width: "100%", maxWidth: "600px" }}
+            />
+            <Button className="text-[#043249] font-popping text-lg font-medium absolute top-2 right-2">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.71 4.04104C18.1 3.65104 18.1 3.00104 17.71 2.63104L15.37 0.291035C15 -0.0989648 14.35 -0.0989648 13.96 0.291035L12.12 2.12104L15.87 5.87104M0 14.251V18.001H3.75L14.81 6.93104L11.06 3.18104L0 14.251Z"
+                  fill="#043249"
                 />
-                Click to upload
-              </p>
-            </div>
-            <p className="text-gray-600">
-              Click or drag a file in this area to upload
-            </p>
-          </Upload.Dragger>
+              </svg>
+              Edit
+            </Button>
+            <Button
+              shape="circle"
+              size="large"
+              onClick={togglePlay}
+              className="bg-white opacity-65 absolute top-[50%] left-[50%] z-10"
+              style={{
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              {isPlaying ? <FaPause /> : <FaPlay />}
+            </Button>
+          </div>
           {/* Thumbnail */}
           <div className="space-y-4 flex-1 text-center ">
             <p className="font-roboto font-normal text-sm text-black text-start pl-8 pb-2">
@@ -169,9 +191,11 @@ const VideoModal: React.FC<VideoModalProps> = ({
               className="w-full bg-[#F0F0F0]"
               size="large"
             >
-              <Option value="nature">Nature</Option>
-              <Option value="technology">Technology</Option>
-              <Option value="people">People</Option>
+              {categories?.map((item, index) => (
+                <Option key={index} value={item}>
+                  {item}
+                </Option>
+              ))}
             </Select>
           </div>
         </div>
@@ -181,11 +205,11 @@ const VideoModal: React.FC<VideoModalProps> = ({
           size="large"
           onClick={handleUpload}
         >
-          Upload
+          Save Changes
         </Button>
       </div>
     </Modal>
   );
 };
 
-export default VideoModal;
+export default VideoEditModal;

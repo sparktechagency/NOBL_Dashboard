@@ -18,13 +18,22 @@ import img6 from "../../assets/Images/videos/Rectangle 8 (5).png";
 import img7 from "../../assets/Images/videos/Rectangle 8 (6).png";
 import VideoModal from "./VideoModal";
 import VideoViewModal from "./VideoViewModal";
+import VideoEditModal from "./VideoEditModal";
 
 const VideosTable: React.FC = () => {
   // show view modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpenModal, setIsEditOpenModal] = useState(false); //edit modal open stat
+
   const showModal = () => {
     setIsModalOpen(true);
   };
+  // edit modal
+
+  const showEditModal = () => {
+    setIsEditOpenModal(true);
+  };
+
   // delete modal
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     console.log(e);
@@ -84,7 +93,7 @@ const VideosTable: React.FC = () => {
             </svg>
           </div>
 
-          <div>
+          <div  onClick={showEditModal}>
             <svg
               width="37"
               height="37"
@@ -209,6 +218,10 @@ const VideosTable: React.FC = () => {
       <VideoViewModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+      />
+      <VideoEditModal
+        isModalOpen={isEditOpenModal}
+        setIsModalOpen={setIsEditOpenModal}
       />
     </>
   );

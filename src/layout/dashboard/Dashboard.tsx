@@ -571,7 +571,7 @@ const Dashboard: React.FC = () => {
         <img src={logo} alt="Logo" className="mx-auto py-6 w-[264px]" />
         <Menu
           mode="inline"
-          style={{ background: "#fff", color: "white" }}
+          // style={{ background: "#fff", color: "white" }}
           defaultSelectedKeys={["1"]}
         >
           {menuItems.map((item, index) => {
@@ -583,15 +583,18 @@ const Dashboard: React.FC = () => {
                   title={item.title}
                   icon={getMenuIcon(item.icon, item.activeIcon, isActive)}
                   style={{
-                    color: isActive ? "red" : "#fff",
+                   
                     fontWeight: isActive ? "bold" : "normal",
                     fontSize: "16px",
                     marginBottom: "10px",
-                    backgroundColor: isActive ? "#F2F5FC" : "white",
+                    backgroundColor: isActive ? "#4B5320" : "transparent",
                   }}
+                  className="!text-black"
                 >
-                  {item.children.map((child, childIndex) => (
-                    <Menu.Item
+                  {item.children.map((child, childIndex) =>{
+                    const isSubActive = location.pathname === child.path;
+                    return (
+                      <Menu.Item
                       key={`child-${childIndex}`}
                       icon={getMenuIcon(
                         child.icon,
@@ -599,17 +602,21 @@ const Dashboard: React.FC = () => {
                         location.pathname === child.path
                       )}
                       style={{
-                        color:
-                          location.pathname === child.path ? "red" : "#fff",
-                        fontWeight:
-                          location.pathname === child.path ? "bold" : "normal",
-                        fontSize: "16px",
-                        paddingRight: "50px",
+                        color: isSubActive ? "red" : "#fff",
+                    fontWeight: isSubActive ? "bold" : "normal",
+                    fontSize: "16px",
+                    marginBottom: "10px",
+                    backgroundColor: isSubActive ? "#4B5320" : "transparent",
                       }}
                     >
-                      <Link to={child.path}>{child.title}</Link>
+                      <Link
+                        style={{
+                          color: isSubActive ? "white" : "black",
+                        }}
+                      to={child.path}>{child.title}</Link>
                     </Menu.Item>
-                  ))}
+                    )
+                  })}
                 </SubMenu>
               );
             } else {

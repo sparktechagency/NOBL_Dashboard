@@ -24,62 +24,58 @@ table {
 .ant-menu {
   background-color: white !important;
   /* color: black !important; */
-
 }
-
-
-
 
 /* .ant-layout .ant-layout-header {
   background-color: #F6F6F6 !important;
 } */
-.ant-layout-sider .ant-layout-sider-red .sidebar-menu{
+.ant-layout-sider .ant-layout-sider-red .sidebar-menu {
   background-color: red !important;
-  color: black !important
+  color: black !important;
 }
 
 /* .ant-layout-content {
   background-color:  #F6F6F6 !important;
 } */
 
-span.ant-menu-title-content {
-  color: #fff;
+span.ant-menu-title-content,
+.ant-menu-submenu-arrow {
+  color: #2e2d2d !important;
 }
 /* Select opriont */
+
 .ant-select-selector {
   background-color: transparent !important;
   color: black !important;
   box-shadow: transparent !important;
 }
 .ant-select-selector:hover {
-  background-color: 'none' !important;
+  background-color: "none" !important;
   color: black !important;
   border-color: transparent !important;
-
 }
 .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
   border: transparent !important;
 }
-.ant-select .ant-select-outlined{ 
-border-color: transparent !important;
-border: transparent !important;
+.ant-select .ant-select-outlined {
+  border-color: transparent !important;
+  border: transparent !important;
 }
 .ant-select-selection-search {
   border: transparent !important;
   border-color: transparent !important;
 }
-.ant-select-selection-item{
-border: transparent !important;
-border-color: transparent !important;
+.ant-select-selection-item {
+  border: transparent !important;
+  border-color: transparent !important;
 }
-.ant-select-selection-search-input{
+.ant-select-selection-search-input {
   border: transparent !important;
   border-color: transparent !important;
 }
 
-
- /* css of ant design table style   */
- .ant-table-wrapper table {
+/* css of ant design table style   */
+.ant-table-wrapper table {
   background-color: #e9f4f3;
   border-radius: 0;
 }
@@ -94,7 +90,6 @@ border-color: transparent !important;
   /* background: #1f8d84; */
   color: white;
   /* text-align: center; */
-  
 }
 .ant-table-wrapper
   .ant-table-container
@@ -119,14 +114,11 @@ border-color: transparent !important;
   text-align: start;
 }
 
-
 /* data roe */
-.ant-table-wrapper .ant-table-tbody > tr > td
-{
+.ant-table-wrapper .ant-table-tbody > tr > td {
   border-bottom: none !important;
 }
 .ant-table-wrapper .ant-table-tbody > tr > td {
- 
   /* padding-left: 50px; */
 }
 .ant-table-wrapper
@@ -152,7 +144,6 @@ border-color: transparent !important;
 .ant-table-wrapper .ant-table-container table > tbody > tr {
   color: #4e4e4e;
 }
-
 
 :where(.css-dev-only-do-not-override-11xg00t).ant-menu-light
   .ant-menu-submenu-title,
@@ -185,7 +176,6 @@ border-color: transparent !important;
 }
 
 .ant-modal .ant-modal-content {
- 
   color: #fff;
 }
 
@@ -199,14 +189,11 @@ border-color: transparent !important;
   /* background: #2e2d2d !important; */
   /* color: wheat !important; */
   border: none !important;
-
 }
 
-
-.jodit-react-container .jodit-wysiwyg{
+.jodit-react-container .jodit-wysiwyg {
   min-height: 300px !important;
 }
-
 
 .auth-wrapper {
   width: 100%;
@@ -228,7 +215,7 @@ border-color: transparent !important;
 
 /* Faq */
 
-.ant-collapse-arrow{
+.ant-collapse-arrow {
   padding-top: 10px !important;
   /* margin-top: 50px !important; */
 }
@@ -237,4 +224,9 @@ border-color: transparent !important;
 .custom-row > td {
   background: #fff; /* optional: make sure it matches your table background */
   border-bottom: 8px solid #f5f5f5; /* acts as the gap */
+}
+
+#rc-menu-uuid-11635-2-submenu-7-popup .ant-menu-item .ant-menu-item-selected {
+  color: #fff !important;
+  background-color: red !important;
 }
