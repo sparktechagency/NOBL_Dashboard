@@ -1,10 +1,15 @@
 import { DownOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import { Option } from "antd/es/mentions";
-import React from "react";
+import React, { useState } from "react";
 import DocumentTable from "../component/documents/DocumentTable";
+import DocumentModal from "../component/documents/DocumentModal";
 
 const Documents = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
   return (
     <div>
       <div className=" flex justify-between items-center mt-5 mb-[43px]">
@@ -32,7 +37,7 @@ const Documents = () => {
           </button>
           {/* Add mamber icon */}
           <button
-            // onClick={showModal}
+            onClick={showModal}
             className="font-semibold ml-7 flex gap-3 justify-between items-center text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
           >
             <svg
@@ -76,6 +81,11 @@ const Documents = () => {
       </div>
       {/* table */}
       <DocumentTable />
+      {/* document Modal */}
+      <DocumentModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   );
 };
