@@ -1,15 +1,44 @@
 import { DownOutlined } from "@ant-design/icons";
-import { Select } from "antd";
+import { Divider, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import React, { useState } from "react";
 import VideosTable from "../component/videos/VideosTable";
 import VideoModal from "../component/videos/VideoModal";
 
 const Videos = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-      setIsModalOpen(true);
-    };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // categories
+  const categories = [
+    "All",
+    "Welcome to NOBL",
+    "Introduction",
+    "Key to success in this industry",
+    "Door approach / Pitch",
+    "Transitioning",
+    "Building Value",
+    "Qualify Questions",
+    "Buying Atmosphere",
+    "Amply Value",
+    "Drop Price / Compare Price",
+    "Closing Lines",
+    "Area Management",
+    "How to use your IPad Resources",
+    // তোমার আগে দেওয়া category গুলোও
+    "PayScale’s",
+    "Binder",
+    "Slicks",
+    "Career Progress Sheets",
+    "Agreements Examples",
+    "BASAFASA Information",
+    "Blitz Trips",
+    "Incentives",
+    "Playbook",
+  ];
+
   return (
     <div>
       <div className=" flex justify-between items-center mt-5 mb-[43px]">
@@ -50,29 +79,25 @@ const Videos = () => {
             className="border border-black rounded-md"
             placeholder="Select a category"
             optionFilterProp="children"
-            suffixIcon={<DownOutlined style={{ color: "black" }} />}
+            suffixIcon={
+              <div className="flex justify-between w-full gap-72">
+                <h1 className="text-black">klsdf</h1>
+                <DownOutlined style={{ color: "black" }} />
+              </div>
+            }
           >
-            <Option value="payscales">PayScale’s</Option>
-            <Option value="binder">Binder</Option>
-            <Option value="slicks">Slicks</Option>
-            <Option value="career_progress_sheets">
-              Career Progress Sheets
-            </Option>
-            <Option value="agreements_examples">Agreements Examples</Option>
-            <Option value="basafasa_information">BASAFASA Information</Option>
-            <Option value="blitz_trips">Blitz Trips</Option>
-            <Option value="incentives">Incentives</Option>
-            <Option value="playbook">Playbook</Option>
+            {categories?.map((item, index) => (
+              <Option key={index} value={item}>
+                {item}
+              </Option>
+            ))}
           </Select>
         </div>
       </div>
       {/* table */}
       <VideosTable />
       {/* video modal */}
-      <VideoModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
+      <VideoModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </div>
   );
 };

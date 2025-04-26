@@ -78,9 +78,6 @@
   border-left: 5px solid #ffc500;
   border-radius: 0px !important;
 }
-.ant-menu-submenu-selected {
-  /* background-color: #1890ff !important; */
-}
 
 /* AboutUS page  style*/
 .ql-toolbar {
@@ -106,3 +103,23 @@
   flex-direction: column !important;
   
 } */
+ .ant-popconfirm-buttons .ant-btn-primary{
+  background-color: red;
+ }
+ .ant-modal-body{
+  border-radius: 10px !important;
+
+
+ }
+ .addClass{
+  margin-top: 40px !important;
+ }
+
+ .ant-menu-item .ant-menu-item-selected a{
+  background-color: #4B5320 !important;
+  background: #4B5320 !important;
+ }
+ .videoStyle video{
+  border: 2px !important;
+  border-radius: 10px !important;
+ }

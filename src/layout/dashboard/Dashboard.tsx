@@ -426,7 +426,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleNotifications = () => {
-    navigate("/notifications");
+    navigate("settings/chagePassword");
   };
 
   const getTitle = () => {

@@ -115,16 +115,7 @@ const cardData = [
 const Status: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const [selectedValue, setSelectedValue] = useState<string | undefined>();
-  // Uncomment the next line when using the actual API
-  // const { data, isSuccess, isError, isLoading } = useGetAllStatusApiQuery();
 
-  // For mock data demonstration
-  // Replace this with the actual API response when needed
-
-  // Uncomment the following block if using the API response
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
   const handleCardClick = (cardIndex: number) => {
     setSelectedCard(cardIndex);
   };
@@ -140,7 +131,7 @@ const Status: React.FC = () => {
   ];
   return (
     <div className="rounded-xl">
-      <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-4  mt-[12px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  mt-[12px]">
         {cardData.map((card, index) => (
           <div key={index} className="bg-white w-[360px] py-6 flex justify-center items-center rounded-lg shadow-sm">
           <div className="flex flex-col justify-center items-center text-center">

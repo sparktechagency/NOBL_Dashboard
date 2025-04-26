@@ -42,10 +42,6 @@ const router = createBrowserRouter([
                 path: "/",
                 element: <DasboardHome />,
             },
-            // {
-            //     path: "/notifications",
-            //     element: <Notifications />,
-            // },
             {
                 path: "/users",
                 element: <Users />,
