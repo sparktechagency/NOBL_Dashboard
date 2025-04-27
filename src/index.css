@@ -123,4 +123,5 @@
 
 .ant-menu-submenu .ant-menu-submenu-inline .ant-menu-submenu-selected {
   background-color: "red" !important;
+  color: "bak";
 }

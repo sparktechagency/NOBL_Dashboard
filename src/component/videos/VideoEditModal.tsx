@@ -91,7 +91,8 @@ const VideoEditModal: React.FC<VideoEditModalProps> = ({
       width={1026}
     >
       <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
-        <h2 className="text-lg font-semibold">Add a new Photo</h2>
+        <div></div>
+        <h2 className="text-lg font-semibold">Add a new video</h2>
         <CloseCircleOutlined
           onClick={handleCancel}
           className="text-white text-xl cursor-pointer"

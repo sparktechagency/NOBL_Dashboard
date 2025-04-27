@@ -212,7 +212,7 @@ const VideosTable: React.FC = () => {
         rowClassName={() => "table-row-gap"}
         className="custom-ant-table"
         dataSource={data}
-        pagination={false}
+        pagination={true}
       />
       {/* view for modal */}
       <VideoViewModal

@@ -421,10 +421,6 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = () => {
-    navigate("/auth/login");
-  };
-
   const handleNotifications = () => {
     navigate("settings/chagePassword");
   };
@@ -583,7 +579,6 @@ const Dashboard: React.FC = () => {
                   title={item.title}
                   icon={getMenuIcon(item.icon, item.activeIcon, isActive)}
                   style={{
-                   
                     fontWeight: isActive ? "bold" : "normal",
                     fontSize: "16px",
                     marginBottom: "10px",
@@ -591,31 +586,36 @@ const Dashboard: React.FC = () => {
                   }}
                   className="!text-black"
                 >
-                  {item.children.map((child, childIndex) =>{
+                  {item.children.map((child, childIndex) => {
                     const isSubActive = location.pathname === child.path;
                     return (
                       <Menu.Item
-                      key={`child-${childIndex}`}
-                      icon={getMenuIcon(
-                        child.icon,
-                        child.activeIcon,
-                        location.pathname === child.path
-                      )}
-                      style={{
-                        color: isSubActive ? "red" : "#fff",
-                    fontWeight: isSubActive ? "bold" : "normal",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    backgroundColor: isSubActive ? "#4B5320" : "transparent",
-                      }}
-                    >
-                      <Link
+                        key={`child-${childIndex}`}
+                        icon={getMenuIcon(
+                          child.icon,
+                          child.activeIcon,
+                          location.pathname === child.path
+                        )}
                         style={{
-                          color: isSubActive ? "white" : "black",
+                          color: isSubActive ? "red" : "#fff",
+                          fontWeight: isSubActive ? "bold" : "normal",
+                          fontSize: "16px",
+                          marginBottom: "10px",
+                          backgroundColor: isSubActive
+                            ? "#4B5320"
+                            : "transparent",
                         }}
-                      to={child.path}>{child.title}</Link>
-                    </Menu.Item>
-                    )
+                      >
+                        <Link
+                          style={{
+                            color: isSubActive ? "white" : "black",
+                          }}
+                          to={child.path}
+                        >
+                          {child.title}
+                        </Link>
+                      </Menu.Item>
+                    );
                   })}
                 </SubMenu>
               );
@@ -644,34 +644,6 @@ const Dashboard: React.FC = () => {
               );
             }
           })}
-          <div className="flex py-36 gap-8 mt-16 px-4 w-full">
-            <div className="flex gap-2 w-3/4 items-center">
-              <Popover
-                className="cursor-pointer"
-                placement="top"
-                content={content}
-              >
-                <Avatar
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    backgroundColor: "gray",
-                  }}
-                  icon={<User size={25} />}
-                />
-              </Popover>
-              <div className="space-y-4">
-                <h1 className="text-black">John Doe</h1>
-                <h1 className="text-black">ex@ample.com</h1>
-              </div>
-            </div>
-            <Menu.Item
-              key="500"
-              icon={<LogOut size={20} />}
-              style={{ color: "red", fontSize: "16px" }}
-              onClick={handleLogout}
-            />
-          </div>
         </Menu>
       </Sider>
 

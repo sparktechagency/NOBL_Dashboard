@@ -1,5 +1,13 @@
-import React from "react";
-import { Table, Button, Space, Image, PopconfirmProps, message, Popconfirm } from "antd";
+import React, { useState } from "react";
+import {
+  Table,
+  Button,
+  Space,
+  Image,
+  PopconfirmProps,
+  message,
+  Popconfirm,
+} from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img1 from "../../assets/Images/dashboard/pdf.png";
 import img2 from "../../assets/Images/dashboard/pdf.png";
@@ -8,22 +16,33 @@ import img4 from "../../assets/Images/dashboard/pdf.png";
 import img5 from "../../assets/Images/dashboard/pdf.png";
 import img6 from "../../assets/Images/dashboard/pdf.png";
 import img7 from "../../assets/Images/dashboard/pdf.png";
+import DocumentEditModal from "./DocumentEditModal";
+import DocumentModal from "./DocumentModal";
+import DocumentViewModal from "./DocumentViewModal";
 
 const DocumentTable: React.FC = () => {
+  // delete modal
+  const confirm: PopconfirmProps["onConfirm"] = (e) => {
+    console.log(e);
+    message.success("Click on Yes");
+  };
 
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
+  // delete modal end
 
-    // delete modal
-    const confirm: PopconfirmProps["onConfirm"] = (e) => {
-      console.log(e);
-      message.success("Click on Yes");
-    };
-  
-    const cancel: PopconfirmProps["onCancel"] = (e) => {
-      console.log(e);
-      message.error("Click on No");
-    };
-    // delete modal end
-  
+  // edit modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const [isModalViewOpen, setisModalViewOpen] = useState(false);
+  const showViewModal = () => {
+    setisModalViewOpen(true);
+  };
 
   const columns = [
     {
@@ -62,7 +81,7 @@ const DocumentTable: React.FC = () => {
       render: (_, record) => (
         <Space size="middle">
           {/* view icon */}
-          <div>
+          <div onClick={showViewModal}>
             <svg
               width="37"
               height="37"
@@ -78,7 +97,7 @@ const DocumentTable: React.FC = () => {
             </svg>
           </div>
 
-          <div>
+          <div onClick={showModal}>
             <svg
               width="37"
               height="37"
@@ -198,13 +217,25 @@ const DocumentTable: React.FC = () => {
     },
   ];
   return (
-    <Table
-      columns={columns}
-      rowClassName={() => "table-row-gap"}
-      className="custom-ant-table"
-      dataSource={data}
-      pagination={false}
-    />
+    <>
+      <Table
+        columns={columns}
+        rowClassName={() => "table-row-gap"}
+        className="custom-ant-table"
+        dataSource={data}
+        pagination={true}
+      />
+      {/* table edit modal */}
+      <DocumentEditModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
+      {/* view modal */}
+      <DocumentViewModal
+        isModalOpen={isModalViewOpen}
+        setIsModalOpen={setisModalViewOpen}
+      />
+    </>
   );
 };
 
