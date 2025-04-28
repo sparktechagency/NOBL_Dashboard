@@ -98,30 +98,46 @@
   min-height: 422px;
   border: 1px solid white !important;
 }
+.ql-editor {
+  min-height: 422px !important;
+}
 /* .ant-row .ant-form-item-row{
   display: flex !important;
   flex-direction: column !important;
   
 } */
- .ant-popconfirm-buttons .ant-btn-primary{
+.ant-popconfirm-buttons .ant-btn-primary {
   background-color: red;
- }
- .ant-modal-body{
+}
+.ant-modal-body {
   border-radius: 10px !important;
-
-
- }
- .addClass{
+}
+.addClass {
   margin-top: 40px !important;
- }
+}
 
- .videoStyle video{
-   border: 2px !important;
-   border-radius: 10px !important;
-  }
-
+.videoStyle video {
+  border: 2px !important;
+  border-radius: 10px !important;
+}
 
 .ant-menu-submenu .ant-menu-submenu-inline .ant-menu-submenu-selected {
   background-color: "red" !important;
   color: "bak";
+}
+
+/* my profile */
+
+.ant-tabs-nav-list {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100%;
+}
+.ant-tabs-tab-btn {
+  color: #043249 !important;
+  font-weight: 500 !important;
+  font-size: 18px;
+}
+.ql-formats{
+  padding-left: 60px !important;
 }

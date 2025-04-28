@@ -41,20 +41,6 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
           className="text-white text-xl cursor-pointer"
         />
       </div>
-      {/* Document Type  */}
-      <div className="px-16 mt-6">
-        <label className="font-semibold font-roboto text-base text-black">
-          Select a type
-        </label>
-        <Select
-          placeholder="Select category"
-          className="w-full bg-[#F0F0F0]"
-          size="large"
-        >
-          <Option value="nature">.pdf</Option>
-          <Option value="technology">.docx</Option>
-        </Select>
-      </div>
       {/* uplode file */}
       <div className="px-16">
         <Upload.Dragger

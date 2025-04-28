@@ -55,6 +55,7 @@ const VerifyEmail: React.FC = () => {
         <Button
           className="bg-[#4B5320] h-12 text-sm text-white font-bold  "
           htmlType="submit"
+          onClick={handleVerify}
         >
           Verify Code
         </Button>

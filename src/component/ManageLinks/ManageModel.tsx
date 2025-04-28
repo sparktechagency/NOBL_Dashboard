@@ -23,38 +23,6 @@ const ManageModel: React.FC<VideoModalProps> = ({
     setIsModalOpen(false);
   };
 
-  const fileList = [
-    {
-      uid: -1,
-      name: "xxx.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: -2,
-      name: "yyy.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ];
-
-  const props = {
-    action: "//jsonplaceholder.typicode.com/posts/",
-    listType: "picture",
-    defaultFileList: [...fileList],
-  };
-
-  const props2 = {
-    action: "//jsonplaceholder.typicode.com/posts/",
-    listType: "picture",
-    defaultFileList: [...fileList],
-    className: "upload-list-inline",
-  };
-
   return (
     <Modal
       open={isModalOpen}
@@ -105,7 +73,7 @@ const ManageModel: React.FC<VideoModalProps> = ({
             </label>
             <Select
               placeholder="Select category"
-              className="w-full bg-[#F0F0F0] py-7"
+              className="w-full bg-[#F0F0F0] "
               size="large"
             >
               <Option value="nature">

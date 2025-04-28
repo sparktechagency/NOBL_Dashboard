@@ -193,7 +193,7 @@ const UserTable: React.FC = () => {
         rowClassName={() => "table-row-gap"}
         className="custom-ant-table"
         dataSource={data}
-        pagination={false}
+        pagination={true}
         
       />
       <Modal

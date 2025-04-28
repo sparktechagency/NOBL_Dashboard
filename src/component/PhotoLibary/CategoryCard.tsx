@@ -10,7 +10,7 @@ import img7 from "../../assets/Images/photoLibray/Rectangle 1314.png";
 import img8 from "../../assets/Images/photoLibray/Rectangle 1315.png";
 import img9 from "../../assets/Images/photoLibray/Rectangle 1316.png";
 import img10 from "../../assets/Images/photoLibray/Rectangle 1317.png";
-
+import Swal from "sweetalert2";
 const { Meta } = Card;
 
 const photoLibraryData = [
@@ -85,6 +85,26 @@ const CategoryCard = () => {
   const hendelClick = (id) => {
     setImageMadel(!imageMadel);
     setimageID(id);
+  };
+
+  const hendelDelete = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   return (
@@ -181,7 +201,10 @@ const CategoryCard = () => {
                   </p>
                 </Button>
                 {/* change photo */}
-                <Button className="flex justify-start  items-center  w-full bg-[#FFEBEB] border-none px-3 py-1">
+                <Button
+                  onClick={hendelDelete}
+                  className="flex justify-start  items-center  w-full bg-[#FFEBEB] border-none px-3 py-1"
+                >
                   <svg
                     width="16"
                     height="20"

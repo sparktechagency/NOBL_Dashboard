@@ -66,9 +66,21 @@ const Videos = () => {
           {/* Add mamber icon */}
           <button
             onClick={showModal}
-            className="font-semibold ml-7 text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
+            className="font-semibold ml-7 flex items-center gap-6 text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
           >
-            + Add a new video
+            <svg
+              width="21"
+              height="20"
+              viewBox="0 0 21 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.07143 11.4286H0.5V8.57143H9.07143V0H11.9286V8.57143H20.5V11.4286H11.9286V20H9.07143V11.4286Z"
+                fill="white"
+              />
+            </svg>
+            Add a new video
           </button>
         </div>
         <div>

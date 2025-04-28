@@ -70,9 +70,9 @@ const RevenueChart: React.FC = () => {
       case "monthly":
         return monthlyData;
       case "yearly":
-        return yearlyData;
-      default:
         return weeklyData;
+      default:
+        return  yearlyData;
     }
   };
 

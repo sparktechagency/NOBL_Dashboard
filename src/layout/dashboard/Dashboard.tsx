@@ -1,23 +1,12 @@
 import React from "react";
-import { Avatar, Badge, Layout, Menu, Popover } from "antd";
+import { Avatar, Badge, Button, Layout, Menu, Popover } from "antd";
 import { Bell, Lock, LogOut, User, User2Icon } from "lucide-react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/Images/NOBLLogo.png";
 import avatar from "../../assets/Images/avatar.png";
-import {
-  FaRegUserCircle,
-  FaRegHeart,
-  FaChartPie,
-  FaUserCircle,
-  FaLock,
-  FaHeart,
-} from "react-icons/fa";
-import { CiCreditCard1 } from "react-icons/ci";
 
 import SubMenu from "antd/es/menu/SubMenu";
 import "./Styled_components.css";
-import { BiPieChartAlt2 } from "react-icons/bi";
-import { IoIosCard } from "react-icons/io";
 
 const { Header, Sider, Content } = Layout;
 
@@ -425,6 +414,10 @@ const Dashboard: React.FC = () => {
     navigate("settings/chagePassword");
   };
 
+  const handleLogout = ()=>{
+    navigate('/auth/login')
+  }
+
   const getTitle = () => {
     switch (location.pathname) {
       case "/":
@@ -645,6 +638,29 @@ const Dashboard: React.FC = () => {
             }
           })}
         </Menu>
+        <div className="mx-7 mt-36">
+          <Button onClick={()=> handleLogout()} className="gap-3 w-full flex justify-start p-6 bg-[#FFE8E8] text-base font-popping font-semibold text-[#FF0000] ">
+            
+            <svg
+              width="37"
+              height="38"
+              viewBox="0 0 37 38"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect y="0.5" width="37" height="37" rx="18.5" fill="#FFF1F1" />
+              <path
+                d="M17.7188 26.2913C17.7188 26.0841 17.8011 25.8854 17.9476 25.7389C18.0941 25.5924 18.2928 25.5101 18.5 25.5101H24.75C24.8191 25.5101 24.8853 25.4827 24.9341 25.4338C24.983 25.385 25.0104 25.3187 25.0104 25.2497V12.7497C25.0104 12.6806 24.983 12.6144 24.9341 12.5655C24.8853 12.5167 24.8191 12.4893 24.75 12.4893H18.5C18.2928 12.4893 18.0941 12.4069 17.9476 12.2604C17.8011 12.1139 17.7188 11.9152 17.7188 11.708C17.7188 11.5008 17.8011 11.3021 17.9476 11.1556C18.0941 11.0091 18.2928 10.9268 18.5 10.9268H24.75C25.7563 10.9268 26.5729 11.7434 26.5729 12.7497V25.2497C26.5729 25.7331 26.3809 26.1968 26.039 26.5387C25.6971 26.8805 25.2335 27.0726 24.75 27.0726H18.5C18.2928 27.0726 18.0941 26.9903 17.9476 26.8438C17.8011 26.6973 17.7188 26.4985 17.7188 26.2913Z"
+                fill="#FF0000"
+              />
+              <path
+                d="M22.2624 20.1613C22.2624 20.4376 22.1527 20.7025 21.9573 20.8979C21.762 21.0932 21.497 21.203 21.2208 21.203H16.1624C16.1381 21.5731 16.1083 21.9433 16.0729 22.3134L16.0416 22.6311C16.03 22.7508 15.9896 22.866 15.924 22.9668C15.8584 23.0676 15.7694 23.1511 15.6646 23.2102C15.5598 23.2693 15.4423 23.3023 15.322 23.3063C15.2018 23.3103 15.0824 23.2852 14.9739 23.2332C13.0692 22.3214 11.3452 21.0725 9.88536 19.5467L9.85411 19.5144C9.7198 19.3747 9.64478 19.1884 9.64478 18.9946C9.64478 18.8008 9.7198 18.6146 9.85411 18.4749L9.88536 18.4426C11.3452 16.9168 13.0692 15.6678 14.9739 14.7561C15.0824 14.7041 15.2018 14.679 15.322 14.683C15.4423 14.687 15.5598 14.72 15.6646 14.7791C15.7694 14.8382 15.8584 14.9216 15.924 15.0225C15.9896 15.1233 16.03 15.2384 16.0416 15.3582L16.0729 15.6759C16.1083 16.0453 16.1381 16.4155 16.1624 16.7863H21.2208C21.497 16.7863 21.762 16.8961 21.9573 17.0914C22.1527 17.2868 22.2624 17.5517 22.2624 17.828V20.1613Z"
+                fill="#FF0000"
+              />
+            </svg>
+            Logout
+          </Button>
+        </div>
       </Sider>
 
       <Layout style={{ marginLeft: 300 }}>

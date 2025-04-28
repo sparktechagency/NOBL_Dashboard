@@ -96,7 +96,7 @@ const VideoViewModal: React.FC<VideoViewModalProps> = ({
           </div>
         </div>
         {/* Catagory input fild*/}
-        <div className="space-y-2">
+        <div className="space-y-4">
           <div>
             <label className="font-semibold font-roboto text-base text-[#000000]">
               Title
@@ -107,6 +107,9 @@ const VideoViewModal: React.FC<VideoViewModalProps> = ({
             />
           </div>
           <div>
+            <label className="font-semibold font-roboto text-base text-[#000000]">
+              Category
+            </label>
             <Input
               placeholder="Welcome to NOBL"
               className="p-2 border-none bg-[#F0F0F0]"

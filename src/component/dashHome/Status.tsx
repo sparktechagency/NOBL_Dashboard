@@ -1,9 +1,4 @@
 import React, { useState } from "react";
-import SelectBox from "../share/SelectBox";
-import { HiMiniUsers } from "react-icons/hi2";
-import { FaArrowTrendUp } from "react-icons/fa6";
-import { SiPaypal } from "react-icons/si";
-import { FcComboChart } from "react-icons/fc";
 import "./Style_dashboard.css";
 
 // import { useGetAllStatusApiQuery } from "../redux/Features/getAllStatusApi";

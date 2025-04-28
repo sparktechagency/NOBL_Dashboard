@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import profileIMg from "../assets/Images/dashboard/profile.png";
 import uplodIcon from "../assets/Images/dashboard/edit.png";
-import { Button, Checkbox, Form, Input, Tabs } from "antd";
+import { Button, Checkbox, Form, Input, Tabs, Upload } from "antd";
 import type { FormProps, TabsProps } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 // tabs 1 type
 type FieldType = {
@@ -38,6 +39,8 @@ const onFinishFailedTabs2: FormProps<FieldTypePassTab>["onFinishFailed"] = (
   console.log("Failed:", errorInfo);
 };
 // tabs 2 end
+
+// profile img1 img
 
 const ChangePassword = () => {
   const onChange = (key: string) => {
@@ -184,15 +187,37 @@ const ChangePassword = () => {
   ];
   // tabs end
 
+  // profile img change functionality
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  // Called before upload
+  const handleBeforeUpload = (file: File) => {
+    const isImage = file.type.startsWith("image/");
+    if (!isImage) {
+      alert("Please upload an image file.");
+      return false;
+    }
+
+    // Create a preview URL and save to state
+    setPreviewImage(URL.createObjectURL(file));
+    return false; // prevents auto upload
+  };
+
   return (
     <div>
       {/* profile section  */}
       <div className="bg-white  mx-52 mt-5 rounded-lg flex flex-col justify-center items-center py-8">
         <div className="relative">
-          <img src={profileIMg} alt="" />
-          <div className="w-8 bg-white flex justify-center items-center p-2 shadow-lg rounded-full absolute right-0 bottom-5">
-            <img src={uplodIcon} className="w-5" alt="" />
-          </div>
+          {previewImage ? <img src={previewImage} alt="" className="w-[137px] rounded-full h-[137ppx] object-cover" /> : <img src={profileIMg} alt="" />}
+          <Upload
+            showUploadList={false}
+            beforeUpload={handleBeforeUpload}
+            accept="image/*"
+          >
+            <button className="w-8 bg-white flex justify-center items-center p-2 shadow-lg rounded-full absolute right-0 bottom-5">
+              <img src={uplodIcon} className="w-5" alt="" />
+            </button>
+          </Upload>
         </div>
         <h3 className="font-roboto font-medium text-[30px]">Jhon Doe</h3>
         <p className="text-[#B1A8A8] font-roboto font-medium text-xl">

@@ -1,55 +1,53 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
-import Buttons from "../component/share/Buttons";
 import Tags from "../component/share/Tags";
 
 interface Props {}
 
 const CategoryManagement: React.FC<Props> = () => {
-  const [tags, setTags] = useState<string[]>([
-    "Property",
-    "Electric",
-    "Study",
-    "Vehicle",
-    "Property",
-    "Electric",
-    "Study",
-    "Vehicle",
-  ]);
-  const [inputVisible, setInputVisible] = useState(false);
+  const [tags, setTags] = useState({
+    "Video Category": ["Property", "Electric"],
+    "Image Category": ["Study", "Vehicle"],
+    "Documents Category": ["Law", "Notes"],
+  });
 
-  // Handle tag close (removal)
+  const [inputVisible, setInputVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("Video Category"); // initially select Video Category
+
   const handleClose = (removedTag: string) => {
-    const newTags = tags.filter((tag) => tag !== removedTag);
-    setTags(newTags); // Update the tags state to remove the tag
+    setTags((prev) => ({
+      ...prev,
+      [selectedCategory]: prev[selectedCategory].filter((tag) => tag !== removedTag),
+    }));
   };
 
-  // Handle adding new category (tag)
   const handleAddNewCategory = (newCategory: string) => {
-    if (newCategory && !tags.includes(newCategory)) {
-      setTags([...tags, newCategory]); // Add the new tag if it's not already in the list
+    if (newCategory && !tags[selectedCategory].includes(newCategory)) {
+      setTags((prev) => ({
+        ...prev,
+        [selectedCategory]: [...prev[selectedCategory], newCategory],
+      }));
     }
   };
 
-  // Toggle the visibility of the input field in Tags component
   const triggerTagInput = () => {
     setInputVisible(true);
   };
 
   return (
-    <div className="p-4 ">
-      {/* Pass the inputVisible state and toggle function to Tags */}
+    <div className="p-4">
       <div className="w-1/3">
         <Tags
-          tags={tags}
+          tags={tags[selectedCategory] || []}
           handleAddNewCategory={handleAddNewCategory}
           handleClose={handleClose}
           inputVisible={inputVisible}
           setInputVisible={setInputVisible}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
         />
         <button
           onClick={triggerTagInput}
-          className="w-[242px]  py-3 flex justify-center items-center gap-3 bg-[#4B5320] mt-12 mb-9 rounded-md text-white font-roboto font-normal text-lg"
+          className="w-[242px] py-3 flex justify-center items-center gap-3 bg-[#4B5320] mt-12 mb-9 rounded-md text-white font-roboto font-normal text-lg"
         >
           <svg
             width="20"
