@@ -47,12 +47,19 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
             className="w-full bg-[#F0F0F0]"
             size="large"
           >
-            <Option value="nature">Nature</Option>
-            <Option value="technology">Technology</Option>
-            <Option value="people">People</Option>
+            <Option value="payscales">PayScale’s</Option>
+            <Option value="binder">Binder</Option>
+            <Option value="slicks">Slicks</Option>
+            <Option value="career_progress_sheets">
+              Career Progress Sheets
+            </Option>
+            <Option value="agreements_examples">Agreements Examples</Option>
+            <Option value="basafasa_information">BASAFASA Information</Option>
+            <Option value="blitz_trips">Blitz Trips</Option>
+            <Option value="incentives">Incentives</Option>
+            <Option value="playbook">Playbook</Option>
           </Select>
         </div>
-
         <Upload.Dragger
           name="file"
           multiple={false}
@@ -60,7 +67,13 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
         >
           <div className="flex justify-center items-center ">
             <p className="ant-upload-drag-icon p-1 border rounded-lg w-[162px]">
-              <UploadOutlined style={{ fontSize: "18px", color: "#697B8C",paddingRight: "10px" }} />
+              <UploadOutlined
+                style={{
+                  fontSize: "18px",
+                  color: "#697B8C",
+                  paddingRight: "10px",
+                }}
+              />
               Click to upload
             </p>
           </div>

@@ -5,7 +5,6 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-
 interface LoginFormValues {
   email: string;
   password: string;
@@ -47,12 +46,13 @@ const Login: React.FC = () => {
         <Form.Item
           label="Password"
           name="password"
-          
           rules={[{ required: true, message: "Please enter your password" }]}
         >
           <Input.Password
-          iconRender={(visible) => (visible ? <FaEye /> : <FaEyeSlash/>)}
-          placeholder="**********" style={{ height: "50px", width: "481px" }} />
+            iconRender={(visible) => (visible ? <FaEye /> : <FaEyeSlash />)}
+            placeholder="**********"
+            style={{ height: "50px", width: "481px" }}
+          />
         </Form.Item>
         <Form.Item>
           <div className="flex justify-between items-center">

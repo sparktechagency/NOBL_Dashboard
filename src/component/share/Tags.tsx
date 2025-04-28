@@ -35,7 +35,6 @@ const Tags: React.FC<TagsProps> = ({
     "Image Category",
     "Documents Category",
   ];
-
   return (
     <div>
       {/* Category Buttons */}
@@ -57,16 +56,85 @@ const Tags: React.FC<TagsProps> = ({
       </div>
 
       {/* Tags List */}
-      {tags.map((tag, index) => (
-        <Tag
-          key={index}
-          closable
-          onClose={() => handleClose(tag)}
-          className="mb-2 px-7 py-2 bg-[#FFFFFF] font-medium text-base rounded-full font-popping"
-        >
-          {tag}
-        </Tag>
-      ))}
+      {tags.map((tag, index) => {
+        return (
+          <Tag
+            key={index}
+            // closable={isClosable}
+            className="mb-2 px-7 py-3 bg-[#FFFFFF] font-medium text-base rounded-3xl border-none font-popping"
+          >
+            <div className="flex flex-row-reverse items-center gap-6">
+              {selectedCategory === "Video Category" ? (
+                <div className="flex gap-2">
+                  <svg
+                    width="38"
+                    height="38"
+                    viewBox="0 0 38 38"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      width="38.0025"
+                      height="38.0025"
+                      rx="6"
+                      fill="#E5FFEC"
+                    />
+                    <path
+                      d="M27.71 14.0425C28.1 13.6525 28.1 13.0025 27.71 12.6325L25.37 10.2925C25 9.9025 24.35 9.9025 23.96 10.2925L22.12 12.1225L25.87 15.8725M10 24.2525V28.0025H13.75L24.81 16.9325L21.06 13.1825L10 24.2525Z"
+                      fill="#23AA49"
+                    />
+                  </svg>
+                  <svg
+                    onClick={() => handleClose(tag)}
+                    width="34"
+                    height="38"
+                    viewBox="0 0 34 38"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="0.00250244"
+                      y="0.000976562"
+                      width="34"
+                      height="38"
+                      rx="6"
+                      fill="#FFE3E3"
+                    />
+                    <path
+                      d="M24.0025 11.001H20.5025L19.5025 10.001H14.5025L13.5025 11.001H10.0025V13.001H24.0025M11.0025 26.001C11.0025 26.5314 11.2132 27.0401 11.5883 27.4152C11.9634 27.7903 12.4721 28.001 13.0025 28.001H21.0025C21.5329 28.001 22.0416 27.7903 22.4167 27.4152C22.7918 27.0401 23.0025 26.5314 23.0025 26.001V14.001H11.0025V26.001Z"
+                      fill="#FF0000"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                <svg
+                  onClick={() => handleClose(tag)}
+                  width="34"
+                  height="38"
+                  viewBox="0 0 34 38"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="0.00250244"
+                    y="0.000976562"
+                    width="34"
+                    height="38"
+                    rx="6"
+                    fill="#FFE3E3"
+                  />
+                  <path
+                    d="M24.0025 11.001H20.5025L19.5025 10.001H14.5025L13.5025 11.001H10.0025V13.001H24.0025M11.0025 26.001C11.0025 26.5314 11.2132 27.0401 11.5883 27.4152C11.9634 27.7903 12.4721 28.001 13.0025 28.001H21.0025C21.5329 28.001 22.0416 27.7903 22.4167 27.4152C22.7918 27.0401 23.0025 26.5314 23.0025 26.001V14.001H11.0025V26.001Z"
+                    fill="#FF0000"
+                  />
+                </svg>
+              )}
+
+              {tag}
+            </div>
+          </Tag>
+        );
+      })}
 
       {/* Modal to add a new tag */}
       <CategoryModal

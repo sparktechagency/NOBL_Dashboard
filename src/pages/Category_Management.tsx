@@ -11,12 +11,15 @@ const CategoryManagement: React.FC<Props> = () => {
   });
 
   const [inputVisible, setInputVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("Video Category"); // initially select Video Category
+  const [selectedCategory, setSelectedCategory] =
+    useState<string>("Video Category"); // initially select Video Category
 
   const handleClose = (removedTag: string) => {
     setTags((prev) => ({
       ...prev,
-      [selectedCategory]: prev[selectedCategory].filter((tag) => tag !== removedTag),
+      [selectedCategory]: prev[selectedCategory].filter(
+        (tag) => tag !== removedTag
+      ),
     }));
   };
 

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Modal, Upload, Select, Button } from "antd";
-import { UploadOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import React from "react";
+import { Modal } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import pdfFile from "../../assets/Images/dashboard/Resume.pdf";
-const { Option } = Select;
 
 interface DocumentViewModalProps {
   isModalOpen: boolean;
@@ -14,11 +16,6 @@ const DocumentViewModal: React.FC<DocumentViewModalProps> = ({
   setIsModalOpen,
 }) => {
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleUpload = () => {
-    // TODO: handle file and category submission
     setIsModalOpen(false);
   };
 
@@ -42,28 +39,11 @@ const DocumentViewModal: React.FC<DocumentViewModalProps> = ({
       </div>
 
       {/* PDF View section */}
-      <div className="p-6">
-        <iframe
-          src={pdfFile}
-          title="PDF Viewer"
-          className="w-full relative"
-          style={{ height: "80vh", border: "none" }}
-        />
-        <Button className="text-[#043249] font-popping text-lg font-medium absolute top-14 right-14">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M17.71 4.04104C18.1 3.65104 18.1 3.00104 17.71 2.63104L15.37 0.291035C15 -0.0989648 14.35 -0.0989648 13.96 0.291035L12.12 2.12104L15.87 5.87104M0 14.251V18.001H3.75L14.81 6.93104L11.06 3.18104L0 14.251Z"
-              fill="#043249"
-            />
-          </svg>
-          Edit
-        </Button>
+      <div className="p-6" style={{ height: "80vh" }}>
+        {/* Worker loads PDF.js worker */}
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+          <Viewer fileUrl={pdfFile} />
+        </Worker>
       </div>
     </Modal>
   );
