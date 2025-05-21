@@ -1,14 +1,77 @@
 import React, { useState } from "react";
-import { Button, Modal } from "antd";
 
-const UserModal: React.FC = ({ isModalOpen, setIsModalOpen }: any) => {
-  const [addedMamber, setAddedMamber] = useState();
-  const showModal = () => {
-    setIsModalOpen(true);
+import { Modal } from "antd";
+import Swal from "sweetalert2";
+import { useAddUserMutation } from "../../../redux/apiSlices/admin/userSlices";
+
+const UserModal: React.FC<{
+  isModalOpen: boolean;
+  setIsModalOpen: (value: boolean) => void;
+}> = ({ isModalOpen, setIsModalOpen }) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    user_name: "",
+    badge_number: "",
+    password: "",
+  });
+
+  const [addNewUser] = useAddUserMutation();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      // Validate form data
+      if (
+        !formData.email ||
+        !formData.user_name ||
+        !formData.badge_number ||
+        !formData.password
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please fill all fields!",
+        });
+        return;
+      }
+
+      // Call the API
+      await addNewUser(formData).unwrap();
+
+      // Show success message
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "User added successfully",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // Close modal and reset form
+      setIsModalOpen(false);
+      setFormData({
+        email: "",
+        user_name: "",
+        badge_number: "",
+        password: "",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to add user. Please try again.",
+      });
+      console.error("Failed to add user:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -20,21 +83,21 @@ const UserModal: React.FC = ({ isModalOpen, setIsModalOpen }: any) => {
       <Modal
         width={569}
         height={400}
-        
         title={
           <div className="text-center bg-[#4b5320] text-white py-4 font-roboto text-[18px]  font-semibold rounded-t-lg">
             Add a member
           </div>
         }
         open={isModalOpen}
-        onOk={addedMamber}
         onCancel={handleCancel}
         footer={null}
       >
-        <div className="">
-          {/* add mamber form */}
-
-          <form className="flex flex-col justify-center items-center  ">
+        <div className="rounded-b-lg">
+          {/* add mamber form - EXACTLY THE SAME DESIGN AS BEFORE */}
+          <form
+            className="flex flex-col justify-center items-center"
+            onSubmit={handleSubmit}
+          >
             {/* email  */}
             <div className="pt-6">
               <label className="block mb-2 text-black text-lg font-medium font-roboto">
@@ -43,7 +106,9 @@ const UserModal: React.FC = ({ isModalOpen, setIsModalOpen }: any) => {
               <input
                 type="email"
                 id="email"
-                className="shadow-xs w-[500px] bg-[#f0f0f0]   p-4 text-gray-900 text-sm rounded-lg  block p-2.5dark:placeholder-gray-400  "
+                value={formData.email}
+                onChange={handleInputChange}
+                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
                 placeholder="name@flowbite.com"
                 required
               />
@@ -54,9 +119,11 @@ const UserModal: React.FC = ({ isModalOpen, setIsModalOpen }: any) => {
                 Username
               </label>
               <input
-                type="name"
-                id="name"
-                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400  "
+                type="text"
+                id="user_name"
+                value={formData.user_name}
+                onChange={handleInputChange}
+                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
                 placeholder="Set an username"
                 required
               />
@@ -68,8 +135,10 @@ const UserModal: React.FC = ({ isModalOpen, setIsModalOpen }: any) => {
               </label>
               <input
                 type="number"
-                id="number"
-                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400  "
+                id="badge_number"
+                value={formData.badge_number}
+                onChange={handleInputChange}
+                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
                 placeholder="5468437"
                 required
               />
@@ -80,14 +149,21 @@ const UserModal: React.FC = ({ isModalOpen, setIsModalOpen }: any) => {
                 Password
               </label>
               <input
-                type="email"
-                id="email"
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={handleInputChange}
                 className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
                 placeholder="Set a password"
                 required
               />
             </div>
-            <button type="submit" className="w-[500px] p-3 bg-[#4B5320] mt-12 mb-9 rounded-lg" onClick={()=> setAddedMamber(handleOk)}>ADD</button>
+            <button
+              type="submit"
+              className="w-[500px] p-3 bg-[#4B5320] mt-12 mb-9 rounded-lg text-white"
+            >
+              ADD
+            </button>
           </form>
         </div>
       </Modal>

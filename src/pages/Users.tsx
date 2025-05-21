@@ -1,10 +1,13 @@
-import { Button } from "antd";
-import React, { useState } from "react";
-import UserTable from "../component/Users/UserTable";
 import UserModal from "../component/Users/UserModal";
-import PhotoAddModal from "../component/PhotoLibary/PhotoAddModal";
+import UserTable from "../component/Users/UserTable";
+import { useState } from "react";
 
 function Users() {
+  const [search, setSearch] = useState("");
+  const handleSearch = (e: any) => {
+    setSearch(e.target.value);
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -20,6 +23,8 @@ function Users() {
             placeholder="Search for user"
             name=""
             id=""
+            value={search}
+            onChange={handleSearch}
           />
           <button className="bg-[#4b5320] p-[18px]">
             <svg
@@ -64,12 +69,9 @@ function Users() {
         </button>
       </div>
       {/* user modal */}
-      <UserModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      ></UserModal>
+      <UserModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
 
-      <UserTable></UserTable>
+      <UserTable search={search} />
     </div>
   );
 }

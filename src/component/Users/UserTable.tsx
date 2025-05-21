@@ -1,20 +1,49 @@
-import React, { useState } from "react";
-import { Table, Button, Space, Image, Popconfirm, message, Modal } from "antd";
-import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Image, Modal, Space, Table } from "antd";
+import {
+  useDeleteUserMutation,
+  useGetUsersQuery,
+} from "../../../redux/apiSlices/admin/userSlices";
+
 import type { PopconfirmProps } from "antd";
-import userPageAvater from "../../assets/Images/dashboard/userPageAvater.png";
-import profileImg from "../../assets/Images/dashboard/profile.png";
-const UserTable: React.FC = () => {
+import Swal from "sweetalert2";
+import { useState } from "react";
+
+const UserTable = ({ search }) => {
+  const [page, setPage] = useState(1);
+  const { data: UsersData } = useGetUsersQuery({
+    params: {
+      page: page,
+      per_page: 10,
+      search: search,
+    },
+  });
+  const [deleteUser] = useDeleteUserMutation();
+  // console.log(UsersData);
   // delete modal
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     console.log(e);
-    message.success("Click on Yes");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteUser(e?.id).then((res) => {
+          console.log(res);
+          if (res?.data?.status) {
+            Swal.fire("Deleted!", res?.data?.message, "success");
+          } else {
+            Swal.fire("Error!", res?.data?.message, "error");
+          }
+        });
+      }
+    });
   };
 
-  const cancel: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
-    message.error("Click on No");
-  };
   // delete modal end
 
   const columns = [
@@ -22,18 +51,27 @@ const UserTable: React.FC = () => {
       title: "Sl. no.",
       dataIndex: "serial",
       key: "serial",
-      align: "center",
+      render: (name: any, record: any, index: number) => {
+        return (
+          <Space>
+            <span>{index + 1}</span>
+          </Space>
+        );
+      },
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "Name",
-      render: (name: any) => (
-        <Space>
-          <Image width={40} src={name.thumbnail} alt="thumbnail" />
-          <span>{name.title}</span>
-        </Space>
-      ),
+      render: (name: any, record: any) => {
+        console.log(name);
+        return (
+          <Space>
+            <Image width={40} src={record?.photo} alt="thumbnail" />
+            <span>{name}</span>
+          </Space>
+        );
+      },
     },
     {
       title: "Email",
@@ -54,7 +92,7 @@ const UserTable: React.FC = () => {
       render: (_, record) => (
         <Space size="middle">
           {/* view button */}
-          <div onClick={showModal}>
+          <div onClick={() => showModal(record)}>
             <svg
               width="37"
               height="37"
@@ -70,115 +108,38 @@ const UserTable: React.FC = () => {
             </svg>
           </div>
           {/* delete button */}
-          <div>
-            <Popconfirm
-              title="Are you sure to delete this user ?"
-             
-              onConfirm={confirm}
-              onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
+          <div onClick={() => confirm(record)}>
+            <svg
+              width="37"
+              height="37"
+              viewBox="0 0 37 37"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                width="37"
-                height="37"
-                viewBox="0 0 37 37"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="37" height="37" rx="5" fill="#FFE6E6" />
-                <path
-                  d="M23 16V26H15V16H23ZM21.5 10H16.5L15.5 11H12V13H26V11H22.5L21.5 10ZM25 14H13V26C13 27.1 13.9 28 15 28H23C24.1 28 25 27.1 25 26V14Z"
-                  fill="#FF0000"
-                />
-              </svg>
-            </Popconfirm>
+              <rect width="37" height="37" rx="5" fill="#FFE6E6" />
+              <path
+                d="M23 16V26H15V16H23ZM21.5 10H16.5L15.5 11H12V13H26V11H22.5L21.5 10ZM25 14H13V26C13 27.1 13.9 28 15 28H23C24.1 28 25 27.1 25 26V14Z"
+                fill="#FF0000"
+              />
+            </svg>
           </div>
         </Space>
       ),
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      serial: "001",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 1",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-    {
-      key: "2",
-      serial: "002",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 2",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-    {
-      key: "3",
-      serial: "003",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 3",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-    {
-      key: "4",
-      serial: "004",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 4",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-    {
-      key: "5",
-      serial: "005",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 5",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-    {
-      key: "6",
-      serial: "006",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 6",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-    {
-      key: "7",
-      serial: "007",
-      name: {
-        thumbnail: userPageAvater,
-        title: "Training Video Part 7",
-      },
-      email: "example@gmail.com",
-      address: "Dhaka, Bangladesh",
-    },
-  ];
   // view modal
+  const [selectItem, setSelectItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showModal = () => {
+  const showModal = (record) => {
+    setSelectItem(record);
+    console.log(record);
     setIsModalOpen(true);
   };
 
   const handleOk = () => {
+    setSelectItem(null);
     setIsModalOpen(false);
   };
 
@@ -192,9 +153,14 @@ const UserTable: React.FC = () => {
         columns={columns}
         rowClassName={() => "table-row-gap"}
         className="custom-ant-table"
-        dataSource={data}
-        pagination={true}
-        
+        dataSource={UsersData?.data?.data}
+        pagination={{
+          current: page,
+          pageSize: 10,
+          total: UsersData?.data?.total,
+          onChange: (page) => setPage(page),
+        }}
+        scroll={{ x: 1300 }}
       />
       <Modal
         title={null}
@@ -205,38 +171,41 @@ const UserTable: React.FC = () => {
       >
         <div className="flex flex-col items-center space-y-4 px-9 py-10">
           {/* Profile Picture */}
-         
-            <img
-              src={profileImg}
-              alt="Profile"
-              className="w-20 h-20 rounded-full object-cover"
-            />
 
-            <h3 className="font-roboto pb-10 font-medium text-[20px] text-[#000000]">
-              Md. Abid Hasan
-            </h3>
-   
+          <img
+            src={selectItem?.photo}
+            alt="Profile"
+            className="w-20 h-20 rounded-full object-cover"
+          />
+
+          <h3 className="font-roboto pb-10 font-medium text-[20px] text-[#000000]">
+            {selectItem?.name}
+          </h3>
 
           {/* Info Section */}
           <div className="w-full space-y-4 text-base mb-14">
             <div className="flex justify-between">
               <span className="font-normal text-[#000000]">Email:</span>
               <span className="text-[#000000] font-semibold">
-                example@gmail.com
+                {selectItem?.email}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="font-normal text-[#000000]">Username:</span>
-              <span className="text-[#000000] font-semibold">example</span>
+              <span className="text-[#000000] font-semibold">
+                {selectItem?.username}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="font-normal text-[#000000]">Badge Number:</span>
-              <span className="text-[#000000] font-semibold">74857435</span>
+              <span className="text-[#000000] font-semibold">
+                {selectItem?.badge_number}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="font-normal text-[#000000]">Address:</span>
               <span className="text-[#000000] font-semibold">
-                Dhaka, Bangladesh.
+                {selectItem?.address}
               </span>
             </div>
           </div>
