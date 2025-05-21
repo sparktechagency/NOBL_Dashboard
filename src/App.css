@@ -230,3 +230,102 @@ span.ant-menu-title-content,
   color: #fff !important;
   background-color: red !important;
 }
+
+
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+
+
+.not-found-svg {
+  width: 300px;
+  height: 200px;
+}
+
+.circle {
+  animation: bounce 2s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.exclamation {
+  animation: shake 0.5s infinite alternate;
+}
+
+.magnifying-glass {
+  animation: rotate 4s linear infinite;
+  transform-origin: 320px 100px;
+}
+
+.not-found-title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.not-found-message {
+  font-size: .7rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.go-back-button {
+  padding: 12px 30px;
+  background-color: #4B5320;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.go-back-button:hover {
+  background-color: #343915;
+  transform: scale(1.05);
+}
+
+
+ :where(.css-dev-only-do-not-override-qnu6hi).ant-form-vertical .ant-form-item:not(.ant-form-item-horizontal) .ant-form-item-label >label {
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #636363 !important;
+}
+
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

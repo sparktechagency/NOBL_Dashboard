@@ -1,9 +1,11 @@
-import React from "react";
-import AuthWrapper from "../component/share/AuthWrapper";
-import Title from "../component/share/Title";
 import { Button, Checkbox, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+
+import AuthWrapper from "../component/share/AuthWrapper";
+import React from "react";
+import Swal from "sweetalert2";
+import { useLoginMutation } from "../../redux/apiSlices/authApiSlices";
 
 interface LoginFormValues {
   email: string;
@@ -14,9 +16,37 @@ interface LoginFormValues {
 const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values: LoginFormValues) => {
-    console.log(values);
-    navigate("/");
+  const [login] = useLoginMutation();
+
+  const onFinish = async (values: LoginFormValues) => {
+    // console.log(values);
+    try {
+      const res = await login(values).unwrap();
+      console.log(res);
+      if (res.status) {
+        localStorage.setItem("token", res.data?.access_token);
+        // localStorage.setItem("user",res.data?.user)
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+        navigate("/");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error?.message,
+      });
+    }
   };
 
   return (
@@ -40,7 +70,12 @@ const Login: React.FC = () => {
         >
           <Input
             placeholder="abidhasan@gmail.com"
-            style={{ height: "50px", width: "481px",backgroundColor: "#fefefe"}}
+            type="email"
+            style={{
+              height: "50px",
+              width: "481px",
+              backgroundColor: "#fefefe",
+            }}
             className="bg-[#fefefe]"
           />
         </Form.Item>

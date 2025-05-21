@@ -1,12 +1,13 @@
-import React from "react";
-import { Avatar, Badge, Button, Layout, Menu, Popover } from "antd";
-import { Bell, Lock, LogOut, User, User2Icon } from "lucide-react";
-import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
-import logo from "../../assets/Images/NOBLLogo.png";
-import avatar from "../../assets/Images/avatar.png";
-
-import SubMenu from "antd/es/menu/SubMenu";
 import "./Styled_components.css";
+
+import { Button, Layout, Menu } from "antd";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Lock, User2Icon } from "lucide-react";
+
+import React from "react";
+import SubMenu from "antd/es/menu/SubMenu";
+import logo from "../../assets/Images/NOBLLogo.png";
+import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
 
 const { Header, Sider, Content } = Layout;
 
@@ -410,13 +411,18 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { data: userData } = useGetProfileQuery({});
+
+  // console.log(userData);
+
   const handleNotifications = () => {
     navigate("settings/chagePassword");
   };
 
-  const handleLogout = ()=>{
-    navigate('/auth/login')
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/auth");
+  };
 
   const getTitle = () => {
     switch (location.pathname) {
@@ -639,8 +645,10 @@ const Dashboard: React.FC = () => {
           })}
         </Menu>
         <div className="mx-7 mt-36">
-          <Button onClick={()=> handleLogout()} className="gap-3 w-full flex justify-start p-6 bg-[#FFE8E8] text-base font-popping font-semibold text-[#FF0000] ">
-            
+          <Button
+            onClick={() => handleLogout()}
+            className="gap-3 w-full flex justify-start p-6 bg-[#FFE8E8] text-base font-popping font-semibold text-[#FF0000] "
+          >
             <svg
               width="37"
               height="38"
@@ -688,9 +696,9 @@ const Dashboard: React.FC = () => {
             >
               {/* avater */}
               <div className="flex justify-center items-center gap-4">
-                <img src={avatar} />
+                <img src={userData?.data?.photo} className="h-12 w-12" />
                 <h2 className="font-roboto font-semibold text-[28]">
-                  John Doe
+                  {userData?.data?.name}
                 </h2>
               </div>
             </div>

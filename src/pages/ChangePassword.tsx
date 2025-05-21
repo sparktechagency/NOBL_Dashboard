@@ -1,51 +1,114 @@
-import React, { useState } from "react";
-import profileIMg from "../assets/Images/dashboard/profile.png";
+import { Form, Input, Tabs, Upload, message } from "antd";
+import { useEffect, useState } from "react";
+import {
+  useGetProfileQuery,
+  useResetPasswordMutation,
+  useUpdateProfileMutation,
+} from "../../redux/apiSlices/authApiSlices";
+
+import type { TabsProps } from "antd";
 import uplodIcon from "../assets/Images/dashboard/edit.png";
-import { Button, Checkbox, Form, Input, Tabs, Upload } from "antd";
-import type { FormProps, TabsProps } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 
 // tabs 1 type
 type FieldType = {
-  title?: string;
-  email?: string;
-  remember?: string;
+  name?: string;
+  address?: string;
 };
 
 // tabs 2 type
 type FieldTypePassTab = {
-  currentPassword?: string;
-  newPassword?: string;
-  ConfirmNewPassword?: string;
+  password?: string;
+  c_password?: string;
 };
-// tabs 1
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log("Success:", values);
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
-// tabs 1 end
-
-// tabs 2
-const onFinishTabs2: FormProps<FieldTypePassTab>["onFinish"] = (values) => {
-  console.log("Success:", values);
-};
-
-const onFinishFailedTabs2: FormProps<FieldTypePassTab>["onFinishFailed"] = (
-  errorInfo
-) => {
-  console.log("Failed:", errorInfo);
-};
-// tabs 2 end
-
-// profile img1 img
 
 const ChangePassword = () => {
+  const { data: userData, isLoading: profileLoading } = useGetProfileQuery({});
+  const [updateProfile] = useUpdateProfileMutation();
+  const [resetPassword] = useResetPasswordMutation();
+  const [form] = Form.useForm();
+  const [formPassword] = Form.useForm();
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [fileToUpload, setFileToUpload] = useState<File | null>(null);
+
+  // Handle profile update
+  const handleProfileUpdate = async (values: FieldType) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", values.name || "");
+      formData.append("address", values.address || "");
+
+      if (fileToUpload) {
+        formData.append("photo", fileToUpload);
+      }
+
+      const response = await updateProfile(formData).unwrap();
+      message.success("Profile updated successfully");
+
+      // Update the preview image if a new one was uploaded
+      if (fileToUpload) {
+        setPreviewImage(URL.createObjectURL(fileToUpload));
+      }
+
+      // Reset the file upload state
+      setFileToUpload(null);
+    } catch (err) {
+      message.error("Failed to update profile");
+      console.error("Update profile error:", err);
+    }
+  };
+
+  // Handle password reset
+  const handlePasswordReset = async (values: FieldTypePassTab) => {
+    try {
+      await resetPassword({
+        password: values.password,
+        c_password: values.c_password,
+      }).unwrap();
+      message.success("Password changed successfully");
+      formPassword.resetFields();
+    } catch (err) {
+      message.error("Failed to change password");
+      console.error("Password change error:", err);
+    }
+  };
+
+  // Handle before image upload
+  const handleBeforeUpload = (file: File) => {
+    const isImage = file.type.startsWith("image/");
+    if (!isImage) {
+      message.error("Please upload an image file");
+      return false;
+    }
+
+    setPreviewImage(URL.createObjectURL(file));
+    setFileToUpload(file);
+    return false; // prevents auto upload
+  };
+
   const onChange = (key: string) => {
     console.log(key);
   };
+
+  useEffect(() => {
+    console.log("User Data:", userData); // Debug log to verify data
+    if (userData?.data) {
+      form.setFieldsValue({
+        name: userData.data.name || "",
+        address: userData.data.address || "",
+      });
+      if (userData.data.photo) {
+        setPreviewImage(userData.data.photo);
+      }
+    }
+  }, [userData, form]);
+
+  if (profileLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   const items: TabsProps["items"] = [
     {
@@ -53,47 +116,41 @@ const ChangePassword = () => {
       label: "Edit profile",
       children: (
         <Form
-          name="edit-profile"
-          // style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
+          form={form}
+          onFinish={handleProfileUpdate}
           autoComplete="off"
+          layout="vertical"
         >
-          {/*Edit profile  title input*/}
           <Form.Item<FieldType>
-            name="title"
-            rules={[{ required: true, message: "Please input your title!" }]}
+            name="name"
+            rules={[{ required: true, message: "Please input your name!" }]}
             className="mb-7"
             colon={false}
-            label=""
+            label="Name"
           >
-            <span className="font-semibold font-roboto text-lg block mb-2">
-              Title
-            </span>
             <Input
-              placeholder="John Doe"
-              className="p-4 border-none w-[1112px] bg-[#ffffff]"
+              placeholder="Write name"
+              className="p-4 border-none text-sm text-gray-900 font-medium w-[1112px] bg-[#ffffff]"
             />
           </Form.Item>
-          {/*Edit profile email input */}
+
           <Form.Item<FieldType>
-            label=""
-            name="email"
-            rules={[{ required: true, message: "Please input your email!" }]}
+            name="address"
+            rules={[{ required: true, message: "Please input your address!" }]}
             colon={false}
+            label="Address"
           >
-            <span className="font-semibold font-roboto text-lg block mb-2">
-              Email
-            </span>
             <Input
-              placeholder="example@gmail.com"
-              className="p-4 border-none w-[1112px] bg-[#ffffff]"
+              placeholder="Write address"
+              className="p-4 border-none text-sm text-gray-900 font-medium w-[1112px] bg-[#ffffff]"
             />
           </Form.Item>
-          {/*Edit profile save button */}
+
           <div className="text-center mt-5 ">
-            <button className="text-white bg-[#4B5320]  font-semibold font-popping text-xl py-2 px-10 rounded-md ">
+            <button
+              type="submit"
+              className="text-white bg-[#4B5320] font-semibold font-popping text-xl py-2 px-10 rounded-md"
+            >
               Save
             </button>
           </div>
@@ -105,79 +162,54 @@ const ChangePassword = () => {
       label: "Change Password",
       children: (
         <Form
-          name="change-password"
-          // style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={onFinishTabs2}
-          onFinishFailed={onFinishFailedTabs2}
+          form={formPassword}
+          onFinish={handlePasswordReset}
           autoComplete="off"
+          layout="vertical"
         >
-          {/*Edit profile  title input*/}
           <Form.Item<FieldTypePassTab>
-            name="currentPassword"
-            label=""
-            rules={[
-              { required: true, message: "Please input your Current Password" },
-            ]}
-            className="mb-7"
+            name="password"
+            rules={[{ required: true, message: "Please input new password" }]}
+            className="mb-7 "
             colon={false}
+            label="New password"
           >
-            <span className="font-semibold font-roboto text-lg block mb-2">
-              Current password
-            </span>
             <Input.Password
               placeholder="**********"
-              className="p-4 border-none w-[1112px] bg-[#ffffff]"
+              className="p-4 text-sm text-gray-900 font-medium border-none w-[1112px] bg-[#ffffff]"
             />
           </Form.Item>
-          {/*Edit profile email input */}
+
           <Form.Item<FieldTypePassTab>
-            label=""
-            name="newPassword"
-            rules={[{ required: true, message: "Please Input New Password" }]}
-            colon={false}
-          >
-            <span className="font-semibold font-roboto text-lg block mb-2">
-              New password
-            </span>
-            <Input.Password
-              placeholder="**********"
-              className="p-4 border-none w-[1112px] bg-[#ffffff]"
-            />
-          </Form.Item>
-          {/*Edit profile email input */}
-          <Form.Item<FieldTypePassTab>
-            name="ConfirmNewPassword"
-            label=""
-            dependencies={["newPassword"]}
+            name="c_password"
+            dependencies={["password"]}
             rules={[
-              { required: true, message: "Please input Confirm new password" },
+              { required: true, message: "Please confirm new password" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("newPassword") === value) {
+                  if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error(
-                      "The two passwords that you entered do not match!"
-                    )
+                    new Error("The two passwords do not match!")
                   );
                 },
               }),
             ]}
             colon={false}
+            label="Confirm new password"
           >
-            <span className="font-semibold font-roboto text-lg block mb-2">
-              Confirm new password
-            </span>
             <Input.Password
               placeholder="**********"
-              className="p-4 border-none w-[1112px] bg-[#ffffff]"
+              className="p-4 text-sm text-gray-900 font-medium border-none w-[1112px] bg-[#ffffff]"
             />
           </Form.Item>
-          {/*Edit profile save button */}
+
           <div className="text-center mt-5 ">
-            <button className="text-white bg-[#4B5320]  font-semibold font-popping text-xl py-2 px-10 rounded-md ">
+            <button
+              type="submit"
+              className="text-white bg-[#4B5320] font-semibold font-popping text-xl py-2 px-10 rounded-md"
+            >
               Save
             </button>
           </div>
@@ -185,47 +217,43 @@ const ChangePassword = () => {
       ),
     },
   ];
-  // tabs end
-
-  // profile img change functionality
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-
-  // Called before upload
-  const handleBeforeUpload = (file: File) => {
-    const isImage = file.type.startsWith("image/");
-    if (!isImage) {
-      alert("Please upload an image file.");
-      return false;
-    }
-
-    // Create a preview URL and save to state
-    setPreviewImage(URL.createObjectURL(file));
-    return false; // prevents auto upload
-  };
 
   return (
     <div>
       {/* profile section  */}
-      <div className="bg-white  mx-52 mt-5 rounded-lg flex flex-col justify-center items-center py-8">
+      <div className="bg-white mx-52 mt-5 rounded-lg flex flex-col justify-center items-center py-8">
         <div className="relative">
-          {previewImage ? <img src={previewImage} alt="" className="w-[137px] rounded-full h-[137ppx] object-cover" /> : <img src={profileIMg} alt="" />}
+          <img
+            src={previewImage || userData?.data?.photo}
+            alt="Profile"
+            className="w-[137px] rounded-full h-[137px] object-cover"
+          />
+
           <Upload
             showUploadList={false}
             beforeUpload={handleBeforeUpload}
             accept="image/*"
           >
-            <button className="w-8 bg-white flex justify-center items-center p-2 shadow-lg rounded-full absolute right-0 bottom-5">
-              <img src={uplodIcon} className="w-5" alt="" />
+            <button
+              type="button"
+              className="w-8 bg-white flex justify-center items-center p-2 shadow-lg rounded-full absolute right-0 bottom-5"
+            >
+              <img src={uplodIcon} className="w-5" alt="Upload" />
             </button>
           </Upload>
         </div>
-        <h3 className="font-roboto font-medium text-[30px]">Jhon Doe</h3>
+        <h3 className="font-roboto font-medium text-[30px]">
+          {userData?.data?.name}
+        </h3>
         <p className="text-[#B1A8A8] font-roboto font-medium text-xl">
-          example@gmail.com
+          {userData?.data?.email}
+        </p>
+        <p className="text-[#B1A8A8] font-roboto font-medium text-xl">
+          {userData?.data?.address}
         </p>
       </div>
 
-      {/* and tabs */}
+      {/* tabs */}
       <div className="mx-52">
         <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
       </div>

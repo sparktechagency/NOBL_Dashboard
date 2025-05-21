@@ -1,9 +1,10 @@
-import React from "react";
-import AuthWrapper from "../component/share/AuthWrapper";
-import Title from "../component/share/Title";
 import { Button, Form, Input } from "antd";
+
+import AuthWrapper from "../component/share/AuthWrapper";
+import React from "react";
+import Swal from "sweetalert2";
+import { useForgotPasswordMutation } from "../../redux/apiSlices/authApiSlices";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/Images/logoChoozy.svg";
 
 interface ForgetPasswordFormValues {
   email: string;
@@ -11,10 +12,29 @@ interface ForgetPasswordFormValues {
 
 const ForgetPassword: React.FC = () => {
   const navigate = useNavigate();
+  const [forgotPassword] = useForgotPasswordMutation();
 
-  const onFinish = (values: ForgetPasswordFormValues) => {
+  const onFinish = async (values: ForgetPasswordFormValues) => {
     console.log(values);
-    navigate("/auth/verify");
+    try {
+      const res = await forgotPassword(values).unwrap();
+      if (res?.status) {
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error?.data || error?.message,
+      });
+    }
+    // navigate("/auth/verify");
   };
 
   return (
