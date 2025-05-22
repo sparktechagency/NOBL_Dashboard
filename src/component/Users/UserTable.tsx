@@ -10,10 +10,11 @@ import { useState } from "react";
 
 const UserTable = ({ search }) => {
   const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(7);
   const { data: UsersData } = useGetUsersQuery({
     params: {
       page: page,
-      per_page: 10,
+      per_page: per_page,
       search: search,
     },
   });
@@ -156,11 +157,10 @@ const UserTable = ({ search }) => {
         dataSource={UsersData?.data?.data}
         pagination={{
           current: page,
-          pageSize: 10,
+          pageSize: per_page,
           total: UsersData?.data?.total,
           onChange: (page) => setPage(page),
         }}
-        scroll={{ x: 1300 }}
       />
       <Modal
         title={null}

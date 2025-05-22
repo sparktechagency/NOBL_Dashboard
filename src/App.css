@@ -302,6 +302,10 @@ span.ant-menu-title-content,
   color: #636363 !important;
 }
 
+:where(.css-dev-only-do-not-override-qnu6hi).ant-modal .ant-modal-body {
+  padding: 0px !important;
+  border-radius: 0px 0px 6px 6px !important;
+}
 
 @keyframes bounce {
   0%, 100% {

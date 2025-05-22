@@ -1,36 +1,21 @@
 import React, { useState } from "react";
+
+import { useGetCategoryQuery } from "../../redux/apiSlices/admin/categorySlices";
 import Tags from "../component/share/Tags";
 
 interface Props {}
 
 const CategoryManagement: React.FC<Props> = () => {
-  const [tags, setTags] = useState({
-    "Video Category": ["Property", "Electric"],
-    "Image Category": ["Study", "Vehicle"],
-    "Documents Category": ["Law", "Notes"],
-  });
-
   const [inputVisible, setInputVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<string>("Video Category"); // initially select Video Category
 
-  const handleClose = (removedTag: string) => {
-    setTags((prev) => ({
-      ...prev,
-      [selectedCategory]: prev[selectedCategory].filter(
-        (tag) => tag !== removedTag
-      ),
-    }));
-  };
-
-  const handleAddNewCategory = (newCategory: string) => {
-    if (newCategory && !tags[selectedCategory].includes(newCategory)) {
-      setTags((prev) => ({
-        ...prev,
-        [selectedCategory]: [...prev[selectedCategory], newCategory],
-      }));
-    }
-  };
+  const { data: categoryData } = useGetCategoryQuery({
+    params: {
+      type: selectedCategory,
+      per_page: 500,
+    },
+  });
 
   const triggerTagInput = () => {
     setInputVisible(true);
@@ -38,11 +23,9 @@ const CategoryManagement: React.FC<Props> = () => {
 
   return (
     <div className="p-4">
-      <div className="w-1/3">
+      <div className="">
         <Tags
-          tags={tags[selectedCategory] || []}
-          handleAddNewCategory={handleAddNewCategory}
-          handleClose={handleClose}
+          tags={categoryData?.data?.data || []}
           inputVisible={inputVisible}
           setInputVisible={setInputVisible}
           selectedCategory={selectedCategory}

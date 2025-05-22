@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { Button, Form, Input, Modal } from "antd";
 
-import { Modal } from "antd";
+import React from "react";
 import Swal from "sweetalert2";
 import { useAddUserMutation } from "../../../redux/apiSlices/admin/userSlices";
 
@@ -8,44 +8,13 @@ const UserModal: React.FC<{
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
 }> = ({ isModalOpen, setIsModalOpen }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    user_name: "",
-    badge_number: "",
-    password: "",
-  });
-
+  const [form] = Form.useForm();
   const [addNewUser] = useAddUserMutation();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values: any) => {
     try {
-      // Validate form data
-      if (
-        !formData.email ||
-        !formData.user_name ||
-        !formData.badge_number ||
-        !formData.password
-      ) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Please fill all fields!",
-        });
-        return;
-      }
-
       // Call the API
-      await addNewUser(formData).unwrap();
+      await addNewUser(values).unwrap();
 
       // Show success message
       Swal.fire({
@@ -58,12 +27,7 @@ const UserModal: React.FC<{
 
       // Close modal and reset form
       setIsModalOpen(false);
-      setFormData({
-        email: "",
-        user_name: "",
-        badge_number: "",
-        password: "",
-      });
+      form.resetFields();
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -76,98 +40,157 @@ const UserModal: React.FC<{
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields();
   };
 
   return (
-    <div className="m-0 p-0">
+    <>
       <Modal
-        width={569}
-        height={400}
         title={
-          <div className="text-center bg-[#4b5320] text-white py-4 font-roboto text-[18px]  font-semibold rounded-t-lg">
+          <div className="text-center bg-[#4b5320] text-white py-4 font-roboto text-[18px] font-semibold rounded-t-lg">
             Add a member
           </div>
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
+        width={600}
+        style={{
+          top: "2%",
+          // transform: "translateY(-50%)",
+        }}
       >
-        <div className="rounded-b-lg">
-          {/* add mamber form - EXACTLY THE SAME DESIGN AS BEFORE */}
-          <form
-            className="flex flex-col justify-center items-center"
-            onSubmit={handleSubmit}
+        <div className="rounded-b-lg p-4">
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSubmit}
+            className="flex flex-col w-full pt-6 justify-center items-center"
           >
-            {/* email  */}
-            <div className="pt-6">
-              <label className="block mb-2 text-black text-lg font-medium font-roboto">
-                Your email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
-                placeholder="name@flowbite.com"
-                required
-              />
-            </div>
-            {/* Username add */}
-            <div className="pt-6">
-              <label className="block mb-2 text-black text-lg font-medium font-roboto">
-                Username
-              </label>
-              <input
-                type="text"
-                id="user_name"
-                value={formData.user_name}
-                onChange={handleInputChange}
-                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
-                placeholder="Set an username"
-                required
-              />
-            </div>
-            {/* Badge Number */}
-            <div className="pt-6">
-              <label className="block mb-2 text-black text-lg font-medium font-roboto">
-                Badge Number
-              </label>
-              <input
-                type="number"
-                id="badge_number"
-                value={formData.badge_number}
-                onChange={handleInputChange}
-                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
-                placeholder="5468437"
-                required
-              />
-            </div>
-            {/* Password */}
-            <div className="pt-6">
-              <label className="block mb-2 text-black text-lg font-medium font-roboto">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="shadow-xs bg-[#f0f0f0]  p-4 text-gray-900 text-sm rounded-lg  block w-[500px] p-2.5dark:placeholder-gray-400 dark:focus:ring-blue-500 "
-                placeholder="Set a password"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-[500px] p-3 bg-[#4B5320] mt-12 mb-9 rounded-lg text-white"
+            {/* Name Field */}
+            <Form.Item
+              name="name"
+              label={
+                <span className="text-black text-lg font-medium font-roboto">
+                  Your Name
+                </span>
+              }
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your name!",
+                  type: "name",
+                },
+              ]}
             >
-              ADD
-            </button>
-          </form>
+              <Input
+                className="shadow-xs bg-[#f0f0f0] px-4 py-3 text-gray-900 text-sm rounded-lg w-[500px]"
+                placeholder="name@flowbite.com"
+              />
+            </Form.Item>
+            {/* Email Field */}
+            <Form.Item
+              name="email"
+              label={
+                <span className="text-black text-lg font-medium font-roboto">
+                  Your Email
+                </span>
+              }
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your email!",
+                  type: "email",
+                },
+              ]}
+            >
+              <Input
+                className="shadow-xs bg-[#f0f0f0] px-4 py-3 text-gray-900 text-sm rounded-lg w-[500px]"
+                placeholder="name@flowbite.com"
+              />
+            </Form.Item>
+
+            {/* Username Field */}
+            <Form.Item
+              name="user_name"
+              label={
+                <span className="text-black text-lg font-medium font-roboto">
+                  Username
+                </span>
+              }
+              rules={[{ required: true, message: "Please enter a username!" }]}
+            >
+              <Input
+                className="shadow-xs bg-[#f0f0f0] px-4 py-3 text-gray-900 text-sm rounded-lg w-[500px]"
+                placeholder="Set a username"
+              />
+            </Form.Item>
+
+            {/* Badge Number Field */}
+            <Form.Item
+              name="badge_number"
+              label={
+                <span className="text-black text-lg font-medium font-roboto">
+                  Badge Number
+                </span>
+              }
+              rules={[
+                { required: true, message: "Please enter a badge number!" },
+              ]}
+            >
+              <Input
+                type="number"
+                className="shadow-xs bg-[#f0f0f0] px-4 py-3 text-gray-900 text-sm rounded-lg w-[500px]"
+                placeholder="5468437"
+              />
+            </Form.Item>
+            {/* Address Field */}
+            <Form.Item
+              name="address"
+              label={
+                <span className="text-black text-lg font-medium font-roboto">
+                  Address
+                </span>
+              }
+              rules={[{ required: true, message: "Please enter a address!" }]}
+            >
+              <Input
+                type="text"
+                className="shadow-xs bg-[#f0f0f0] px-4 py-3 text-gray-900 text-sm rounded-lg w-[500px]"
+                placeholder="Write a address"
+              />
+            </Form.Item>
+
+            {/* Password Field */}
+            <Form.Item
+              name="password"
+              label={
+                <span className="text-black text-lg font-medium font-roboto">
+                  Password
+                </span>
+              }
+              rules={[{ required: true, message: "Please enter a password!" }]}
+            >
+              <Input.Password
+                className="shadow-xs bg-[#f0f0f0] px-4 py-3 text-gray-900 text-sm rounded-lg w-[500px]"
+                placeholder="Set a password"
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                className="w-[500px] p-3 bg-[#4B5320] my-5 rounded-lg text-white"
+              >
+                ADD
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 
