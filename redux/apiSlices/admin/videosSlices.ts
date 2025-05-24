@@ -12,20 +12,49 @@ const authSlice = api.injectEndpoints({
       }),
       providesTags: ["video"],
     }),
-    addVideo: builder.mutation<any, any>({
-      query: (data) => ({
-        url: `${_pathName}`,
-        method: "POST",
-        body: data,
-      }),
+    addVideo: builder.mutation<
+      any,
+      {
+        data: FormData;
+        onUploadProgress?: (progressEvent: ProgressEvent) => void;
+      }
+    >({
+      query: ({ data, onUploadProgress }) => {
+        const config: any = {
+          url: `${_pathName}`,
+          method: "POST",
+          body: data,
+        };
+
+        if (onUploadProgress) {
+          config.onUploadProgress = onUploadProgress;
+        }
+
+        return config;
+      },
       invalidatesTags: ["video"],
     }),
-    updateVideo: builder.mutation<any, { id: string; data: any }>({
-      query: ({ id, data }) => ({
-        url: `${_pathName}/${id}`,
-        method: "POST",
-        body: data,
-      }),
+    updateVideo: builder.mutation<
+      any,
+      {
+        id: string;
+        data: FormData;
+        onUploadProgress?: (progressEvent: ProgressEvent) => void;
+      }
+    >({
+      query: ({ id, data, onUploadProgress }) => {
+        const config: any = {
+          url: `${_pathName}/${id}`,
+          method: "POST",
+          body: data,
+        };
+
+        if (onUploadProgress) {
+          config.onUploadProgress = onUploadProgress;
+        }
+
+        return config;
+      },
       invalidatesTags: ["video"],
     }),
     deleteVideo: builder.mutation<any, any>({

@@ -1,75 +1,182 @@
-import React, { useState } from "react";
-import { Modal, Upload, Select, Button } from "antd";
-import { UploadOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import Input from "antd/es/input/Input";
+import {
+  CloseCircleOutlined,
+  DownOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  Progress,
+  Select,
+  Upload,
+  message,
+} from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  useAddVideoMutation,
+  useUpdateVideoMutation,
+} from "../../../redux/apiSlices/admin/videosSlices";
 
-const { Option } = Select;
+import Swal from "sweetalert2";
 
 interface VideoModalProps {
+  data: any;
+  categoryData?: any[];
   isModalOpen: boolean;
+  setData: React.Dispatch<React.SetStateAction<any>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const VideoModal: React.FC<VideoModalProps> = ({
+  data,
   isModalOpen,
+  setData,
   setIsModalOpen,
+  categoryData = [],
 }) => {
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleUpload = () => {
-    // TODO: handle file and category submission
-    setIsModalOpen(false);
-  };
-
-  //   th
-  const fileList = [
-    {
-      uid: -1,
-      name: "xxx.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: -2,
-      name: "yyy.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-      thumbUrl:
-        "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ];
-
-  const props = {
-    action: "//jsonplaceholder.typicode.com/posts/",
-    listType: "picture",
-    defaultFileList: [...fileList],
-  };
-
-  const props2 = {
-    action: "//jsonplaceholder.typicode.com/posts/",
-    listType: "picture",
-    defaultFileList: [...fileList],
-    className: "upload-list-inline",
-  };
+  const [form] = Form.useForm();
+  const [addNewVideo, addResults] = useAddVideoMutation();
+  const [updateVideo, updateResults] = useUpdateVideoMutation();
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState({
+    video: 0,
+    thumbnail: 0,
+  });
 
-  // Called before upload
-  const handleBeforeUpload = (file: File) => {
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        title: data.title,
+        category_id: data.category_id,
+      });
+      setPreviewImage(data.thumbnail_url || null);
+      setVideoPreview(data.video_url || null);
+    } else {
+      form.resetFields();
+      setPreviewImage(null);
+      setVideoPreview(null);
+      setThumbnailFile(null);
+      setVideoFile(null);
+      setUploadProgress({ video: 0, thumbnail: 0 });
+    }
+  }, [data, form]);
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setData(null);
+  };
+
+  const handleBeforeImageUpload = (file: File) => {
     const isImage = file.type.startsWith("image/");
     if (!isImage) {
-      alert("Please upload an image file.");
+      message.error("You can only upload image files for thumbnails!");
       return false;
     }
-
-    // Create a preview URL and save to state
+    setThumbnailFile(file);
     setPreviewImage(URL.createObjectURL(file));
-    return false; // prevents auto upload
+    return false;
   };
+
+  const handleBeforeVideoUpload = (file: File) => {
+    const isVideo = file.type.startsWith("video/");
+    if (!isVideo) {
+      message.error("You can only upload video files!");
+      return false;
+    }
+    setVideoFile(file);
+    setVideoPreview(URL.createObjectURL(file));
+    return false;
+  };
+
+  const handleSubmit = async (values: any) => {
+    try {
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("category_id", values.category_id);
+
+      if (videoFile) {
+        formData.append("video", videoFile);
+      }
+
+      if (thumbnailFile) {
+        formData.append("thumbnail", thumbnailFile);
+      }
+
+      const config = {
+        onUploadProgress: (progressEvent: ProgressEvent) => {
+          const { loaded, total } = progressEvent;
+          const percent = Math.floor((loaded * 100) / (total || 1));
+
+          if (progressEvent.target === progressEvent.currentTarget) {
+            // This is for the main request progress
+            setUploadProgress((prev) => ({
+              ...prev,
+              video: percent,
+              thumbnail: percent,
+            }));
+          }
+        },
+      };
+
+      if (data) {
+        formData.append("_method", "PUT");
+        await updateVideo({ id: data.id, data: formData, ...config }).unwrap();
+        Swal.fire({
+          title: "Updated!",
+          text: "Video has been updated.",
+          icon: "success",
+        });
+      } else {
+        await addNewVideo({ data: formData, ...config }).unwrap();
+        Swal.fire({
+          title: "Added!",
+          text: "Video has been added.",
+          icon: "success",
+        });
+      }
+
+      handleCancel();
+    } catch (err) {
+      Swal.fire({
+        title: "Error",
+        text: "Failed to upload video",
+        icon: "error",
+      });
+      console.error(err);
+    } finally {
+      setThumbnailFile(null);
+      setVideoFile(null);
+      setPreviewImage(null);
+      setVideoPreview(null);
+      setUploadProgress({ video: 0, thumbnail: 0 });
+      form.resetFields();
+      setData(null);
+    }
+  };
+
+  React.useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        title: data.title,
+        category_id: data.category_id,
+      });
+      setPreviewImage(data.thumbnail || null);
+      setVideoPreview(data.video || null);
+    } else {
+      form.resetFields();
+      setPreviewImage(null);
+      setVideoPreview(null);
+      setThumbnailFile(null);
+      setVideoFile(null);
+      setUploadProgress({ video: 0, thumbnail: 0 });
+    }
+  }, [data, form]);
 
   return (
     <Modal
@@ -79,111 +186,170 @@ const VideoModal: React.FC<VideoModalProps> = ({
       onCancel={handleCancel}
       className="rounded-lg"
       width={1026}
+      title={
+        <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
+          <div></div>
+          <h2 className="text-lg font-semibold">
+            {data ? "Edit Video" : "Add a new video"}
+          </h2>
+          <CloseCircleOutlined
+            onClick={handleCancel}
+            className="text-white text-xl cursor-pointer"
+          />
+        </div>
+      }
     >
-      <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
-        <div></div>
-        <h2 className="text-lg font-semibold">Add a new video</h2>
-        <CloseCircleOutlined
-          onClick={handleCancel}
-          className="text-white text-xl cursor-pointer"
-        />
-      </div>
-
-      <div className=" bg-white rounded-b-lg space-y-5 p-16">
-        <div className="flex justify-between">
-          <Upload.Dragger
-            name="file"
-            accept="video/*"
-            multiple={false}
-            className="border border-dashed rounded-md p-16"
-          >
-            <div className="flex justify-center items-center ">
-              <p className="ant-upload-drag-icon p-1 border rounded-lg w-[162px]">
-                <UploadOutlined
-                  style={{
-                    fontSize: "18px",
-                    color: "#697B8C",
-                    paddingRight: "10px",
-                  }}
-                />
-                Click to upload
-              </p>
-            </div>
-            <p className="text-gray-600">
-              Click or drag a file in this area to upload
-            </p>
-          </Upload.Dragger>
-          {/* Thumbnail */}
-          <div className="space-y-4 flex-1 text-center ">
-            <p className="font-roboto font-normal text-sm text-black text-start pl-8 pb-2">
-              Select Thumbnail
-            </p>
-            <Upload
-              showUploadList={false}
-              beforeUpload={handleBeforeUpload}
-              accept="image/*"
-            >
-              <div className="flex justify-center  cursor-pointer bg-[#F2F4F5] w-[396px]">
-                <p className="ant-upload-drag-icon  p-1 border rounded-lg w-[162px] text-black">
-                  <UploadOutlined
-                    style={{
-                      fontSize: "18px",
-                      color: "#697B8C",
-                      paddingRight: "10px",
-                    }}
-                  />
-                  Click to upload
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        className="bg-white rounded-b-lg space-y-5 p-16"
+      >
+        <div className="flex justify-between gap-8">
+          <div className="flex-1">
+            <Form.Item
+              name="video"
+              rules={[{ required: !data, message: "Please upload a video!" }]}
+              label={
+                <p className="font-roboto font-normal text-sm text-black text-start">
+                  Select Video
                 </p>
-              </div>
-            </Upload>
+              }
+            >
+              <Upload.Dragger
+                showUploadList={false}
+                beforeUpload={handleBeforeVideoUpload}
+                accept="video/*"
+              >
+                {videoPreview ? (
+                  <div className="flex flex-col justify-center cursor-pointer">
+                    <video
+                      controls
+                      className="max-w-full max-h-40 object-contain border rounded-md"
+                      src={videoPreview}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col justify-center cursor-pointer h-40 items-center">
+                    <p className="ant-upload-drag-icon p-1 rounded-lg w-[162px]">
+                      <UploadOutlined
+                        style={{
+                          fontSize: "18px",
+                          color: "#697B8C",
+                          paddingRight: "10px",
+                        }}
+                      />
+                      Click to upload
+                    </p>
+                    <p className="text-gray-600">
+                      Click or drag a video file in this area to upload
+                    </p>
+                  </div>
+                )}
+              </Upload.Dragger>
+            </Form.Item>
+          </div>
 
-            {/* Image Preview Section */}
-            {previewImage && (
-              <div className="flex justify-start ml-8">
-                <img
-                  src={previewImage}
-                  alt="Thumbnail preview"
-                  className="max-w-[200px] max-h-[150px] object-contain border rounded-md"
-                />
-              </div>
-            )}
+          <div className="flex-1">
+            <Form.Item
+              name="thumbnail"
+              rules={[
+                { required: !data, message: "Please upload a thumbnail!" },
+              ]}
+              label={
+                <p className="font-roboto font-normal text-sm text-black text-start">
+                  Select Thumbnail
+                </p>
+              }
+            >
+              <Upload.Dragger
+                showUploadList={false}
+                beforeUpload={handleBeforeImageUpload}
+                accept="image/*"
+              >
+                {previewImage ? (
+                  <div className="flex flex-col justify-center cursor-pointer">
+                    <img
+                      src={previewImage}
+                      alt="Thumbnail preview"
+                      className="max-w-full max-h-40 object-contain border rounded-md"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col justify-center cursor-pointer h-40 items-center">
+                    <p className="ant-upload-drag-icon p-1 rounded-lg w-[162px]">
+                      <UploadOutlined
+                        style={{
+                          fontSize: "18px",
+                          color: "#697B8C",
+                          paddingRight: "10px",
+                        }}
+                      />
+                      Click to upload
+                    </p>
+                    <p className="text-gray-600">
+                      Click or drag a photo file in this area to upload
+                    </p>
+                  </div>
+                )}
+              </Upload.Dragger>
+            </Form.Item>
           </div>
         </div>
-        {/* Catagory input fild*/}
-        <div className="space-y-2">
-          <div>
-            <label className="font-semibold font-roboto text-base text-[#000000]">
-              Title
-            </label>
-            <Input
-              placeholder="Enter your video title"
-              className="p-2 border-none bg-[#F0F0F0]"
+
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true, message: "Please enter video title!" }]}
+        >
+          <Input
+            placeholder="Enter your video title"
+            className="p-2 border-none bg-[#F0F0F0]"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="category_id"
+          label="Category"
+          rules={[{ required: true, message: "Please select a category!" }]}
+        >
+          <Select
+            showSearch
+            style={{ width: 363, height: 50 }}
+            className="border border-gray-300 rounded-md"
+            placeholder="Select a category"
+            optionFilterProp="children"
+            suffixIcon={<DownOutlined style={{ color: "black" }} />}
+            defaultValue={categoryData?.id}
+            options={
+              categoryData?.map((item) => ({
+                value: item.id,
+                label: item.name,
+              })) || []
+            }
+          />
+        </Form.Item>
+
+        <Form.Item>
+          {addResults.isLoading || updateResults.isLoading ? (
+            <Progress
+              percent={uploadProgress.video}
+              status="active"
+              className="mt-2"
             />
-          </div>
-          <div>
-            <label className="font-semibold font-roboto text-base text-black">
-              Category
-            </label>
-            <Select
-              placeholder="Select category"
-              className="w-full bg-[#F0F0F0]"
+          ) : (
+            <Button
+              loading={addResults.isLoading || updateResults.isLoading}
+              type="primary"
+              htmlType="submit"
+              className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white"
               size="large"
             >
-              <Option value="nature">Nature</Option>
-              <Option value="technology">Technology</Option>
-              <Option value="people">People</Option>
-            </Select>
-          </div>
-        </div>
-        <Button
-          type="primary"
-          className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white mt-4"
-          size="large"
-          onClick={handleUpload}
-        >
-          Upload
-        </Button>
-      </div>
+              {data ? "Update Video" : "Upload Video"}
+            </Button>
+          )}
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

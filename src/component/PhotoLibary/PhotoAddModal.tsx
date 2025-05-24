@@ -1,26 +1,111 @@
-import React from "react";
-import { Modal, Upload, Select, Button } from "antd";
-import { UploadOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import {
+  CloseCircleOutlined,
+  DownOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import { Button, Form, Image, Modal, Select, Upload } from "antd";
+import React, { useState } from "react";
+import {
+  useAddPhotosMutation,
+  useUpdatePhotosMutation,
+} from "../../../redux/apiSlices/admin/photosSlices";
 
-const { Option } = Select;
+import Swal from "sweetalert2";
 
 interface PhotoAddModalProps {
+  data: any;
   isModalOpen: boolean;
+  categoryData?: any[];
+  setData: React.Dispatch<React.SetStateAction<any>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
   isModalOpen,
   setIsModalOpen,
+  data,
+  setData,
+  categoryData = [],
 }) => {
+  const [addPhoto] = useAddPhotosMutation();
+  const [updatePhoto] = useUpdatePhotosMutation();
+  const [form] = Form.useForm();
+  const [file, setFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(
+    data?.photo_url || null
+  );
+
   const handleCancel = () => {
     setIsModalOpen(false);
+    setData(null);
+    form.resetFields();
+    setFile(null);
+    setPreviewImage(null);
   };
 
-  const handleUpload = () => {
-    // TODO: handle file and category submission
-    setIsModalOpen(false);
+  const handleUpload = async () => {
+    try {
+      const values = await form.validateFields();
+      if (!file && !data) {
+        Swal.fire("Error", "Please upload a photo before submitting", "error");
+        return;
+      }
+
+      const { categoryId } = values;
+
+      const formData = new FormData();
+      if (file) {
+        formData.append("photo", file);
+      }
+      formData.append("category_id", categoryId || "");
+      formData.append("_method", data ? "PUT" : "POST");
+
+      if (data) {
+        // Update photo
+        await updatePhoto({
+          id: data.id,
+          data: formData,
+        }).unwrap();
+        setFile(null);
+        handleCancel();
+        Swal.fire("Updated!", "Photo has been updated.", "success");
+      } else {
+        // Add new photo
+        await addPhoto(formData).unwrap();
+        setFile(null);
+        handleCancel();
+        Swal.fire("Added!", "Photo has been added.", "success");
+      }
+    } catch (error) {
+      Swal.fire("Error", "Failed to upload photo", "error");
+    } finally {
+      setFile(null);
+      form.resetFields();
+    }
   };
+
+  const handleBeforeUpload = (file: File) => {
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    setFile(file);
+    return false; // Prevent automatic upload
+  };
+
+  React.useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        categoryId: data.category_id,
+      });
+      setPreviewImage(data.photo);
+    } else {
+      form.resetFields();
+      setPreviewImage(null);
+    }
+  }, [data, form]);
 
   return (
     <Modal
@@ -28,68 +113,86 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
       footer={null}
       closable={false}
       onCancel={handleCancel}
-      className="rounded-lg"
+      title={
+        <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 !rounded-t-lg">
+          <h2 className="text-lg font-semibold">
+            {data ? "Update Photo" : "Add a new Photo"}
+          </h2>
+          <CloseCircleOutlined
+            onClick={handleCancel}
+            className="text-white text-xl cursor-pointer"
+          />
+        </div>
+      }
       width={600}
     >
-      <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
-        <h2 className="text-lg font-semibold">Add a new Photo</h2>
-        <CloseCircleOutlined
-          onClick={handleCancel}
-          className="text-white text-xl cursor-pointer"
-        />
-      </div>
-
       <div className="px-6 py-6 bg-white rounded-b-lg space-y-5">
-        <div className="space-y-2">
-          <label className="font-semibold text-base text-black">Category</label>
-          <Select
-            placeholder="Select category"
-            className="w-full bg-[#F0F0F0]"
-            size="large"
-          >
-            <Option value="payscales">PayScale’s</Option>
-            <Option value="binder">Binder</Option>
-            <Option value="slicks">Slicks</Option>
-            <Option value="career_progress_sheets">
-              Career Progress Sheets
-            </Option>
-            <Option value="agreements_examples">Agreements Examples</Option>
-            <Option value="basafasa_information">BASAFASA Information</Option>
-            <Option value="blitz_trips">Blitz Trips</Option>
-            <Option value="incentives">Incentives</Option>
-            <Option value="playbook">Playbook</Option>
-          </Select>
-        </div>
-        <Upload.Dragger
-          name="file"
-          multiple={false}
-          className="border border-dashed rounded-md"
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{ categoryId: categoryData[0]?.id || null }}
         >
-          <div className="flex justify-center items-center ">
-            <p className="ant-upload-drag-icon p-1 border rounded-lg w-[162px]">
+          <Form.Item
+            name="categoryId"
+            label="Category"
+            rules={[{ required: true, message: "Please select a category!" }]}
+          >
+            <Select
+              showSearch
+              style={{ width: 363, height: 50 }}
+              className="border  !w-full border-gray-300 rounded-md"
+              placeholder="Select a category"
+              optionFilterProp="children"
+              suffixIcon={<DownOutlined style={{ color: "black" }} />}
+              options={
+                categoryData?.map((item) => ({
+                  value: item.id,
+                  label: item.name,
+                })) || []
+              }
+            />
+          </Form.Item>
+
+          <Form.Item label="Photo" required>
+            {previewImage && (
+              <div className="mb-4 w-full flex justify-center">
+                <Image
+                  src={previewImage}
+                  alt="Preview"
+                  style={{ maxHeight: "200px" }}
+                />
+              </div>
+            )}
+            <Upload.Dragger
+              name="file"
+              beforeUpload={handleBeforeUpload}
+              className=" rounded-md"
+              showUploadList={false}
+            >
               <UploadOutlined
                 style={{
                   fontSize: "18px",
+
                   color: "#697B8C",
                   paddingRight: "10px",
                 }}
               />
               Click to upload
-            </p>
-          </div>
-          <p className="text-gray-600">
-            Click or drag a file in this area to upload
-          </p>
-        </Upload.Dragger>
+              <p className="text-gray-600">
+                Click or drag a file in this area to upload
+              </p>
+            </Upload.Dragger>
+          </Form.Item>
 
-        <Button
-          type="primary"
-          className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white mt-4"
-          size="large"
-          onClick={handleUpload}
-        >
-          Upload
-        </Button>
+          <Button
+            type="primary"
+            className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white mt-4"
+            size="large"
+            onClick={handleUpload}
+          >
+            {data ? "Update" : "Upload"}
+          </Button>
+        </Form>
       </div>
     </Modal>
   );

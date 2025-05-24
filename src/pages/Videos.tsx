@@ -1,18 +1,39 @@
-import { Image, Popconfirm, Select, Space, Table, message } from "antd";
+import { Image, Select, Space, Table } from "antd";
+import {
+  useDeleteVideoMutation,
+  useGetVideoQuery,
+} from "../../redux/apiSlices/admin/videosSlices";
 
 import { DownOutlined } from "@ant-design/icons";
-import { Option } from "antd/es/mentions";
 import { useState } from "react";
-import img2 from "../assets/Images/videos/Rectangle 8 (1).png";
-import img3 from "../assets/Images/videos/Rectangle 8 (2).png";
-import img4 from "../assets/Images/videos/Rectangle 8 (3).png";
-import img5 from "../assets/Images/videos/Rectangle 8 (4).png";
-import img6 from "../assets/Images/videos/Rectangle 8 (5).png";
-import img7 from "../assets/Images/videos/Rectangle 8 (6).png";
-import img1 from "../assets/Images/videos/Rectangle 8.png";
+import Swal from "sweetalert2";
+import { useGetCategoryQuery } from "../../redux/apiSlices/admin/categorySlices";
 import VideoModal from "../component/videos/VideoModal";
 
 const Videos = () => {
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [selectedCate, setSelectedCate] = useState<string | null>(null);
+  const [search, setSearch] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const { data: VideoLibraryData } = useGetVideoQuery({
+    params: {
+      page: page,
+      per_page: limit,
+      category_id: selectedCate,
+      search: search,
+    },
+  });
+  const { data: categoryData } = useGetCategoryQuery({
+    params: {
+      type: "Video Category",
+    },
+  });
+
+  // console.log(page, limit, VideoLibraryData?.data?.total);
+
+  const [deleteVideo] = useDeleteVideoMutation();
+
   // show view modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditOpenModal, setIsEditOpenModal] = useState(false); //edit modal open stat
@@ -22,21 +43,37 @@ const Videos = () => {
   };
   // edit modal
 
-  const showEditModal = () => {
-    setIsEditOpenModal(true);
+  const showEditModal = (item: any) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
   };
 
-  // delete modal
-  const confirm = (e) => {
-    console.log(e);
-    message.success("Click on Yes");
+  const handleDeletedVideo = async (id: string) => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteVideo(id).unwrap();
+          Swal.fire("Deleted!", "Your video has been deleted.", "success");
+        }
+      });
+      // Handle successful deletion
+      // Optionally, you can refetch the video list or update the state to reflect the deletion
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to delete video: " + error.message,
+      });
+    }
   };
-
-  const cancel = (e) => {
-    console.log(e);
-    message.error("Click on No");
-  };
-  // delete modal end
 
   const columns = [
     {
@@ -44,15 +81,16 @@ const Videos = () => {
       dataIndex: "serial",
       key: "serial",
       align: "center",
+      render: (_, __, index) => <span>{(page - 1) * limit + index + 1}</span>,
     },
     {
       title: "Video",
       dataIndex: "video",
       key: "video",
-      render: (video: any) => (
+      render: (video: any, record: any) => (
         <Space>
-          <Image width={40} src={video.thumbnail} alt="thumbnail" />
-          <span>{video.title}</span>
+          <Image width={40} src={record.thumbnail} alt="thumbnail" />
+          <span>{record.title}</span>
         </Space>
       ),
     },
@@ -61,6 +99,9 @@ const Videos = () => {
       dataIndex: "category",
       key: "category",
       align: "center",
+      render: (category: any) => (
+        <span>{category ? category.name : "N/A"}</span>
+      ),
     },
     {
       title: "Action",
@@ -69,7 +110,12 @@ const Videos = () => {
       render: (_, record) => (
         <Space size="middle">
           {/* view icon */}
-          <div onClick={showModal}>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              showEditModal(record);
+            }}
+          >
             <svg
               width="37"
               height="37"
@@ -85,7 +131,7 @@ const Videos = () => {
             </svg>
           </div>
 
-          <div onClick={showEditModal}>
+          <div onClick={() => showEditModal(record)}>
             <svg
               width="37"
               height="37"
@@ -103,125 +149,29 @@ const Videos = () => {
               />
             </svg>
           </div>
-          <div>
-            <Popconfirm
-              title="Are you sure to delete this video?"
-              onConfirm={confirm}
-              onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              handleDeletedVideo(record.id);
+            }}
+          >
+            <svg
+              width="37"
+              height="37"
+              viewBox="0 0 37 37"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                width="37"
-                height="37"
-                viewBox="0 0 37 37"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="37" height="37" rx="5" fill="#FFE6E6" />
-                <path
-                  d="M23 16V26H15V16H23ZM21.5 10H16.5L15.5 11H12V13H26V11H22.5L21.5 10ZM25 14H13V26C13 27.1 13.9 28 15 28H23C24.1 28 25 27.1 25 26V14Z"
-                  fill="#FF0000"
-                />
-              </svg>
-            </Popconfirm>
+              <rect width="37" height="37" rx="5" fill="#FFE6E6" />
+              <path
+                d="M23 16V26H15V16H23ZM21.5 10H16.5L15.5 11H12V13H26V11H22.5L21.5 10ZM25 14H13V26C13 27.1 13.9 28 15 28H23C24.1 28 25 27.1 25 26V14Z"
+                fill="#FF0000"
+              />
+            </svg>
           </div>
         </Space>
       ),
     },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      serial: "001",
-      video: {
-        thumbnail: img1,
-        title: "Training Video Part 1",
-      },
-      category: "Welcome to NOBL",
-    },
-    {
-      key: "2",
-      serial: "002",
-      video: {
-        thumbnail: img2,
-        title: "Training Video Part 2",
-      },
-      category: "Amply Value",
-    },
-    {
-      key: "3",
-      serial: "003",
-      video: {
-        thumbnail: img3,
-        title: "Training Video Part 3",
-      },
-      category: "Introduction",
-    },
-    {
-      key: "4",
-      serial: "004",
-      video: {
-        thumbnail: img4,
-        title: "Training Video Part 4",
-      },
-      category: "Key to success in this industry",
-    },
-    {
-      key: "5",
-      serial: "005",
-      video: {
-        thumbnail: img5,
-        title: "Training Video Part 5",
-      },
-      category: "Introduction",
-    },
-    {
-      key: "6",
-      serial: "006",
-      video: {
-        thumbnail: img6,
-        title: "Training Video Part 6",
-      },
-      category: "Transitioning",
-    },
-    {
-      key: "7",
-      serial: "007",
-      video: {
-        thumbnail: img7,
-        title: "Training Video Part 7",
-      },
-      category: "Building Value",
-    },
-  ];
-
-  // categories
-  const categories = [
-    "All",
-    "Welcome to NOBL",
-    "Introduction",
-    "Key to success in this industry",
-    "Door approach / Pitch",
-    "Transitioning",
-    "Building Value",
-    "Qualify Questions",
-    "Buying Atmosphere",
-    "Amply Value",
-    "Drop Price / Compare Price",
-    "Closing Lines",
-    "Area Management",
-    "How to use your IPad Resources",
-    "PayScale’s",
-    "Binder",
-    "Slicks",
-    "Career Progress Sheets",
-    "Agreements Examples",
-    "BASAFASA Information",
-    "Blitz Trips",
-    "Incentives",
-    "Playbook",
   ];
 
   return (
@@ -230,6 +180,8 @@ const Videos = () => {
         <div className="flex justify-center">
           <input
             type="search"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search || ""}
             className="w-[534px] p-4 border border-[#D9D9D9]"
             placeholder="Search for a video"
             name=""
@@ -273,34 +225,52 @@ const Videos = () => {
           <Select
             showSearch
             style={{ width: 363, height: 50 }}
-            className="border border-black rounded-md"
+            className="border border-gray-300 rounded-md"
             placeholder="Select a category"
             optionFilterProp="children"
-            suffixIcon={
-              <div className="flex justify-between w-full gap-72">
-                <h1 className="text-black">klsdf</h1>
-                <DownOutlined style={{ color: "black" }} />
-              </div>
-            }
-          >
-            {categories?.map((item, index) => (
-              <Option key={index} value={item}>
-                {item}
-              </Option>
-            ))}
-          </Select>
+            suffixIcon={<DownOutlined style={{ color: "black" }} />}
+            defaultValue={null}
+            options={[
+              {
+                value: null,
+                label: "All Categories",
+              },
+              ...(categoryData?.data?.data?.map((item) => ({
+                value: item.id,
+                label: item.name,
+              })) || []),
+            ]}
+            onChange={(value) => {
+              setSelectedCate(value);
+            }}
+          />
         </div>
       </div>
       {/* table */}
       <Table
         columns={columns}
         rowClassName={() => "table-row-gap"}
-        className="custom-ant-table"
-        dataSource={data}
-        pagination={true}
+        className="custom-ant-table "
+        dataSource={VideoLibraryData?.data?.data}
+        pagination={{
+          current: page,
+          pageSize: limit,
+          total: VideoLibraryData?.data?.total,
+          // showSizeChanger: true,
+          onChange: (page) => {
+            setPage(page);
+            // setLimit(pageSize);
+          },
+        }}
       />
       {/* video modal */}
-      <VideoModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <VideoModal
+        categoryData={categoryData?.data?.data}
+        data={selectedItem}
+        setData={setSelectedItem}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   );
 };
