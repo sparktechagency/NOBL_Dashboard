@@ -602,101 +602,91 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      <Sider
-        width={300}
-        className="sidebar-menu"
-        style={{
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          overflow: "auto",
-          zIndex: 2,
-        }}
-        trigger={null}
-      >
-        <img src={logo} alt="Logo" className="mx-auto py-6 w-[264px]" />
-        <Menu
-          mode="inline"
-          // style={{ background: "#fff", color: "white" }}
-          defaultSelectedKeys={["1"]}
-        >
-          {menuItems.map((item, index) => {
-            const isActive = location.pathname === item.path;
-            if (item.children) {
-              return (
-                <SubMenu
-                  key={`submenu-${index}`}
-                  title={item.title}
-                  icon={getMenuIcon(item.icon, item.activeIcon, isActive)}
-                  style={{
-                    fontWeight: isActive ? "bold" : "normal",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    backgroundColor: isActive ? "#4B5320" : "transparent",
-                  }}
-                  className="!text-black"
-                >
-                  {item.children.map((child, childIndex) => {
-                    const isSubActive = location.pathname === child.path;
-                    return (
-                      <Menu.Item
-                        key={`child-${childIndex}`}
-                        icon={getMenuIcon(
-                          child.icon,
-                          child.activeIcon,
-                          location.pathname === child.path
-                        )}
-                        style={{
-                          color: isSubActive ? "red" : "#fff",
-                          fontWeight: isSubActive ? "bold" : "normal",
-                          fontSize: "16px",
-                          marginBottom: "10px",
-                          backgroundColor: isSubActive
-                            ? "#4B5320"
-                            : "transparent",
-                        }}
-                      >
-                        <Link
-                          style={{
-                            color: isSubActive ? "white" : "black",
-                          }}
-                          to={child.path}
-                        >
-                          {child.title}
-                        </Link>
-                      </Menu.Item>
-                    );
-                  })}
-                </SubMenu>
-              );
-            } else {
-              return (
-                <Menu.Item
-                  key={`item-${index}`}
-                  icon={getMenuIcon(item.icon, item.activeIcon, isActive)}
-                  style={{
-                    color: isActive ? "red" : "#fff",
-                    fontWeight: isActive ? "bold" : "normal",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    backgroundColor: isActive ? "#4B5320" : "transparent",
-                  }}
-                >
-                  <Link
+      <Sider width={300} trigger={null}>
+        <div className="flex-1">
+          <img src={logo} alt="Logo" className="mx-auto py-6 w-[264px]" />
+          <Menu
+            mode="inline"
+            // style={{ background: "#fff", color: "white" }}
+            defaultSelectedKeys={["1"]}
+          >
+            {menuItems.map((item, index) => {
+              const isActive = location.pathname === item.path;
+              if (item.children) {
+                return (
+                  <SubMenu
+                    key={`submenu-${index}`}
+                    title={item.title}
+                    icon={getMenuIcon(item.icon, item.activeIcon, isActive)}
                     style={{
-                      color: isActive ? "white" : "black",
+                      fontWeight: isActive ? "bold" : "normal",
+                      fontSize: "16px",
+                      marginBottom: "10px",
+                      backgroundColor: isActive ? "#4B5320" : "transparent",
                     }}
-                    to={item.path}
+                    className="!text-black"
                   >
-                    {item.title}
-                  </Link>
-                </Menu.Item>
-              );
-            }
-          })}
-        </Menu>
-        <div className="mx-7 mt-36">
+                    {item.children.map((child, childIndex) => {
+                      const isSubActive = location.pathname === child.path;
+                      return (
+                        <Menu.Item
+                          key={`child-${childIndex}`}
+                          icon={getMenuIcon(
+                            child.icon,
+                            child.activeIcon,
+                            location.pathname === child.path
+                          )}
+                          style={{
+                            color: isSubActive ? "red" : "#fff",
+                            fontWeight: isSubActive ? "bold" : "normal",
+                            fontSize: "16px",
+                            marginBottom: "10px",
+                            backgroundColor: isSubActive
+                              ? "#4B5320"
+                              : "transparent",
+                          }}
+                        >
+                          <Link
+                            style={{
+                              color: isSubActive ? "white" : "black",
+                            }}
+                            to={child.path}
+                          >
+                            {child.title}
+                          </Link>
+                        </Menu.Item>
+                      );
+                    })}
+                  </SubMenu>
+                );
+              } else {
+                return (
+                  <Menu.Item
+                    key={`item-${index}`}
+                    icon={getMenuIcon(item.icon, item.activeIcon, isActive)}
+                    style={{
+                      color: isActive ? "red" : "#fff",
+                      fontWeight: isActive ? "bold" : "normal",
+                      fontSize: "16px",
+                      marginBottom: "10px",
+                      backgroundColor: isActive ? "#4B5320" : "transparent",
+                    }}
+                  >
+                    <Link
+                      style={{
+                        color: isActive ? "white" : "black",
+                      }}
+                      to={item.path}
+                    >
+                      {item.title}
+                    </Link>
+                  </Menu.Item>
+                );
+              }
+            })}
+          </Menu>
+        </div>
+        <div className="p-4">
           <Button
             onClick={() => handleLogout()}
             className="gap-3 w-full flex justify-start p-6 bg-[#FFE8E8] text-base font-popping font-semibold text-[#FF0000] "
@@ -723,7 +713,7 @@ const Dashboard: React.FC = () => {
         </div>
       </Sider>
 
-      <Layout style={{ marginLeft: 300 }}>
+      <Layout>
         <Header
           style={{
             position: "fixed",
@@ -763,6 +753,7 @@ const Dashboard: React.FC = () => {
               padding: "20px",
               overflowY: "auto",
               height: `calc(100vh - 80px)`,
+
               background: "#f5f8e4",
             }}
           >

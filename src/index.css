@@ -163,3 +163,11 @@
     background-color: #4B5320 !important;
 }
 
+.ant-layout .ant-layout-sider-children {
+  height: 100%;
+    margin-top: -0.1px;
+    padding-top: 0.1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
