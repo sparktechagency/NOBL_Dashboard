@@ -1,61 +1,58 @@
 import { Image, Select, Space, Table } from "antd";
 import {
-  useDeleteDocumentsMutation,
-  useGetDocumentsQuery,
-} from "../../redux/apiSlices/admin/documentsSlices";
+  useDeleteAudiosMutation,
+  useGetAudiosQuery,
+} from "../../redux/apiSlices/admin/audiosSlices";
 
 import { DownOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useGetCategoryQuery } from "../../redux/apiSlices/admin/categorySlices";
-import DocumentModal from "../component/documents/DocumentModal";
-import DocumentViewModal from "../component/documents/DocumentViewModal";
+import AudioModal from "../component/audios/AudioModal";
 
-const Documents = () => {
+const Audios = () => {
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [selectedCate, setSelectedCate] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [per_page, setPer_page] = useState(7);
+  const [limit, setLimit] = useState(7);
   const {
-    data: documentLibraryData,
+    data: AudioLibraryData,
     isFetching,
     isLoading,
-  } = useGetDocumentsQuery({
+  } = useGetAudiosQuery({
     params: {
       page: page,
-      per_page: per_page,
+      per_page: limit,
       category_id: selectedCate,
       search: search,
     },
   });
   const { data: categoryData } = useGetCategoryQuery({
     params: {
-      type: "Documents Category",
+      type: "Audio Category",
     },
   });
 
-  const [deletedDocument] = useDeleteDocumentsMutation();
+  // console.log(page, limit, AudioLibraryData?.data?.total);
 
+  const [deleteAudio] = useDeleteAudiosMutation();
+
+  // show view modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpenModal, setIsEditOpenModal] = useState(false); //edit modal open stat
 
   const showModal = () => {
-    setSelectedItem(null);
     setIsModalOpen(true);
   };
+  // edit modal
 
-  const [isModalViewOpen, setisModalViewOpen] = useState(false);
-
-  const showPDFViewModal = (item: any) => {
-    setSelectedItem(item);
-    setisModalViewOpen(true);
-  };
-  const showViewModal = (item: any) => {
+  const showEditModal = (item: any) => {
     setSelectedItem(item);
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDeletedAudio = async (id: string) => {
     try {
       Swal.fire({
         title: "Are you sure?",
@@ -67,17 +64,17 @@ const Documents = () => {
         confirmButtonText: "Yes, delete it!",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await deletedDocument(id).unwrap();
-          Swal.fire("Deleted!", "Your document has been deleted.", "success");
+          await deleteAudio(id).unwrap();
+          Swal.fire("Deleted!", "Your Audio has been deleted.", "success");
         }
       });
-      // await deletedDocument(id).unwrap();
-      // Optionally, you can show a success message or update the UI
+      // Handle successful deletion
+      // Optionally, you can refetch the Audio list or update the state to reflect the deletion
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to delete the document.",
+        text: "Failed to delete Audio: " + error.message,
       });
     }
   };
@@ -88,26 +85,27 @@ const Documents = () => {
       dataIndex: "serial",
       key: "serial",
       align: "center",
-      render: (_, __, index) => index + 1 + (page - 1) * per_page,
+      render: (_, __, index) => <span>{(page - 1) * limit + index + 1}</span>,
     },
     {
-      title: "Document",
-      dataIndex: "document",
-      key: "document",
-      render: (document: any, record: any) => (
+      title: "Audio",
+      dataIndex: "Audio",
+      key: "Audio",
+      render: (Audio: any, record: any) => (
         <Space>
           <Image width={40} src={record.thumbnail} alt="thumbnail" />
           <span>{record.title}</span>
         </Space>
       ),
     },
-
     {
       title: "Category",
       dataIndex: "category",
-      key: "document Type",
+      key: "category",
       align: "center",
-      render: (category: any) => category?.name || "N/A",
+      render: (category: any) => (
+        <span>{category ? category.name : "N/A"}</span>
+      ),
     },
     {
       title: "Action",
@@ -116,7 +114,12 @@ const Documents = () => {
       render: (_, record) => (
         <Space size="middle">
           {/* view icon */}
-          <div onClick={() => showPDFViewModal(record)}>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              showEditModal(record);
+            }}
+          >
             <svg
               width="37"
               height="37"
@@ -132,7 +135,7 @@ const Documents = () => {
             </svg>
           </div>
 
-          <div onClick={() => showViewModal(record)}>
+          <div onClick={() => showEditModal(record)}>
             <svg
               width="37"
               height="37"
@@ -150,7 +153,12 @@ const Documents = () => {
               />
             </svg>
           </div>
-          <div onClick={() => handleDelete(record.id)}>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              handleDeletedAudio(record.id);
+            }}
+          >
             <svg
               width="37"
               height="37"
@@ -179,7 +187,7 @@ const Documents = () => {
             onChange={(e) => setSearch(e.target.value)}
             value={search || ""}
             className="w-[534px] p-4 border border-[#D9D9D9]"
-            placeholder="Search for a document"
+            placeholder="Search for a Audio"
             name=""
             id=""
           />
@@ -199,22 +207,22 @@ const Documents = () => {
           </button>
           {/* Add mamber icon */}
           <button
-            onClick={() => showModal()}
-            className="font-semibold ml-7 flex gap-3 justify-between items-center text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
+            onClick={showModal}
+            className="font-semibold ml-7 flex items-center gap-6 text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
           >
             <svg
-              width="20"
+              width="21"
               height="20"
-              viewBox="0 0 20 20"
+              viewBox="0 0 21 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M8.57143 11.4286H0V8.57143H8.57143V0H11.4286V8.57143H20V11.4286H11.4286V20H8.57143V11.4286Z"
+                d="M9.07143 11.4286H0.5V8.57143H9.07143V0H11.9286V8.57143H20.5V11.4286H11.9286V20H9.07143V11.4286Z"
                 fill="white"
               />
             </svg>
-            Add a new Document
+            Add a new Audio
           </button>
         </div>
         <div>
@@ -243,36 +251,28 @@ const Documents = () => {
         </div>
       </div>
       {/* table */}
-      <>
-        <Table
-          loading={isFetching || isLoading}
-          columns={columns}
-          rowClassName={() => "table-row-gap"}
-          className="custom-ant-table"
-          dataSource={documentLibraryData?.data?.data}
-          pagination={{
-            current: page,
-            pageSize: per_page,
-            total: documentLibraryData?.data?.total,
-            onChange: (page) => {
-              setPage(page);
-            },
-          }}
-        />
-
-        {/* view modal */}
-        <DocumentViewModal
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          isModalOpen={isModalViewOpen}
-          setIsModalOpen={setisModalViewOpen}
-        />
-      </>
-      {/* document Modal */}
-      <DocumentModal
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
+      <Table
+        loading={isFetching || isLoading}
+        columns={columns}
+        rowClassName={() => "table-row-gap"}
+        className="custom-ant-table "
+        dataSource={AudioLibraryData?.data?.data}
+        pagination={{
+          current: page,
+          pageSize: limit,
+          total: AudioLibraryData?.data?.total,
+          // showSizeChanger: true,
+          onChange: (page) => {
+            setPage(page);
+            // setLimit(pageSize);
+          },
+        }}
+      />
+      {/* Audio modal */}
+      <AudioModal
         categoryData={categoryData?.data?.data}
+        data={selectedItem}
+        setData={setSelectedItem}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />
@@ -280,4 +280,4 @@ const Documents = () => {
   );
 };
 
-export default Documents;
+export default Audios;

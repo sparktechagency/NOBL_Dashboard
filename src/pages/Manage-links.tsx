@@ -6,7 +6,6 @@ import {
 } from "../../redux/apiSlices/admin/linksSlices";
 
 import Swal from "sweetalert2";
-import ManageLinksEditModal from "../component/ManageLinks/ManageLinksEditModal";
 import ManageModel from "../component/ManageLinks/ManageModel";
 
 const Managelinks: React.FC = () => {
@@ -14,7 +13,11 @@ const Managelinks: React.FC = () => {
   const [search, setSearch] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [per_page, setPer_page] = useState(7);
-  const { data: linksData } = useGetLinksQuery({
+  const {
+    data: linksData,
+    isFetching,
+    isLoading,
+  } = useGetLinksQuery({
     params: {
       page: page,
       per_page: per_page,
@@ -29,9 +32,10 @@ const Managelinks: React.FC = () => {
   };
   //  Edit modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const showEditModal = (item: any) => {
     setSelectedItem(item);
-    setIsEditModalOpen(true);
+    setIsModalOpen(true);
   };
   // delete modal
 
@@ -120,7 +124,7 @@ const Managelinks: React.FC = () => {
       render: (_, record) => (
         <Space size="middle">
           {/* view icon */}
-          <div onClick={showEditModal}>
+          <div onClick={() => showEditModal(record)}>
             <svg
               width="37"
               height="37"
@@ -160,36 +164,49 @@ const Managelinks: React.FC = () => {
 
   return (
     <div>
+      {/* add new Links */}
+      <div className="flex justify-end">
+        <button
+          onClick={showModal}
+          className="font-semibold    flex items-center gap-3 text-lg  font-roboto text-white bg-[#4b5320] py-3 px-[50px]"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8.57143 11.4286H0V8.57143H8.57143V0H11.4286V8.57143H20V11.4286H11.4286V20H8.57143V11.4286Z"
+              fill="white"
+            />
+          </svg>
+          Add new Link
+        </button>
+      </div>
       <Table
+        loading={isFetching || isLoading}
         columns={columns}
         dataSource={linksData?.data?.data}
-        pagination={true}
+        pagination={{
+          current: page,
+          pageSize: per_page,
+          total: linksData?.data?.total || 0,
+          onChange: (page, pageSize) => {
+            setPage(page);
+            setPer_page(pageSize);
+          },
+        }}
         rowClassName={() => "table-row-gap"}
         className="custom-ant-table mt-5"
       />
-      {/* add new Links */}
-      <button
-        onClick={showModal}
-        className="font-semibold   flex items-center gap-3 text-lg  font-roboto text-white bg-[#4b5320] py-3 px-[50px]"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M8.57143 11.4286H0V8.57143H8.57143V0H11.4286V8.57143H20V11.4286H11.4286V20H8.57143V11.4286Z"
-            fill="white"
-          />
-        </svg>
-        Add new Link
-      </button>
-      <ManageModel isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      <ManageLinksEditModal
-        isModalOpen={isEditModalOpen}
-        setIsModalOpen={setIsEditModalOpen}
+
+      <ManageModel
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
       />
     </div>
   );

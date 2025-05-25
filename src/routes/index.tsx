@@ -1,24 +1,25 @@
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
+import Dashboard from "../layout/dashboard/Dashboard";
 import AboutUs from "../pages/AboutUs";
-import Auth from "./../layout/auth/Auth";
+import Audios from "../pages/Audio";
 import Category_Management from "../pages/Category_Management";
 import ChangePassword from "../pages/ChangePassword";
 import DasboardHome from "../pages/DasboardHome";
-import Dashboard from "../layout/dashboard/Dashboard";
 import Documents from "../pages/Documents";
 import ErrorPage from "../pages/ErrorPage";
 import ForgetPassword from "../pages/ForgetPassword";
 import Login from "../pages/Login";
 import Managelinks from "../pages/Manage-links";
 import PhotoLibrary from "../pages/PhotoLibrary";
-import PrivateRoutes from "./PrivateRoutes";
-import React from "react";
 import SetNewPassword from "../pages/SetNewPassword";
 import SettingsPage from "../pages/Settings";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import Users from "../pages/Users";
 import VerifyEmail from "../pages/VerifyEmail";
 import Videos from "../pages/Videos";
-import { createBrowserRouter } from "react-router-dom";
+import Auth from "./../layout/auth/Auth";
+import PrivateRoutes from "./PrivateRoutes";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
   console.log("16++++++++++++++Notification clicked!");
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/videos",
         element: <Videos />,
+      },
+      {
+        path: "/audio",
+        element: <Audios />,
       },
       {
         path: "/documents",

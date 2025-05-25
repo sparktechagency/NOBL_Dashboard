@@ -16,7 +16,11 @@ const Videos = () => {
   const [search, setSearch] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const { data: VideoLibraryData } = useGetVideoQuery({
+  const {
+    data: VideoLibraryData,
+    isFetching,
+    isLoading,
+  } = useGetVideoQuery({
     params: {
       page: page,
       per_page: limit,
@@ -248,6 +252,7 @@ const Videos = () => {
       </div>
       {/* table */}
       <Table
+        loading={isFetching || isLoading}
         columns={columns}
         rowClassName={() => "table-row-gap"}
         className="custom-ant-table "

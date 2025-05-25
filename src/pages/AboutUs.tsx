@@ -1,9 +1,53 @@
-import React, { useState } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
+import { useEffect, useState } from "react";
+import {
+  useAddPageMutation,
+  useGetPageQuery,
+} from "../../redux/apiSlices/admin/additionalSlices";
+
+import ReactQuill from "react-quill";
+import Swal from "sweetalert2";
+
 function AboutUs() {
+  const { data: pages } = useGetPageQuery({
+    params: {
+      type: "About Us",
+    },
+  });
+
+  const [updateText] = useAddPageMutation();
   const [value, setValue] = useState("");
+
+  // Set initial content when pages are loaded
+  useEffect(() => {
+    if (pages?.data?.[0]?.text) {
+      setValue(pages.data[0].text);
+    }
+  }, [pages]);
+
+  const handleSave = async () => {
+    try {
+      await updateText({
+        type: "About Us",
+        text: value,
+      }).unwrap();
+      Swal.fire({
+        title: "Success!",
+        text: "Content saved successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Failed to save content:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to save content.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
   return (
     <div>
@@ -24,8 +68,8 @@ function AboutUs() {
           ],
         }}
       />
-      <div className="text-right mt-5 ">
-        <button className="text-white bg-[#4B5320]  font-semibold font-popping text-xl py-3 px-28 rounded-md ">
+      <div onClick={handleSave} className="text-right mt-5 ">
+        <button className="text-white bg-[#4B5320] font-semibold text-xl py-3 px-28 rounded-md">
           Save
         </button>
       </div>

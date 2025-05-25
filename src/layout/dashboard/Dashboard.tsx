@@ -1,13 +1,13 @@
 import "./Styled_components.css";
 
 import { Button, Layout, Menu } from "antd";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Lock, User2Icon } from "lucide-react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import React from "react";
 import SubMenu from "antd/es/menu/SubMenu";
-import logo from "../../assets/Images/NOBLLogo.png";
+import React from "react";
 import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
+import logo from "../../assets/Images/NOBLLogo.png";
 
 const { Header, Sider, Content } = Layout;
 
@@ -185,6 +185,58 @@ const menuItems: MenuItem[] = [
           d="M18 1H6C5.46957 1 4.96086 1.21071 4.58579 1.58579C4.21071 1.96086 4 2.46957 4 3V15C4 15.5304 4.21071 16.0391 4.58579 16.4142C4.96086 16.7893 5.46957 17 6 17H18C18.5304 17 19.0391 16.7893 19.4142 16.4142C19.7893 16.0391 20 15.5304 20 15V3C20 2.46957 19.7893 1.96086 19.4142 1.58579C19.0391 1.21071 18.5304 1 18 1ZM9 13V5L16 9L9 13Z"
           stroke="white"
         />
+      </svg>
+    ),
+  },
+  {
+    path: "/audio",
+    title: "Audios",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        version="1.1"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="25"
+        height="25"
+        x="0"
+        y="0"
+        viewBox="0 0 100 100"
+        xml:space="preserve"
+        class=""
+      >
+        <g>
+          <path
+            d="M67.813 16.313a2.969 2.969 0 1 0-5.938 0v67.374a2.969 2.969 0 1 0 5.938 0zM20.313 22.25c1.64 0 2.968 1.33 2.968 2.969V74.78a2.969 2.969 0 1 1-5.937 0V25.22c0-1.64 1.329-2.969 2.969-2.969zM5.469 37.094c1.64 0 2.969 1.329 2.969 2.968v19.876a2.969 2.969 0 1 1-5.938 0V40.061c0-1.64 1.33-2.968 2.969-2.968zM38.125 37.094a2.969 2.969 0 1 0-5.938 0v25.812a2.969 2.969 0 1 0 5.938 0zM50 28.188c1.64 0 2.969 1.329 2.969 2.968v37.688a2.969 2.969 0 1 1-5.938 0V31.156c0-1.64 1.33-2.968 2.969-2.968zM79.688 28.188c1.64 0 2.968 1.329 2.968 2.968v37.688a2.969 2.969 0 1 1-5.937 0V31.156c0-1.64 1.329-2.968 2.969-2.968zM97.5 34.125a2.969 2.969 0 1 0-5.938 0v31.75a2.969 2.969 0 1 0 5.938 0z"
+            fill="#000000"
+            opacity="1"
+            data-original="#000000"
+            class=""
+          ></path>
+        </g>
+      </svg>
+    ),
+    activeIcon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        version="1.1"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="25"
+        height="25"
+        x="0"
+        y="0"
+        viewBox="0 0 100 100"
+        xml:space="preserve"
+        class=""
+      >
+        <g>
+          <path
+            d="M67.813 16.313a2.969 2.969 0 1 0-5.938 0v67.374a2.969 2.969 0 1 0 5.938 0zM20.313 22.25c1.64 0 2.968 1.33 2.968 2.969V74.78a2.969 2.969 0 1 1-5.937 0V25.22c0-1.64 1.329-2.969 2.969-2.969zM5.469 37.094c1.64 0 2.969 1.329 2.969 2.968v19.876a2.969 2.969 0 1 1-5.938 0V40.061c0-1.64 1.33-2.968 2.969-2.968zM38.125 37.094a2.969 2.969 0 1 0-5.938 0v25.812a2.969 2.969 0 1 0 5.938 0zM50 28.188c1.64 0 2.969 1.329 2.969 2.968v37.688a2.969 2.969 0 1 1-5.938 0V31.156c0-1.64 1.33-2.968 2.969-2.968zM79.688 28.188c1.64 0 2.968 1.329 2.968 2.968v37.688a2.969 2.969 0 1 1-5.937 0V31.156c0-1.64 1.329-2.968 2.969-2.968zM97.5 34.125a2.969 2.969 0 1 0-5.938 0v31.75a2.969 2.969 0 1 0 5.938 0z"
+            fill="#fff"
+            opacity="1"
+            data-original="#fff"
+            class=""
+          ></path>
+        </g>
       </svg>
     ),
   },
@@ -473,7 +525,7 @@ const Dashboard: React.FC = () => {
         return (
           <>
             <h1 className="text-[#333333] font-semibold text-[30px]">Videos</h1>
-            <p className="font-normal text-lg -mt-3">
+            <p className="font-normal text-lg -mt-3 mb-4">
               You can upload & manage videos from here.
             </p>
           </>
@@ -484,7 +536,7 @@ const Dashboard: React.FC = () => {
             <h1 className="text-[#333333] font-semibold text-[30px]">
               Documents
             </h1>
-            <p className="font-normal text-lg -mt-3">
+            <p className="font-normal text-lg -mt-3 mb-4">
               You can upload & manage documents from here.
             </p>
           </>

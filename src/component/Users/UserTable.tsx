@@ -5,13 +5,17 @@ import {
 } from "../../../redux/apiSlices/admin/userSlices";
 
 import type { PopconfirmProps } from "antd";
-import Swal from "sweetalert2";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const UserTable = ({ search }) => {
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
-  const { data: UsersData } = useGetUsersQuery({
+  const {
+    data: UsersData,
+    isFetching,
+    isLoading,
+  } = useGetUsersQuery({
     params: {
       page: page,
       per_page: per_page,
@@ -151,6 +155,7 @@ const UserTable = ({ search }) => {
   return (
     <>
       <Table
+        loading={isFetching || isLoading}
         columns={columns}
         rowClassName={() => "table-row-gap"}
         className="custom-ant-table"
