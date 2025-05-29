@@ -1,9 +1,10 @@
-import React from "react";
-import AuthWrapper from "../component/share/AuthWrapper";
-import Title from "../component/share/Title";
 import { Button, Input } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
+import AuthWrapper from "../component/share/AuthWrapper";
+import React from "react";
+import Swal from "sweetalert2";
+import { useVerifyOtpMutation } from "../../redux/apiSlices/authApiSlices";
 
 // Assuming `Input.OTP` is a custom input component
 interface OTPInputProps {
@@ -18,9 +19,44 @@ interface OTPInputProps {
 const VerifyEmail: React.FC = () => {
   const navigate = useNavigate();
 
+  const [VerifyEmail] = useVerifyOtpMutation();
+
+  const [searchData] = useSearchParams();
+  const email = searchData.get("email");
+
+  // console.log(email);
+
   // Define the `onChange` handler with the correct type
-  const onChange = (text: string) => {
-    console.log("onChange:", text);
+  const onChange = async (text: string) => {
+    // console.log("onChange:", text);
+    try {
+      const res = await VerifyEmail({
+        email: email,
+        otp: text,
+      }).unwrap();
+      if (res?.status) {
+        // console.log(res);
+        Swal.fire({
+          icon: "success",
+          title: res?.message,
+          text: "Please check you mail",
+        });
+        navigate(`/auth/set-new-password?token=${res?.data?.access_token}`);
+      } else {
+        // console.log(res);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message?.email,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error?.data || error?.message,
+      });
+    }
   };
 
   const handleVerify = () => {
@@ -46,7 +82,7 @@ const VerifyEmail: React.FC = () => {
         size="large"
         className="otp-input"
         style={{ width: "100%", height: "50px" }}
-        length={5}
+        length={6}
         formatter={(str: string) => str.toUpperCase()}
         onChange={onChange}
       />

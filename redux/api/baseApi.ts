@@ -28,8 +28,8 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
       method: args.method,
       data: args.body,
       headers: {
-        ...args.headers,
         Authorization: token ? `Bearer ${token}` : "",
+        ...args.headers,
       },
     });
 

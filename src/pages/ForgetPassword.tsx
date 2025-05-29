@@ -15,15 +15,23 @@ const ForgetPassword: React.FC = () => {
   const [forgotPassword] = useForgotPasswordMutation();
 
   const onFinish = async (values: ForgetPasswordFormValues) => {
-    console.log(values);
+    // console.log(values);
     try {
       const res = await forgotPassword(values).unwrap();
       if (res?.status) {
+        console.log(res);
+        Swal.fire({
+          icon: "success",
+          title: res?.message,
+          text: "Please check you mail",
+        });
+        navigate(`/auth/verify?email=${values?.email}`);
       } else {
+        // console.log(res);
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: res?.message,
+          text: res?.message?.email,
         });
       }
     } catch (error) {
