@@ -1,13 +1,13 @@
 import "./Styled_components.css";
 
 import { Button, Layout, Menu } from "antd";
-import { Lock, User2Icon } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Lock, User2Icon } from "lucide-react";
 
-import SubMenu from "antd/es/menu/SubMenu";
 import React from "react";
-import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
+import SubMenu from "antd/es/menu/SubMenu";
 import logo from "../../assets/Images/NOBLLogo.png";
+import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
 
 const { Header, Sider, Content } = Layout;
 
@@ -738,7 +738,10 @@ const Dashboard: React.FC = () => {
             >
               {/* avater */}
               <div className="flex justify-center items-center gap-4">
-                <img src={userData?.data?.photo} className="h-12 w-12" />
+                <img
+                  src={userData?.data?.photo}
+                  className="h-12 w-12 rounded-full"
+                />
                 <h2 className="font-roboto font-semibold text-[28]">
                   {userData?.data?.name}
                 </h2>
