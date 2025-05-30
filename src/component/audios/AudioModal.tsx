@@ -20,6 +20,7 @@ import {
 } from "../../../redux/apiSlices/admin/audiosSlices";
 
 import Swal from "sweetalert2";
+import { getDuration } from "../../utils/utils";
 
 interface AudiosModalProps {
   data: any;
@@ -105,6 +106,10 @@ const AudioModal: React.FC<AudiosModalProps> = ({
 
       if (AudiosFile) {
         formData.append("audio", AudiosFile);
+        // Wait for the audio duration
+        const duration = await getDuration(AudiosFile);
+        formData.append("duration", duration.toString());
+        console.log("Audio duration:", duration);
       }
 
       if (thumbnailFile) {

@@ -20,6 +20,7 @@ import {
 } from "../../../redux/apiSlices/admin/videosSlices";
 
 import Swal from "sweetalert2";
+import { getDuration } from "../../utils/utils";
 
 interface VideoModalProps {
   data: any;
@@ -94,6 +95,32 @@ const VideoModal: React.FC<VideoModalProps> = ({
     return false;
   };
 
+  function getVideoDuration(videoFile) {
+    return new Promise((resolve, reject) => {
+      // Create a video element
+      const video = document.createElement("video");
+
+      // Create a URL for the video file
+      const url = URL.createObjectURL(videoFile);
+
+      // Set up event listeners
+      video.addEventListener("loadedmetadata", () => {
+        // Duration is available now
+        const duration = video.duration; // in seconds
+        URL.revokeObjectURL(url); // Clean up
+        resolve(duration);
+      });
+
+      video.addEventListener("error", (error) => {
+        URL.revokeObjectURL(url); // Clean up
+        reject(error);
+      });
+
+      // Set the video source
+      video.src = url;
+    });
+  }
+
   const handleSubmit = async (values: any) => {
     try {
       const formData = new FormData();
@@ -102,6 +129,10 @@ const VideoModal: React.FC<VideoModalProps> = ({
 
       if (videoFile) {
         formData.append("video", videoFile);
+        // Wait for the audio duration
+        const duration = await getDuration(videoFile);
+        formData.append("duration", duration.toString());
+        console.log("Audio duration:", duration);
       }
 
       if (thumbnailFile) {

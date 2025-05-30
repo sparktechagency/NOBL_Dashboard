@@ -107,6 +107,15 @@ const Audios = () => {
         <span>{category ? category.name : "N/A"}</span>
       ),
     },
+    // {
+    //   title: "Duration",
+    //   dataIndex: "Duration",
+    //   key: "duration",
+    //   align: "center",
+    //   render: (duration: any, record: any) => (
+    //     <span>{record?.duration ? record?.duration : "N/A"}</span>
+    //   ),
+    // },
     {
       title: "Action",
       key: "action",
