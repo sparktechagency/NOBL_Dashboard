@@ -98,12 +98,12 @@ const AudioModal: React.FC<AudiosModalProps> = ({
 
   const handleSubmit = async (values: any) => {
     try {
-      console.log(values);
+      // console.log(values);
 
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("category_id", values.category_id);
-
+      formData.append("duration", data?.duration);
       if (AudiosFile) {
         formData.append("audio", AudiosFile);
         // Wait for the audio duration
