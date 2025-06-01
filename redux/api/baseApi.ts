@@ -35,12 +35,11 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
 
     // console.log(result);
 
-    if (result?.status === 401) {
-      localStorage.removeItem("token");
-    }
-
     return { data: result?.data };
   } catch (error: any) {
+    if (error?.status === 401) {
+      localStorage.removeItem("token");
+    }
     if (error.response?.data) {
       // if (typeof error.response?.data === "string") {
       //   const withCurly = (error.response.data += "}");
