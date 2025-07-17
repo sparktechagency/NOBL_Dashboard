@@ -9,7 +9,7 @@ const UserModal: React.FC<{
   setIsModalOpen: (value: boolean) => void;
 }> = ({ isModalOpen, setIsModalOpen }) => {
   const [form] = Form.useForm();
-  const [addNewUser] = useAddUserMutation();
+  const [addNewUser, { isLoading: addLoading }] = useAddUserMutation();
 
   const handleSubmit = async (values: any) => {
     try {
@@ -179,10 +179,16 @@ const UserModal: React.FC<{
 
             <Form.Item>
               <Button
+                style={{
+                  backgroundColor: "#4B5320",
+                  color: "white",
+                  height: 50,
+                }}
+                loading={addLoading}
                 type="primary"
                 htmlType="submit"
                 size="large"
-                className="w-[500px] p-3 bg-[#4B5320] my-5 rounded-lg text-white"
+                className="w-[500px] p-3  bg-[#4B5320] my-5 rounded-lg text-white"
               >
                 ADD
               </Button>

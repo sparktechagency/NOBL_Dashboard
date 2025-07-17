@@ -76,8 +76,8 @@ const ManageModel: React.FC<VideoModalProps> = ({
   setSelectedItem,
 }) => {
   const [form] = Form.useForm();
-  const [addLink] = useAddLinksMutation();
-  const [updateLinks] = useUpdateLinksMutation();
+  const [addLink, { isLoading: addLoading }] = useAddLinksMutation();
+  const [updateLinks, { isLoading: updateLoading }] = useUpdateLinksMutation();
   const [thumbnail, setThumbnail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -131,7 +131,15 @@ const ManageModel: React.FC<VideoModalProps> = ({
           id: selectedItem.id,
           data: fromData,
         }).unwrap();
-        console.log(res);
+        // console.log(res);
+        if (!res.status) {
+          Swal.fire({
+            title: "Error",
+            text: res.message?.link || "Failed to update link",
+            icon: "error",
+          });
+          return;
+        }
         Swal.fire({
           title: "Success",
           text: "Link updated successfully",
@@ -263,6 +271,12 @@ const ManageModel: React.FC<VideoModalProps> = ({
           </Form.Item>
 
           <Button
+            style={{
+              backgroundColor: "#4B5320",
+              color: "white",
+              height: 50,
+            }}
+            loading={addLoading || updateLoading}
             type="primary"
             htmlType="submit"
             className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white mt-4"

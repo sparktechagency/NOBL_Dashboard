@@ -348,6 +348,11 @@ const AudioModal: React.FC<AudiosModalProps> = ({
             />
           ) : (
             <Button
+              style={{
+                backgroundColor: "#4B5320",
+                color: "white",
+                height: 50,
+              }}
               loading={addResults.isLoading || updateResults.isLoading}
               type="primary"
               htmlType="submit"

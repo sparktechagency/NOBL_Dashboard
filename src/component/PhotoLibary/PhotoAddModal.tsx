@@ -27,8 +27,8 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
   setData,
   categoryData = [],
 }) => {
-  const [addPhoto] = useAddPhotosMutation();
-  const [updatePhoto] = useUpdatePhotosMutation();
+  const [addPhoto, { isLoading: addLoading }] = useAddPhotosMutation();
+  const [updatePhoto, { isLoading: updateLoading }] = useUpdatePhotosMutation();
   const [form] = Form.useForm();
   const [file, setFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(
@@ -71,10 +71,14 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
         Swal.fire("Updated!", "Photo has been updated.", "success");
       } else {
         // Add new photo
-        await addPhoto(formData).unwrap();
-        setFile(null);
-        handleCancel();
-        Swal.fire("Added!", "Photo has been added.", "success");
+        const res = await addPhoto(formData).unwrap();
+        if (res.status) {
+          setFile(null);
+          handleCancel();
+          Swal.fire("Added!", "Photo has been added.", "success");
+        } else {
+          Swal.fire("Warning", "Failed to upload photo", "error");
+        }
       }
     } catch (error) {
       Swal.fire("Error", "Failed to upload photo", "error");
@@ -185,6 +189,12 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
           </Form.Item>
 
           <Button
+            style={{
+              backgroundColor: "#4B5320",
+              color: "white",
+              height: 50,
+            }}
+            loading={addLoading || updateLoading}
             type="primary"
             className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white mt-4"
             size="large"

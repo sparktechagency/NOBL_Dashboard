@@ -21,7 +21,6 @@ import {
 
 import Swal from "sweetalert2";
 import { getDuration } from "../../utils/utils";
-import ColumnGroup from "antd/es/table/ColumnGroup";
 
 interface VideoModalProps {
   data: any;
@@ -55,7 +54,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
     if (data) {
       form.setFieldsValue({
         title: data.title,
-        duration : data?.duration,
+        duration: data?.duration,
         category_id: data.category_id,
       });
       setPreviewImage(data.thumbnail_url || null);
@@ -96,11 +95,8 @@ const VideoModal: React.FC<VideoModalProps> = ({
     setVideoPreview(URL.createObjectURL(file));
     return false;
   };
-  
-  
-  
+
   // console.log(data)
- 
 
   const handleSubmit = async (values: any) => {
     try {
@@ -108,8 +104,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
       formData.append("title", values.title);
       formData.append("category_id", values.category_id);
       formData.append("duration", data?.duration);
-
-
 
       if (videoFile) {
         // console.log("HIt")
@@ -355,6 +349,11 @@ const VideoModal: React.FC<VideoModalProps> = ({
             />
           ) : (
             <Button
+              style={{
+                backgroundColor: "#4B5320",
+                color: "white",
+                height: 50,
+              }}
               loading={addResults.isLoading || updateResults.isLoading}
               type="primary"
               htmlType="submit"

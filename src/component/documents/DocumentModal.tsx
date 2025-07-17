@@ -29,8 +29,10 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
   setSelectedItem,
 }) => {
   const [form] = Form.useForm();
-  const [AddDocument] = useAddDocumentsMutation();
-  const [updateDocument] = useUpdateDocumentsMutation();
+  const [AddDocument, { isLoading: documentLoading }] =
+    useAddDocumentsMutation();
+  const [updateDocument, { isLoading: updateDocumentLoading }] =
+    useUpdateDocumentsMutation();
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
 
@@ -88,7 +90,15 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
           id: selectedItem.id,
           data: formData,
         }).unwrap();
-        console.log(res);
+        // console.log(res);
+        if (res.status === false) {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to update document.",
+            icon: "error",
+          });
+          return;
+        }
         Swal.fire({
           title: "Success",
           text: "Document updated successfully!",
@@ -98,6 +108,16 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
       } else {
         const res = await AddDocument(formData).unwrap();
         console.log(res);
+
+        if (res.status === false) {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to upload document.",
+            icon: "error",
+          });
+          return;
+        }
+
         Swal.fire({
           title: "Success",
           text: "Document uploaded successfully!",
@@ -280,11 +300,16 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
         </Form.Item>
 
         <Button
+          style={{
+            backgroundColor: "#4B5320",
+            color: "white",
+            height: 50,
+          }}
+          loading={documentLoading || updateDocumentLoading}
           type="primary"
           className="w-full bg-[#4B5320] text-white mt-4"
           size="large"
           htmlType="submit"
-          style={{ height: 50 }}
         >
           {selectedItem ? "Update" : "Upload"}
         </Button>

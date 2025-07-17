@@ -24,8 +24,9 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
 }) => {
   const [form] = Form.useForm();
   const inputRef = React.useRef<any>(null);
-  const [addNewCategory] = useAddCategoryMutation();
-  const [updateCategory] = useUpdateCategoryMutation();
+  const [addNewCategory, { isLoading: addLoading }] = useAddCategoryMutation();
+  const [updateCategory, { isLoading: updateLoading }] =
+    useUpdateCategoryMutation();
 
   // console.log(selectedCategory);
 
@@ -127,6 +128,12 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           </Form.Item>
           <Form.Item>
             <Button
+              style={{
+                backgroundColor: "#4B5320",
+                color: "white",
+                height: 50,
+              }}
+              loading={addLoading || updateLoading}
               className="w-full mt-4 py-6 bg-[#4B5320] text-white"
               type="default"
               htmlType="submit"

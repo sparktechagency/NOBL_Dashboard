@@ -1,6 +1,15 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.swal2-confirm .swal2-styled {
+  background-color: #1c0031 !important; /* Change this to your desired color */
+  color: rgb(255, 0, 0) !important;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
 
 .ant-modal-content {
   background-color: green !important;
