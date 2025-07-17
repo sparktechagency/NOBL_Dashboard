@@ -134,7 +134,18 @@ const AudioModal: React.FC<AudiosModalProps> = ({
 
       if (data) {
         formData.append("_method", "PUT");
-        await updateAudios({ id: data.id, data: formData, ...config }).unwrap();
+        const res = await updateAudios({
+          id: data.id,
+          data: formData,
+          ...config,
+        }).unwrap();
+        if (!res.status) {
+          return Swal.fire({
+            title: "Warning",
+            text: res?.message?.thumbnail,
+            icon: "error",
+          });
+        }
         Swal.fire({
           title: "Updated!",
           text: "Audios has been updated.",
@@ -142,7 +153,13 @@ const AudioModal: React.FC<AudiosModalProps> = ({
         });
       } else {
         const res = await addNewAudios({ data: formData, ...config }).unwrap();
-        console.log(res);
+        if (!res.status) {
+          return Swal.fire({
+            title: "Warning",
+            text: res?.message?.thumbnail,
+            icon: "error",
+          });
+        }
         Swal.fire({
           title: "Added!",
           text: "Audios has been added.",

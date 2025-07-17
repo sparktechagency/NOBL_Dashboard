@@ -2,10 +2,10 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-import AuthWrapper from "../component/share/AuthWrapper";
 import React from "react";
 import Swal from "sweetalert2";
 import { useLoginMutation } from "../../redux/apiSlices/authApiSlices";
+import AuthWrapper from "../component/share/AuthWrapper";
 
 interface LoginFormValues {
   email: string;
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
           rules={[{ required: true, message: "Please enter your email" }]}
         >
           <Input
-            placeholder="abidhasan@gmail.com"
+            placeholder="example@gmail.com"
             type="email"
             style={{
               height: "50px",

@@ -136,14 +136,33 @@ const VideoModal: React.FC<VideoModalProps> = ({
 
       if (data) {
         formData.append("_method", "PUT");
-        await updateVideo({ id: data.id, data: formData, ...config }).unwrap();
+        const res = await updateVideo({
+          id: data.id,
+          data: formData,
+          ...config,
+        }).unwrap();
+        // console.log(res);
+        if (!res.status) {
+          return Swal.fire({
+            title: "Warning",
+            text: res?.message?.thumbnail,
+            icon: "error",
+          });
+        }
         Swal.fire({
           title: "Updated!",
           text: "Video has been updated.",
           icon: "success",
         });
       } else {
-        await addNewVideo({ data: formData, ...config }).unwrap();
+        const res = await addNewVideo({ data: formData, ...config }).unwrap();
+        if (!res.status) {
+          return Swal.fire({
+            title: "Warning",
+            text: res?.message?.thumbnail,
+            icon: "error",
+          });
+        }
         Swal.fire({
           title: "Added!",
           text: "Video has been added.",
