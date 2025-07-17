@@ -1,10 +1,10 @@
 import { Button, Input } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import AuthWrapper from "../component/share/AuthWrapper";
 import React from "react";
 import Swal from "sweetalert2";
 import { useVerifyOtpMutation } from "../../redux/apiSlices/authApiSlices";
+import AuthWrapper from "../component/share/AuthWrapper";
 
 // Assuming `Input.OTP` is a custom input component
 interface OTPInputProps {
@@ -72,7 +72,8 @@ const VerifyEmail: React.FC = () => {
           </h3>
         </div>
         <p className="text-sm font-normal mb-6 text-[#5C5C5C] ">
-          We sent a reset link to contact@dscode...com <br />
+          We sent a reset link to {email}
+          <br />
           enter 5 digit code that is mentioned in the email
         </p>
       </div>

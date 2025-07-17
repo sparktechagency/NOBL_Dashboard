@@ -1,8 +1,8 @@
 import { Form, Input, Tabs, Upload, message } from "antd";
 import { useEffect, useState } from "react";
 import {
+  useChangePasswordMutation,
   useGetProfileQuery,
-  useResetPasswordMutation,
   useUpdateProfileMutation,
 } from "../../redux/apiSlices/authApiSlices";
 
@@ -17,6 +17,7 @@ type FieldType = {
 
 // tabs 2 type
 type FieldTypePassTab = {
+  old_password?: string;
   password?: string;
   c_password?: string;
 };
@@ -24,7 +25,7 @@ type FieldTypePassTab = {
 const ChangePassword = () => {
   const { data: userData, isLoading: profileLoading } = useGetProfileQuery({});
   const [updateProfile] = useUpdateProfileMutation();
-  const [resetPassword] = useResetPasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
   const [form] = Form.useForm();
   const [formPassword] = Form.useForm();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -42,6 +43,7 @@ const ChangePassword = () => {
       }
 
       const response = await updateProfile(formData).unwrap();
+
       message.success("Profile updated successfully");
 
       // Update the preview image if a new one was uploaded
@@ -60,12 +62,16 @@ const ChangePassword = () => {
   // Handle password reset
   const handlePasswordReset = async (values: FieldTypePassTab) => {
     try {
-      await resetPassword({
+      const response = await changePassword({
         password: values.password,
+        old_password: values.old_password,
         c_password: values.c_password,
       }).unwrap();
-      message.success("Password changed successfully");
-      formPassword.resetFields();
+      // console.log(response);
+      if (response?.status) {
+        formPassword.resetFields();
+      }
+      message.success(response?.message || "Password changed successfully");
     } catch (err) {
       message.error("Failed to change password");
       console.error("Password change error:", err);
@@ -167,6 +173,18 @@ const ChangePassword = () => {
           autoComplete="off"
           layout="vertical"
         >
+          <Form.Item<FieldTypePassTab>
+            name="old_password"
+            rules={[{ required: true, message: "Please input new password" }]}
+            className="mb-7 "
+            colon={false}
+            label="Old password"
+          >
+            <Input.Password
+              placeholder="**********"
+              className="p-4 text-sm text-gray-900 font-medium border-none w-[1112px] bg-[#ffffff]"
+            />
+          </Form.Item>
           <Form.Item<FieldTypePassTab>
             name="password"
             rules={[{ required: true, message: "Please input new password" }]}
