@@ -79,7 +79,7 @@ const PhotoLibrary = () => {
               fill="white"
             />
           </svg>
-          Add a new category
+          Add a new photo
         </button>
         <div>
           <Select
