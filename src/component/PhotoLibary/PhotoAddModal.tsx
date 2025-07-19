@@ -1,9 +1,9 @@
+import { Button, Form, Image, Modal, Select, Upload } from "antd";
 import {
   CloseCircleOutlined,
   DownOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Image, Modal, Select, Upload } from "antd";
 import React, { useState } from "react";
 import {
   useAddPhotosMutation,
@@ -46,8 +46,12 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
   const handleUpload = async () => {
     try {
       const values = await form.validateFields();
-      if (!file && !data) {
-        Swal.fire("Error", "Please upload a photo before submitting", "error");
+      if (!file) {
+        Swal.fire(
+          "Warning",
+          "Please upload a photo before submitting",
+          "error"
+        );
         return;
       }
 
@@ -62,29 +66,40 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
 
       if (data) {
         // Update photo
-        await updatePhoto({
+        const res = await updatePhoto({
           id: data.id,
           data: formData,
         }).unwrap();
-        setFile(null);
-        handleCancel();
-        Swal.fire("Updated!", "Photo has been updated.", "success");
+        console.log(res);
+        if (res?.status) {
+          Swal.fire("Updated!", "Photo has been updated.", "success");
+          setFile(null);
+          handleCancel();
+        } else {
+          return Swal.fire({
+            title: "Warning",
+            text: res.message?.photo || "Failed to add photo",
+            icon: "error",
+          });
+        }
       } else {
         // Add new photo
         const res = await addPhoto(formData).unwrap();
+        console.log(res);
         if (res.status) {
           setFile(null);
           handleCancel();
           Swal.fire("Added!", "Photo has been added.", "success");
         } else {
-          Swal.fire("Warning", "Failed to upload photo", "error");
+          return Swal.fire({
+            title: "Warning",
+            text: res.message?.photo || "Failed to add photo",
+            icon: "error",
+          });
         }
       }
     } catch (error) {
-      Swal.fire("Error", "Failed to upload photo", "error");
-    } finally {
-      setFile(null);
-      form.resetFields();
+      return Swal.fire("warning", "Failed to upload photo", "error");
     }
   };
 
