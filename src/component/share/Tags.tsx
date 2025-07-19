@@ -61,8 +61,13 @@ const Tags: React.FC<TagsProps> = ({
       <div className="flex gap-2">
         {categoryButtons.map((cat, index) => (
           <Button
+            shape="default"
+            style={{
+              backgroundColor: selectedCategory === cat ? "#4B5320" : "white",
+              color: selectedCategory === cat ? "white" : "#4B5320",
+            }}
             key={index}
-            className={` ${
+            className={`!transition-all !duration-500 ${
               selectedCategory === cat
                 ? "bg-[#4B5320] text-white"
                 : "bg-white text-black"

@@ -1,9 +1,9 @@
-import { Button, Form, Image, Modal, Select, Upload } from "antd";
 import {
   CloseCircleOutlined,
   DownOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
+import { Button, Form, Image, Modal, Select, Upload } from "antd";
 import React, { useState } from "react";
 import {
   useAddPhotosMutation,
@@ -46,7 +46,7 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
   const handleUpload = async () => {
     try {
       const values = await form.validateFields();
-      if (!file) {
+      if (!file && !data) {
         Swal.fire(
           "Warning",
           "Please upload a photo before submitting",
