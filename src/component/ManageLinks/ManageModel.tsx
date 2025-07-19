@@ -1,16 +1,16 @@
-import { CloseCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Select, Upload } from "antd";
+import { CloseCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import {
   useAddLinksMutation,
   useUpdateLinksMutation,
 } from "../../../redux/apiSlices/admin/linksSlices";
 
-import Swal from "sweetalert2";
 import DocSvg from "./DocSvg";
 import FacebookSvg from "./FacebookSvg";
 import GoogleSvg from "./GoogleSvg";
 import OthersSvg from "./OthersSvg";
+import Swal from "sweetalert2";
 import YoutubeSvg from "./YoutubeSvg";
 
 const SelectionData = [
@@ -132,19 +132,24 @@ const ManageModel: React.FC<VideoModalProps> = ({
           data: fromData,
         }).unwrap();
         // console.log(res);
-        if (!res.status) {
+        if (res.status) {
           Swal.fire({
-            title: "Error",
-            text: res.message?.link || "Failed to update link",
+            title: "Success",
+            text: "Link added successfully",
+            icon: "success",
+          });
+          form.resetFields();
+          setThumbnail(null);
+        } else {
+          return Swal.fire({
+            title: "Warning",
+            text:
+              res.message?.link ||
+              res.message?.thumbnail ||
+              "Failed to update link",
             icon: "error",
           });
-          return;
         }
-        Swal.fire({
-          title: "Success",
-          text: "Link updated successfully",
-          icon: "success",
-        });
       } else {
         const res = await addLink(fromData).unwrap();
         if (res.status) {
@@ -156,9 +161,12 @@ const ManageModel: React.FC<VideoModalProps> = ({
           form.resetFields();
           setThumbnail(null);
         } else {
-          Swal.fire({
-            title: "Error",
-            text: res.message?.link || "Failed to add link",
+          return Swal.fire({
+            title: "Warning",
+            text:
+              res.message?.link ||
+              res.message?.thumbnail ||
+              "Failed to add link",
             icon: "error",
           });
         }

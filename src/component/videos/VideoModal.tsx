@@ -1,9 +1,4 @@
 import {
-  CloseCircleOutlined,
-  DownOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import {
   Button,
   Form,
   Input,
@@ -13,6 +8,11 @@ import {
   Upload,
   message,
 } from "antd";
+import {
+  CloseCircleOutlined,
+  DownOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import {
   useAddVideoMutation,
@@ -170,7 +170,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
         });
       }
 
-      handleCancel();
+      successfulDone();
     } catch (err) {
       Swal.fire({
         title: "Error",
@@ -179,14 +179,19 @@ const VideoModal: React.FC<VideoModalProps> = ({
       });
       console.error(err);
     } finally {
-      setThumbnailFile(null);
-      setVideoFile(null);
-      setPreviewImage(null);
-      setVideoPreview(null);
       setUploadProgress({ video: 0, thumbnail: 0 });
-      form.resetFields();
-      setData(null);
     }
+  };
+
+  const successfulDone = () => {
+    setThumbnailFile(null);
+    setVideoFile(null);
+    setPreviewImage(null);
+    setVideoPreview(null);
+    setUploadProgress({ video: 0, thumbnail: 0 });
+    form.resetFields();
+    setData(null);
+    setIsModalOpen(false);
   };
 
   React.useEffect(() => {

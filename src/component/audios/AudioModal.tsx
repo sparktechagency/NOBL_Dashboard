@@ -1,9 +1,4 @@
 import {
-  CloseCircleOutlined,
-  DownOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import {
   Button,
   Form,
   Input,
@@ -13,6 +8,11 @@ import {
   Upload,
   message,
 } from "antd";
+import {
+  CloseCircleOutlined,
+  DownOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import {
   useAddAudiosMutation,
@@ -125,7 +125,7 @@ const AudioModal: React.FC<AudiosModalProps> = ({
             // This is for the main request progress
             setUploadProgress((prev) => ({
               ...prev,
-              Audios: percent,
+              audio: percent,
               thumbnail: percent,
             }));
           }
@@ -167,7 +167,7 @@ const AudioModal: React.FC<AudiosModalProps> = ({
         });
       }
 
-      handleCancel();
+      successfullyDone();
     } catch (err) {
       Swal.fire({
         title: "Error",
@@ -176,14 +176,19 @@ const AudioModal: React.FC<AudiosModalProps> = ({
       });
       console.error(err);
     } finally {
-      setThumbnailFile(null);
-      setAudiosFile(null);
-      setPreviewImage(null);
-      setAudiosPreview(null);
       setUploadProgress({ audio: 0, thumbnail: 0 });
-      form.resetFields();
-      setData(null);
     }
+  };
+
+  const successfullyDone = () => {
+    setThumbnailFile(null);
+    setAudiosFile(null);
+    setPreviewImage(null);
+    setAudiosPreview(null);
+    setUploadProgress({ audio: 0, thumbnail: 0 });
+    form.resetFields();
+    setData(null);
+    handleCancel();
   };
 
   React.useEffect(() => {
