@@ -7,6 +7,7 @@ import {
 } from "../../redux/apiSlices/authApiSlices";
 
 import type { TabsProps } from "antd";
+import { useSearchParams } from "react-router-dom";
 import uplodIcon from "../assets/Images/dashboard/edit.png";
 
 // tabs 1 type
@@ -24,6 +25,12 @@ type FieldTypePassTab = {
 
 const ChangePassword = () => {
   const { data: userData, isLoading: profileLoading } = useGetProfileQuery({});
+  const [prams] = useSearchParams();
+
+  let tab = prams.get("tab");
+
+  const [tabKey, setTabKey] = useState(tab);
+
   const [updateProfile] = useUpdateProfileMutation();
   const [changePassword] = useChangePasswordMutation();
   const [form] = Form.useForm();
@@ -92,7 +99,11 @@ const ChangePassword = () => {
   };
 
   const onChange = (key: string) => {
-    console.log(key);
+    if (key === "2") {
+      setTabKey("password");
+    } else {
+      setTabKey("profile");
+    }
   };
 
   useEffect(() => {
@@ -273,7 +284,12 @@ const ChangePassword = () => {
 
       {/* tabs */}
       <div className="mx-52">
-        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        <Tabs
+          defaultActiveKey="1"
+          activeKey={tabKey === "profile" ? "1" : "2"}
+          items={items}
+          onChange={onChange}
+        />
       </div>
     </div>
   );

@@ -180,3 +180,43 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+/* Set default menu item styles */
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected),
+.ant-menu-submenu-title {
+  color: black;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Style for selected menu items and their icons */
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected,
+.ant-menu-submenu-selected .ant-menu-submenu-title {
+  background-color: #4B5320 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+/* Style for child items of a selected submenu */
+.ant-menu-submenu.ant-menu-item-selected .ant-menu-item {
+    color: black;
+}
+
+.ant-menu-submenu.ant-menu-item-selected .ant-menu-item.ant-menu-submenu-item-selected {
+    background-color: #4B5320 !important;
+    color: white !important;
+}
+
+.ant-menu-submenu.ant-menu-item-selected .ant-menu-item.ant-menu-submenu-item-selected a {
+    color: white !important;
+}
+
+/* Ensure the text inside the link is white when active */
+.ant-menu-item-selected a,
+.ant-menu-submenu-selected .ant-menu-submenu-title a {
+  color: white !important;
+}
+
+.ant-menu-item a {
+  color: black;
+}

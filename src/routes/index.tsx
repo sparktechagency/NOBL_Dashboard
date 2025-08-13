@@ -75,16 +75,17 @@ const router = createBrowserRouter([
         path: "/settings",
         element: <SettingsPage />,
       },
+
       {
         path: "/settings/aboutUS",
         element: <AboutUs />,
       },
       {
-        path: "/settings/termsAndCondintion",
+        path: "/settings/termsAndCondition",
         element: <TermsAndConditions />,
       },
       {
-        path: "/settings/chagePassword",
+        path: "/settings/profile",
         element: <ChangePassword />,
       },
       // {
