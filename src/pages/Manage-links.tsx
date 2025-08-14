@@ -150,7 +150,7 @@ const Managelinks: React.FC = () => {
   ];
 
   return (
-    <div className=" ">
+    <div className=" pt-7">
       {/* Add new link button */}
       <div className="flex justify-end mb-4 sm:mb-6">
         <button
