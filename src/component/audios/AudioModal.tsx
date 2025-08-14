@@ -215,13 +215,12 @@ const AudioModal: React.FC<AudiosModalProps> = ({
       footer={null}
       closable={false}
       onCancel={handleCancel}
-      className="rounded-lg"
-      width={1026}
+      className="!w-11/12 max-w-5xl rounded-lg !top-4 lg:!top-24"
       title={
         <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
           <div></div>
-          <h2 className="text-lg font-semibold">
-            {data ? "Edit Audios" : "Add a new Audios"}
+          <h2 className="text-lg font-semibold text-center">
+            {data ? "Edit Audio" : "Add a New Audio"}
           </h2>
           <CloseCircleOutlined
             onClick={handleCancel}
@@ -234,18 +233,15 @@ const AudioModal: React.FC<AudiosModalProps> = ({
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        className="bg-white rounded-b-lg space-y-5 p-16"
+        className="bg-white rounded-b-lg space-y-5 p-6 sm:p-8 lg:p-16"
       >
-        <div className="flex justify-between gap-8">
+        <div className="flex flex-col md:flex-row justify-between gap-8">
+          {/* Audio Upload */}
           <div className="flex-1">
             <Form.Item
               name="audio"
-              rules={[{ required: !data, message: "Please upload a Audios!" }]}
-              label={
-                <p className="font-roboto font-normal text-sm text-black text-start">
-                  Select Audios
-                </p>
-              }
+              rules={[{ required: !data, message: "Please upload an audio!" }]}
+              label="Select Audio"
             >
               <Upload.Dragger
                 showUploadList={false}
@@ -253,27 +249,23 @@ const AudioModal: React.FC<AudiosModalProps> = ({
                 accept="audio/*"
               >
                 {AudiosPreview ? (
-                  <div className="flex flex-col justify-center cursor-pointer">
+                  <div className="flex justify-center items-center h-48 p-2">
                     <audio
                       controls
-                      className="max-w-full max-h-40 object-contain border rounded-md"
                       src={AudiosPreview}
+                      className="max-w-full max-h-full object-contain rounded-md"
                     />
                   </div>
                 ) : (
-                  <div className="flex flex-col justify-center cursor-pointer h-40 items-center">
-                    <p className="ant-upload-drag-icon p-1 rounded-lg w-[162px]">
-                      <UploadOutlined
-                        style={{
-                          fontSize: "18px",
-                          color: "#697B8C",
-                          paddingRight: "10px",
-                        }}
-                      />
+                  <div className="flex flex-col justify-center items-center h-48 p-4 cursor-pointer">
+                    <p className="ant-upload-drag-icon">
+                      <UploadOutlined className="text-2xl text-gray-500 mb-2" />
+                    </p>
+                    <p className="text-gray-700 font-semibold">
                       Click to upload
                     </p>
-                    <p className="text-gray-600">
-                      Click or drag a Audios file in this area to upload
+                    <p className="text-gray-500 text-sm">
+                      or drag audio file here
                     </p>
                   </div>
                 )}
@@ -281,17 +273,14 @@ const AudioModal: React.FC<AudiosModalProps> = ({
             </Form.Item>
           </div>
 
+          {/* Thumbnail Upload */}
           <div className="flex-1">
             <Form.Item
               name="thumbnail"
               rules={[
                 { required: !data, message: "Please upload a thumbnail!" },
               ]}
-              label={
-                <p className="font-roboto font-normal text-sm text-black text-start">
-                  Select Thumbnail
-                </p>
-              }
+              label="Select Thumbnail"
             >
               <Upload.Dragger
                 showUploadList={false}
@@ -299,27 +288,23 @@ const AudioModal: React.FC<AudiosModalProps> = ({
                 accept="image/*"
               >
                 {previewImage ? (
-                  <div className="flex flex-col justify-center cursor-pointer">
+                  <div className="flex justify-center items-center h-48 p-2">
                     <img
                       src={previewImage}
-                      alt="Thumbnail preview"
-                      className="max-w-full max-h-40 object-contain border rounded-md"
+                      alt="Thumbnail"
+                      className="max-w-full max-h-full object-contain rounded-md"
                     />
                   </div>
                 ) : (
-                  <div className="flex flex-col justify-center cursor-pointer h-40 items-center">
-                    <p className="ant-upload-drag-icon p-1 rounded-lg w-[162px]">
-                      <UploadOutlined
-                        style={{
-                          fontSize: "18px",
-                          color: "#697B8C",
-                          paddingRight: "10px",
-                        }}
-                      />
+                  <div className="flex flex-col justify-center items-center h-48 p-4 cursor-pointer">
+                    <p className="ant-upload-drag-icon">
+                      <UploadOutlined className="text-2xl text-gray-500 mb-2" />
+                    </p>
+                    <p className="text-gray-700 font-semibold">
                       Click to upload
                     </p>
-                    <p className="text-gray-600">
-                      Click or drag a photo file in this area to upload
+                    <p className="text-gray-500 text-sm">
+                      or drag image file here
                     </p>
                   </div>
                 )}
@@ -328,17 +313,20 @@ const AudioModal: React.FC<AudiosModalProps> = ({
           </div>
         </div>
 
+        {/* Title */}
         <Form.Item
           name="title"
           label="Title"
-          rules={[{ required: true, message: "Please enter Audios title!" }]}
+          rules={[{ required: true, message: "Please enter audio title!" }]}
         >
           <Input
-            placeholder="Enter your Audios title"
-            className="p-2 border-none bg-[#F0F0F0]"
+            placeholder="Enter your audio title"
+            size="large"
+            className="!bg-[#F0F0F0] !border-none"
           />
         </Form.Item>
 
+        {/* Category */}
         <Form.Item
           name="category_id"
           label="Category"
@@ -346,12 +334,10 @@ const AudioModal: React.FC<AudiosModalProps> = ({
         >
           <Select
             showSearch
-            style={{ width: 363, height: 50 }}
-            className="border border-gray-300 rounded-md"
+            size="large"
             placeholder="Select a category"
             optionFilterProp="children"
-            suffixIcon={<DownOutlined style={{ color: "black" }} />}
-            defaultValue={categoryData?.id}
+            suffixIcon={<DownOutlined />}
             options={
               categoryData?.map((item) => ({
                 value: item.id,
@@ -361,6 +347,7 @@ const AudioModal: React.FC<AudiosModalProps> = ({
           />
         </Form.Item>
 
+        {/* Submit */}
         <Form.Item>
           {addResults.isLoading || updateResults.isLoading ? (
             <Progress
@@ -370,18 +357,14 @@ const AudioModal: React.FC<AudiosModalProps> = ({
             />
           ) : (
             <Button
-              style={{
-                backgroundColor: "#4B5320",
-                color: "white",
-                height: 50,
-              }}
+              style={{ backgroundColor: "#4B5320", color: "white" }}
               loading={addResults.isLoading || updateResults.isLoading}
               type="primary"
               htmlType="submit"
               className="w-full bg-[#4B5320] hover:bg-[#3d4318] text-white"
               size="large"
             >
-              {data ? "Update Audios" : "Upload Audios"}
+              {data ? "Update Audio" : "Upload Audio"}
             </Button>
           )}
         </Form.Item>

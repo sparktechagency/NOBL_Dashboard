@@ -1,9 +1,9 @@
+import { Button, Form, Modal, Select, Upload, message } from "antd";
 import {
   CloseCircleOutlined,
   DownOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Modal, Select, Upload, message } from "antd";
 import React, { useState } from "react";
 import {
   useAddDocumentsMutation,
@@ -159,7 +159,7 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
       footer={null}
       closable={false}
       onCancel={handleCancel}
-      className="rounded-lg"
+      className="!w-11/12 max-w-5xl rounded-lg !top-4 lg:!top-24"
       // style={{ top: "2%" }}
       width={1026}
       title={

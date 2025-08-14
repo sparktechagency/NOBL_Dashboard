@@ -5,39 +5,34 @@ import {
   useGetLinksQuery,
 } from "../../redux/apiSlices/admin/linksSlices";
 
-import Swal from "sweetalert2";
 import ManageModel from "../component/ManageLinks/ManageModel";
+import Swal from "sweetalert2";
 
 const Managelinks: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
-  const [search, setSearch] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [per_page, setPer_page] = useState(7);
+
   const {
     data: linksData,
     isFetching,
     isLoading,
   } = useGetLinksQuery({
-    params: {
-      page: page,
-      per_page: per_page,
-    },
+    params: { page, per_page },
   });
-  const [deleteLinks] = useDeleteLinksMutation();
 
+  const [deleteLinks] = useDeleteLinksMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const showModal = () => {
-    setSelectedItem(null); // Reset selected item when opening the modal
+    setSelectedItem(null);
     setIsModalOpen(true);
   };
-  //  Edit modal
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const showEditModal = (item: any) => {
     setSelectedItem(item);
     setIsModalOpen(true);
   };
-  // delete modal
 
   const handleDelete = async (id: string) => {
     try {
@@ -71,33 +66,22 @@ const Managelinks: React.FC = () => {
   const columns = [
     {
       title: "Sl No",
-      dataIndex: "key",
-      key: "type",
+      key: "sl",
       align: "center",
-      render: (_, record, index) => (
-        <div>
-          <span style={{ fontWeight: "bold" }}>{index + 1}</span>
-        </div>
-      ),
+      render: (_, record, index) => index + 1 + (page - 1) * per_page,
     },
-
     {
       title: "Link Type",
-      dataIndex: "type",
       key: "type",
-
       render: (_, record) => (
-        <Space direction="horizontal" align="center">
-          <span>{record.link_type}</span>
-        </Space>
+        <span className="truncate max-w-[120px]">{record.link_type}</span>
       ),
     },
     {
       title: "Link",
-      dataIndex: "link",
       key: "link",
-      render: (link: string, record: any) => (
-        <div className="flex items-center gap-2">
+      render: (_, record) => (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
           <Image
             width={50}
             height={50}
@@ -105,14 +89,13 @@ const Managelinks: React.FC = () => {
             alt={record.link_type}
             style={{ borderRadius: "5px" }}
           />
-
           <a
-            href={link}
+            href={record.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
+            className="text-blue-500 hover:underline truncate max-w-[200px]"
           >
-            {link}
+            {record.link}
           </a>
         </div>
       ),
@@ -122,9 +105,9 @@ const Managelinks: React.FC = () => {
       key: "action",
       align: "center",
       render: (_, record) => (
-        <Space size="middle">
-          {/* view icon */}
-          <div onClick={() => showEditModal(record)}>
+        <Space size="middle" className="flex-wrap">
+          <div onClick={() => showEditModal(record)} className="cursor-pointer">
+            {/* Edit icon */}
             <svg
               width="37"
               height="37"
@@ -136,13 +119,17 @@ const Managelinks: React.FC = () => {
               <path
                 d="M21 13.1716L24 16.1716M19 27.1716H27M11 23.1716L10 27.1716L14 26.1716L25.586 14.5856C25.9609 14.2105 26.1716 13.7019 26.1716 13.1716C26.1716 12.6412 25.9609 12.1326 25.586 11.7576L25.414 11.5856C25.0389 11.2106 24.5303 11 24 11C23.4697 11 22.9611 11.2106 22.586 11.5856L11 23.1716Z"
                 stroke="#28A745"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>
-          <div onClick={() => handleDelete(record.id)}>
+          <div
+            onClick={() => handleDelete(record.id)}
+            className="cursor-pointer"
+          >
+            {/* Delete icon */}
             <svg
               width="37"
               height="37"
@@ -163,12 +150,12 @@ const Managelinks: React.FC = () => {
   ];
 
   return (
-    <div>
-      {/* add new Links */}
-      <div className="flex justify-end">
+    <div className=" ">
+      {/* Add new link button */}
+      <div className="flex justify-end mb-4 sm:mb-6">
         <button
           onClick={showModal}
-          className="font-semibold    flex items-center gap-3 text-lg  font-roboto text-white bg-[#4b5320] py-3 px-[50px]"
+          className="flex items-center gap-2 sm:gap-3 bg-[#4b5320] text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-md text-sm sm:text-base"
         >
           <svg
             width="20"
@@ -185,22 +172,28 @@ const Managelinks: React.FC = () => {
           Add new Link
         </button>
       </div>
-      <Table
-        loading={isFetching || isLoading}
-        columns={columns}
-        dataSource={linksData?.data?.data}
-        pagination={{
-          current: page,
-          pageSize: per_page,
-          total: linksData?.data?.total || 0,
-          onChange: (page, pageSize) => {
-            setPage(page);
-            setPer_page(pageSize);
-          },
-        }}
-        rowClassName={() => "table-row-gap"}
-        className="custom-ant-table mt-5"
-      />
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <Table
+          loading={isFetching || isLoading}
+          columns={columns}
+          dataSource={linksData?.data?.data}
+          pagination={{
+            current: page,
+            pageSize: per_page,
+            total: linksData?.data?.total || 0,
+            onChange: (page, pageSize) => {
+              setPage(page);
+              setPer_page(pageSize);
+            },
+            showSizeChanger: true,
+            pageSizeOptions: ["5", "7", "10"],
+          }}
+          rowClassName={() => "table-row-gap"}
+          className="custom-ant-table min-w-[600px]"
+        />
+      </div>
 
       <ManageModel
         selectedItem={selectedItem}

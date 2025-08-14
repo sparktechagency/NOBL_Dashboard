@@ -1,6 +1,5 @@
 import "./Styled_components.css";
 
-import { Button, Drawer, Layout, Menu, Popover } from "antd";
 import {
   Blocks,
   FileText,
@@ -19,12 +18,13 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Button, Drawer, Layout, Menu, Popover } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 
 import SubMenu from "antd/es/menu/SubMenu";
-import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
 import logo from "../../assets/Images/NOBLLogo.png";
+import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
 
 const { Header, Sider, Content } = Layout;
 const SIDER_WIDTH = 300;
@@ -182,10 +182,10 @@ const Dashboard: React.FC = () => {
                       size={20}
                     />
                   }
-                  className={isParentActive ? "ant-menu-item-selected" : ""}
                 >
                   {item.children.map((child) => {
                     const isChildActive = location.pathname === child.path;
+                    console.log(isChildActive);
                     return (
                       <Menu.Item
                         key={child.path}
@@ -194,9 +194,6 @@ const Dashboard: React.FC = () => {
                             color={isChildActive ? "white" : "black"}
                             size={18}
                           />
-                        }
-                        className={
-                          isChildActive ? "ant-menu-submenu-item-selected" : ""
                         }
                       >
                         <Link to={child.path}>{child.title}</Link>
@@ -313,7 +310,7 @@ const Dashboard: React.FC = () => {
         }}
       >
         <Header
-          className="!bg-white !px-6 !h-[114px] !pt-5"
+          className="!bg-white !px-6 !h-20 lg:!h-28 "
           style={{
             position: "fixed",
             width: isMobile ? "100%" : `calc(100% - ${SIDER_WIDTH}px)`,
@@ -348,7 +345,7 @@ const Dashboard: React.FC = () => {
               <img
                 src={userData?.data?.photo || "https://via.placeholder.com/150"} // Fallback image
                 alt={userData?.data?.name}
-                className="h-12 w-12 rounded-full object-cover"
+                className=" h-11 lg:h-12 aspect-square rounded-full object-cover"
               />
               <h2 className="font-roboto font-semibold text-lg hidden md:block">
                 {userData?.data?.name}
@@ -359,13 +356,14 @@ const Dashboard: React.FC = () => {
 
         <div className="bg-[#f5f8e4]">
           <Content
-            style={{
-              marginTop: 114, // Match header height
-              padding: "24px",
-              overflow: "auto",
-              // height: "calc(100vh - 114px)",
-              background: "#f5f8e4",
-            }}
+            // style={{
+            //   marginTop: 114, // Match header height
+            //   padding: "24px",
+            //   overflow: "auto",
+            //   // height: "calc(100vh - 114px)",
+            //   background: "#f5f8e4",
+            // }}
+            className="bg-[#f5f8e4] min-h-screen mt-20 lg:mt-32 px-6"
           >
             <Outlet />
           </Content>

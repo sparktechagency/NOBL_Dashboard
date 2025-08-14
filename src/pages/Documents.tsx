@@ -4,12 +4,12 @@ import {
   useGetDocumentsQuery,
 } from "../../redux/apiSlices/admin/documentsSlices";
 
-import { DownOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import { useGetCategoryQuery } from "../../redux/apiSlices/admin/categorySlices";
 import DocumentModal from "../component/documents/DocumentModal";
 import DocumentViewModal from "../component/documents/DocumentViewModal";
+import { DownOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
+import { useGetCategoryQuery } from "../../redux/apiSlices/admin/categorySlices";
+import { useState } from "react";
 
 const Documents = () => {
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
@@ -17,39 +17,34 @@ const Documents = () => {
   const [search, setSearch] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [per_page, setPer_page] = useState(7);
+
   const {
     data: documentLibraryData,
     isFetching,
     isLoading,
   } = useGetDocumentsQuery({
-    params: {
-      page: page,
-      per_page: per_page,
-      category_id: selectedCate,
-      search: search,
-    },
+    params: { page, per_page, category_id: selectedCate, search },
   });
+
   const { data: categoryData } = useGetCategoryQuery({
-    params: {
-      type: "Documents Category",
-    },
+    params: { type: "Documents Category" },
   });
 
   const [deletedDocument] = useDeleteDocumentsMutation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalViewOpen, setisModalViewOpen] = useState(false);
 
   const showModal = () => {
     setSelectedItem(null);
     setIsModalOpen(true);
   };
 
-  const [isModalViewOpen, setisModalViewOpen] = useState(false);
-
   const showPDFViewModal = (item: any) => {
     setSelectedItem(item);
     setisModalViewOpen(true);
   };
+
   const showViewModal = (item: any) => {
     setSelectedItem(item);
     setIsModalOpen(true);
@@ -71,8 +66,6 @@ const Documents = () => {
           Swal.fire("Deleted!", "Your document has been deleted.", "success");
         }
       });
-      // await deletedDocument(id).unwrap();
-      // Optionally, you can show a success message or update the UI
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -95,13 +88,12 @@ const Documents = () => {
       dataIndex: "document",
       key: "document",
       render: (document: any, record: any) => (
-        <Space>
+        <Space wrap>
           <Image width={40} src={record.thumbnail} alt="thumbnail" />
           <span>{record.title}</span>
         </Space>
       ),
     },
-
     {
       title: "Category",
       dataIndex: "category",
@@ -114,8 +106,7 @@ const Documents = () => {
       key: "action",
       align: "center",
       render: (_, record) => (
-        <Space size="middle">
-          {/* view icon */}
+        <Space size="middle" wrap>
           <div onClick={() => showPDFViewModal(record)}>
             <svg
               width="37"
@@ -131,7 +122,6 @@ const Documents = () => {
               />
             </svg>
           </div>
-
           <div onClick={() => showViewModal(record)}>
             <svg
               width="37"
@@ -144,9 +134,9 @@ const Documents = () => {
               <path
                 d="M21 13.1716L24 16.1716M19 27.1716H27M11 23.1716L10 27.1716L14 26.1716L25.586 14.5856C25.9609 14.2105 26.1716 13.7019 26.1716 13.1716C26.1716 12.6412 25.9609 12.1326 25.586 11.7576L25.414 11.5856C25.0389 11.2106 24.5303 11 24 11C23.4697 11 22.9611 11.2106 22.586 11.5856L11 23.1716Z"
                 stroke="#28A745"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>
@@ -171,36 +161,21 @@ const Documents = () => {
   ];
 
   return (
-    <div>
-      <div className=" flex justify-between items-center mt-5 mb-[43px]">
-        <div className="flex justify-center">
+    <div className="  lg:px-10 py-5">
+      {/* Header & Search */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
           <input
             type="search"
             onChange={(e) => setSearch(e.target.value)}
             value={search || ""}
-            className="w-[534px] p-4 border border-[#D9D9D9]"
+            className="flex-1 sm:flex-none w-full sm:w-[350px] p-3 border border-[#D9D9D9] rounded-md"
             placeholder="Search for a document"
-            name=""
-            id=""
           />
-          <button className="bg-[#4b5320] p-[18px]">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M13.2127 12.3535L9.15493 8.29564C9.78462 7.48158 10.1252 6.48627 10.1252 5.43939C10.1252 4.18627 9.63618 3.01127 8.75181 2.12533C7.86743 1.23939 6.68931 0.751892 5.43774 0.751892C4.18618 0.751892 3.00806 1.24095 2.12368 2.12533C1.23774 3.0097 0.750244 4.18627 0.750244 5.43939C0.750244 6.69095 1.23931 7.86908 2.12368 8.75345C3.00806 9.63939 4.18462 10.1269 5.43774 10.1269C6.48462 10.1269 7.47837 9.78627 8.29243 9.15814L12.3502 13.2144C12.3621 13.2263 12.3763 13.2357 12.3918 13.2422C12.4074 13.2486 12.424 13.2519 12.4409 13.2519C12.4577 13.2519 12.4744 13.2486 12.4899 13.2422C12.5055 13.2357 12.5196 13.2263 12.5315 13.2144L13.2127 12.5347C13.2246 12.5228 13.2341 12.5087 13.2405 12.4931C13.247 12.4776 13.2503 12.4609 13.2503 12.4441C13.2503 12.4272 13.247 12.4106 13.2405 12.395C13.2341 12.3795 13.2246 12.3654 13.2127 12.3535ZM7.91274 7.91439C7.25024 8.57533 6.37212 8.93939 5.43774 8.93939C4.50337 8.93939 3.62524 8.57533 2.96274 7.91439C2.30181 7.25189 1.93774 6.37377 1.93774 5.43939C1.93774 4.50502 2.30181 3.62533 2.96274 2.96439C3.62524 2.30345 4.50337 1.93939 5.43774 1.93939C6.37212 1.93939 7.25181 2.30189 7.91274 2.96439C8.57368 3.62689 8.93774 4.50502 8.93774 5.43939C8.93774 6.37377 8.57368 7.25346 7.91274 7.91439Z"
-                fill="white"
-              />
-            </svg>
-          </button>
-          {/* Add mamber icon */}
+
           <button
-            onClick={() => showModal()}
-            className="font-semibold ml-7 flex gap-3 justify-between items-center text-base font-roboto text-white bg-[#4b5320] py-3 px-[63px]"
+            onClick={showModal}
+            className="flex gap-2 justify-center items-center text-white bg-[#4b5320] py-3 px-5 rounded-md font-semibold"
           >
             <svg
               width="20"
@@ -217,58 +192,50 @@ const Documents = () => {
             Add a new Document
           </button>
         </div>
-        <div>
+
+        <div className="w-full sm:w-[250px] lg:w-[363px]">
           <Select
             showSearch
-            style={{ width: 363, height: 50 }}
-            className="border border-gray-300 rounded-md"
+            className="w-full border border-gray-300 rounded-md"
             placeholder="Select a category"
             optionFilterProp="children"
             suffixIcon={<DownOutlined style={{ color: "black" }} />}
             defaultValue={null}
             options={[
-              {
-                value: null,
-                label: "All Categories",
-              },
+              { value: null, label: "All Categories" },
               ...(categoryData?.data?.data?.map((item) => ({
                 value: item.id,
                 label: item.name,
               })) || []),
             ]}
-            onChange={(value) => {
-              setSelectedCate(value);
-            }}
+            onChange={(value) => setSelectedCate(value)}
           />
         </div>
       </div>
-      {/* table */}
-      <>
-        <Table
-          loading={isFetching || isLoading}
-          columns={columns}
-          rowClassName={() => "table-row-gap"}
-          className="custom-ant-table"
-          dataSource={documentLibraryData?.data?.data}
-          pagination={{
-            current: page,
-            pageSize: per_page,
-            total: documentLibraryData?.data?.total,
-            onChange: (page) => {
-              setPage(page);
-            },
-          }}
-        />
 
-        {/* view modal */}
-        <DocumentViewModal
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          isModalOpen={isModalViewOpen}
-          setIsModalOpen={setisModalViewOpen}
-        />
-      </>
-      {/* document Modal */}
+      {/* Table */}
+      <Table
+        loading={isFetching || isLoading}
+        columns={columns}
+        rowClassName={() => "table-row-gap"}
+        className="custom-ant-table overflow-x-auto"
+        dataSource={documentLibraryData?.data?.data}
+        pagination={{
+          current: page,
+          pageSize: per_page,
+          total: documentLibraryData?.data?.total,
+          onChange: (page) => setPage(page),
+        }}
+        scroll={{ x: "max-content" }}
+      />
+
+      {/* Modals */}
+      <DocumentViewModal
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        isModalOpen={isModalViewOpen}
+        setIsModalOpen={setisModalViewOpen}
+      />
       <DocumentModal
         selectedItem={selectedItem}
         setSelectedItem={setSelectedItem}

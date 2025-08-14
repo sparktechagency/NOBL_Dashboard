@@ -1,22 +1,22 @@
 import { Form, Input, Tabs, Upload, message } from "antd";
-import { useEffect, useState } from "react";
 import {
   useChangePasswordMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
 } from "../../redux/apiSlices/authApiSlices";
+import { useEffect, useState } from "react";
 
 import type { TabsProps } from "antd";
-import { useSearchParams } from "react-router-dom";
 import uplodIcon from "../assets/Images/dashboard/edit.png";
+import { useSearchParams } from "react-router-dom";
 
-// tabs 1 type
+// Tabs 1 type
 type FieldType = {
   name?: string;
   address?: string;
 };
 
-// tabs 2 type
+// Tabs 2 type
 type FieldTypePassTab = {
   old_password?: string;
   password?: string;
@@ -26,11 +26,8 @@ type FieldTypePassTab = {
 const ChangePassword = () => {
   const { data: userData, isLoading: profileLoading } = useGetProfileQuery({});
   const [prams] = useSearchParams();
-
   let tab = prams.get("tab");
-
   const [tabKey, setTabKey] = useState(tab);
-
   const [updateProfile] = useUpdateProfileMutation();
   const [changePassword] = useChangePasswordMutation();
   const [form] = Form.useForm();
@@ -38,27 +35,16 @@ const ChangePassword = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
 
-  // Handle profile update
   const handleProfileUpdate = async (values: FieldType) => {
     try {
       const formData = new FormData();
       formData.append("name", values.name || "");
       formData.append("address", values.address || "");
+      if (fileToUpload) formData.append("photo", fileToUpload);
 
-      if (fileToUpload) {
-        formData.append("photo", fileToUpload);
-      }
-
-      const response = await updateProfile(formData).unwrap();
-
+      await updateProfile(formData).unwrap();
       message.success("Profile updated successfully");
-
-      // Update the preview image if a new one was uploaded
-      if (fileToUpload) {
-        setPreviewImage(URL.createObjectURL(fileToUpload));
-      }
-
-      // Reset the file upload state
+      if (fileToUpload) setPreviewImage(URL.createObjectURL(fileToUpload));
       setFileToUpload(null);
     } catch (err) {
       message.error("Failed to update profile");
@@ -66,7 +52,6 @@ const ChangePassword = () => {
     }
   };
 
-  // Handle password reset
   const handlePasswordReset = async (values: FieldTypePassTab) => {
     try {
       const response = await changePassword({
@@ -74,10 +59,8 @@ const ChangePassword = () => {
         old_password: values.old_password,
         c_password: values.c_password,
       }).unwrap();
-      // console.log(response);
-      if (response?.status) {
-        formPassword.resetFields();
-      }
+
+      if (response?.status) formPassword.resetFields();
       message.success(response?.message || "Password changed successfully");
     } catch (err) {
       message.error("Failed to change password");
@@ -85,47 +68,37 @@ const ChangePassword = () => {
     }
   };
 
-  // Handle before image upload
   const handleBeforeUpload = (file: File) => {
     const isImage = file.type.startsWith("image/");
     if (!isImage) {
       message.error("Please upload an image file");
       return false;
     }
-
     setPreviewImage(URL.createObjectURL(file));
     setFileToUpload(file);
-    return false; // prevents auto upload
+    return false;
   };
 
   const onChange = (key: string) => {
-    if (key === "2") {
-      setTabKey("password");
-    } else {
-      setTabKey("profile");
-    }
+    setTabKey(key === "2" ? "password" : "profile");
   };
 
   useEffect(() => {
-    console.log("User Data:", userData); // Debug log to verify data
     if (userData?.data) {
       form.setFieldsValue({
         name: userData.data.name || "",
         address: userData.data.address || "",
       });
-      if (userData.data.photo) {
-        setPreviewImage(userData.data.photo);
-      }
+      if (userData.data.photo) setPreviewImage(userData.data.photo);
     }
   }, [userData, form]);
 
-  if (profileLoading) {
+  if (profileLoading)
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader"></div>
       </div>
     );
-  }
 
   const items: TabsProps["items"] = [
     {
@@ -137,36 +110,36 @@ const ChangePassword = () => {
           onFinish={handleProfileUpdate}
           autoComplete="off"
           layout="vertical"
+          className="w-full max-w-md mx-auto space-y-6"
         >
           <Form.Item<FieldType>
             name="name"
             rules={[{ required: true, message: "Please input your name!" }]}
-            className="mb-7"
-            colon={false}
             label="Name"
+            colon={false}
           >
             <Input
               placeholder="Write name"
-              className="p-4 border-none text-sm text-gray-900 font-medium w-[1112px] bg-[#ffffff]"
+              className="p-3 text-sm sm:text-base w-full rounded border border-gray-300"
             />
           </Form.Item>
 
           <Form.Item<FieldType>
             name="address"
             rules={[{ required: true, message: "Please input your address!" }]}
-            colon={false}
             label="Address"
+            colon={false}
           >
             <Input
               placeholder="Write address"
-              className="p-4 border-none text-sm text-gray-900 font-medium w-[1112px] bg-[#ffffff]"
+              className="p-3 text-sm sm:text-base w-full rounded border border-gray-300"
             />
           </Form.Item>
 
-          <div className="text-center mt-5 ">
+          <div className="text-center">
             <button
               type="submit"
-              className="text-white bg-[#4B5320] font-semibold font-popping text-xl py-2 px-10 rounded-md"
+              className="w-full sm:w-auto bg-[#4B5320] text-white font-semibold text-base sm:text-lg py-2 px-6 rounded-md"
             >
               Save
             </button>
@@ -183,61 +156,47 @@ const ChangePassword = () => {
           onFinish={handlePasswordReset}
           autoComplete="off"
           layout="vertical"
+          className="w-full max-w-md mx-auto space-y-6"
         >
-          <Form.Item<FieldTypePassTab>
-            name="old_password"
-            rules={[{ required: true, message: "Please input new password" }]}
-            className="mb-7 "
-            colon={false}
-            label="Old password"
-          >
-            <Input.Password
-              placeholder="**********"
-              className="p-4 text-sm text-gray-900 font-medium border-none w-[1112px] bg-[#ffffff]"
-            />
-          </Form.Item>
-          <Form.Item<FieldTypePassTab>
-            name="password"
-            rules={[{ required: true, message: "Please input new password" }]}
-            className="mb-7 "
-            colon={false}
-            label="New password"
-          >
-            <Input.Password
-              placeholder="**********"
-              className="p-4 text-sm text-gray-900 font-medium border-none w-[1112px] bg-[#ffffff]"
-            />
-          </Form.Item>
-
-          <Form.Item<FieldTypePassTab>
-            name="c_password"
-            dependencies={["password"]}
-            rules={[
-              { required: true, message: "Please confirm new password" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("The two passwords do not match!")
-                  );
+          {["old_password", "password", "c_password"].map((field, index) => (
+            <Form.Item<FieldTypePassTab>
+              key={field}
+              name={field as keyof FieldTypePassTab}
+              rules={[
+                {
+                  required: true,
+                  message: `Please input ${field.replace("_", " ")}`,
                 },
-              }),
-            ]}
-            colon={false}
-            label="Confirm new password"
-          >
-            <Input.Password
-              placeholder="**********"
-              className="p-4 text-sm text-gray-900 font-medium border-none w-[1112px] bg-[#ffffff]"
-            />
-          </Form.Item>
+                ...(field === "c_password"
+                  ? [
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue("password") === value)
+                            return Promise.resolve();
+                          return Promise.reject(
+                            new Error("Passwords do not match!")
+                          );
+                        },
+                      }),
+                    ]
+                  : []),
+              ]}
+              label={field
+                .replace("_", " ")
+                .replace("c password", "Confirm password")}
+              colon={false}
+            >
+              <Input.Password
+                placeholder="**********"
+                className="p-3 text-sm sm:text-base w-full rounded border border-gray-300"
+              />
+            </Form.Item>
+          ))}
 
-          <div className="text-center mt-5 ">
+          <div className="text-center">
             <button
               type="submit"
-              className="text-white bg-[#4B5320] font-semibold font-popping text-xl py-2 px-10 rounded-md"
+              className="w-full sm:w-auto bg-[#4B5320] text-white font-semibold text-base sm:text-lg py-2 px-6 rounded-md"
             >
               Save
             </button>
@@ -248,44 +207,40 @@ const ChangePassword = () => {
   ];
 
   return (
-    <div>
-      {/* profile section  */}
-      <div className="bg-white mx-52 mt-5 rounded-lg flex flex-col justify-center items-center py-8">
+    <div className="px-4 sm:px-6 md:px-10 py-8">
+      {/* Profile section */}
+      <div className="bg-white rounded-lg flex flex-col items-center py-8 mb-8 w-full max-w-sm mx-auto">
         <div className="relative">
           <img
             src={previewImage || userData?.data?.photo}
             alt="Profile"
-            className="w-[137px] rounded-full h-[137px] object-cover"
+            className="w-32 h-32 rounded-full object-cover"
           />
-
           <Upload
             showUploadList={false}
             beforeUpload={handleBeforeUpload}
             accept="image/*"
           >
-            <button
-              type="button"
-              className="w-8 bg-white flex justify-center items-center p-2 shadow-lg rounded-full absolute right-0 bottom-5"
-            >
-              <img src={uplodIcon} className="w-5" alt="Upload" />
+            <button className="absolute bottom-0 right-0 w-8 h-8 bg-white flex justify-center items-center rounded-full shadow-md">
+              <img src={uplodIcon} alt="Upload" className="w-5 h-5" />
             </button>
           </Upload>
         </div>
-        <h3 className="font-roboto font-medium text-[30px]">
+        <h3 className="mt-4 font-medium text-xl sm:text-2xl">
           {userData?.data?.name}
         </h3>
-        <p className="text-[#B1A8A8] font-roboto font-medium text-xl">
+        <p className="text-gray-500 text-sm sm:text-base">
           {userData?.data?.email}
         </p>
-        <p className="text-[#B1A8A8] font-roboto font-medium text-xl">
+        <p className="text-gray-500 text-sm sm:text-base">
           {userData?.data?.address}
         </p>
       </div>
 
-      {/* tabs */}
-      <div className="mx-52">
+      {/* Tabs */}
+      <div className="w-full max-w-md mx-auto">
         <Tabs
-          defaultActiveKey="1"
+          size="small"
           activeKey={tabKey === "profile" ? "1" : "2"}
           items={items}
           onChange={onChange}

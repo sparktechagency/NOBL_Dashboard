@@ -1,10 +1,10 @@
 import "react-quill/dist/quill.snow.css";
 
-import { useEffect, useState } from "react";
 import {
   useAddPageMutation,
   useGetPageQuery,
 } from "../../redux/apiSlices/admin/additionalSlices";
+import { useEffect, useState } from "react";
 
 import ReactQuill from "react-quill";
 import Swal from "sweetalert2";
@@ -50,26 +50,30 @@ function AboutUs() {
   };
 
   return (
-    <div>
-      <ReactQuill
-        theme="snow"
-        value={value}
-        onChange={setValue}
-        modules={{
-          toolbar: [
-            ["undo", "redo"],
-            [{ font: [] }, { size: [] }],
-            ["bold", "italic", "underline", "strike"],
-            [{ color: [] }, { background: [] }],
-            ["link", "image"],
-            [{ list: "ordered" }, { list: "bullet" }],
-            [{ align: [] }],
-            ["clean"],
-          ],
-        }}
-      />
-      <div onClick={handleSave} className="text-right mt-5 ">
-        <button className="text-white bg-[#4B5320] font-semibold text-xl py-3 px-28 rounded-md">
+    <div className="p-4 sm:p-6 md:p-10">
+      <div className="w-full">
+        <ReactQuill
+          theme="snow"
+          value={value}
+          onChange={setValue}
+          className="min-h-[300px] sm:min-h-[400px]"
+          modules={{
+            toolbar: [
+              ["undo", "redo"],
+              [{ font: [] }, { size: [] }],
+              ["bold", "italic", "underline", "strike"],
+              [{ color: [] }, { background: [] }],
+              ["link", "image"],
+              [{ list: "ordered" }, { list: "bullet" }],
+              [{ align: [] }],
+              ["clean"],
+            ],
+          }}
+        />
+      </div>
+
+      <div className="flex justify-center sm:justify-end mt-5">
+        <button className="text-white bg-[#4B5320] font-semibold text-lg sm:text-xl py-3 px-8 sm:px-28 rounded-md w-full sm:w-auto">
           Save
         </button>
       </div>

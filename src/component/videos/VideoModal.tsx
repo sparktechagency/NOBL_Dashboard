@@ -50,6 +50,7 @@ const VideoModal: React.FC<VideoModalProps> = ({
     thumbnail: 0,
   });
 
+  // This is the logic block you provided. It remains unchanged.
   useEffect(() => {
     if (data) {
       form.setFieldsValue({
@@ -96,8 +97,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
     return false;
   };
 
-  // console.log(data)
-
   const handleSubmit = async (values: any) => {
     try {
       const formData = new FormData();
@@ -106,12 +105,9 @@ const VideoModal: React.FC<VideoModalProps> = ({
       formData.append("duration", data?.duration);
 
       if (videoFile) {
-        // console.log("HIt")
         formData.append("video", videoFile);
-        // Wait for the audio duration
         const duration = await getDuration(videoFile);
         formData.append("duration", duration.toString());
-        // console.log("Audio duration:", duration);
       }
 
       if (thumbnailFile) {
@@ -124,7 +120,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
           const percent = Math.floor((loaded * 100) / (total || 1));
 
           if (progressEvent.target === progressEvent.currentTarget) {
-            // This is for the main request progress
             setUploadProgress((prev) => ({
               ...prev,
               video: percent,
@@ -141,7 +136,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
           data: formData,
           ...config,
         }).unwrap();
-        // console.log(res);
         if (!res.status) {
           return Swal.fire({
             title: "Warning",
@@ -169,7 +163,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
           icon: "success",
         });
       }
-
       successfulDone();
     } catch (err) {
       Swal.fire({
@@ -218,13 +211,12 @@ const VideoModal: React.FC<VideoModalProps> = ({
       footer={null}
       closable={false}
       onCancel={handleCancel}
-      className="rounded-lg"
-      width={1026}
+      className="!w-11/12 max-w-5xl rounded-lg !top-4 lg:!top-24 "
       title={
         <div className="flex justify-between items-center bg-[#4B5320] text-white px-6 py-4 rounded-t-lg">
           <div></div>
-          <h2 className="text-lg font-semibold">
-            {data ? "Edit Video" : "Add a new video"}
+          <h2 className="text-lg font-semibold text-center">
+            {data ? "Edit Video" : "Add a New Video"}
           </h2>
           <CloseCircleOutlined
             onClick={handleCancel}
@@ -237,9 +229,9 @@ const VideoModal: React.FC<VideoModalProps> = ({
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        className="bg-white rounded-b-lg space-y-5 p-16"
+        className="bg-white rounded-b-lg space-y-5 p-6 sm:p-8 lg:p-16"
       >
-        <div className="flex justify-between gap-8">
+        <div className="flex flex-col md:flex-row justify-between gap-8">
           <div className="flex-1">
             <Form.Item
               name="video"
@@ -255,28 +247,25 @@ const VideoModal: React.FC<VideoModalProps> = ({
                 beforeUpload={handleBeforeVideoUpload}
                 accept="video/*"
               >
+                {/* FIX: Reverted to a structure that correctly displays the preview */}
                 {videoPreview ? (
-                  <div className="flex flex-col justify-center cursor-pointer">
+                  <div className="flex justify-center items-center h-48 p-2">
                     <video
                       controls
-                      className="max-w-full max-h-40 object-contain border rounded-md"
                       src={videoPreview}
+                      className="max-w-full max-h-full object-contain rounded-md"
                     />
                   </div>
                 ) : (
-                  <div className="flex flex-col justify-center cursor-pointer h-40 items-center">
-                    <p className="ant-upload-drag-icon p-1 rounded-lg w-[162px]">
-                      <UploadOutlined
-                        style={{
-                          fontSize: "18px",
-                          color: "#697B8C",
-                          paddingRight: "10px",
-                        }}
-                      />
+                  <div className="flex flex-col justify-center items-center cursor-pointer h-48 p-4">
+                    <p className="ant-upload-drag-icon">
+                      <UploadOutlined className="text-2xl text-gray-500 mb-2" />
+                    </p>
+                    <p className="text-gray-700 font-semibold">
                       Click to upload
                     </p>
-                    <p className="text-gray-600">
-                      Click or drag a video file in this area to upload
+                    <p className="text-gray-500 text-sm">
+                      or drag video file here
                     </p>
                   </div>
                 )}
@@ -301,28 +290,25 @@ const VideoModal: React.FC<VideoModalProps> = ({
                 beforeUpload={handleBeforeImageUpload}
                 accept="image/*"
               >
+                {/* FIX: Reverted to a structure that correctly displays the preview */}
                 {previewImage ? (
-                  <div className="flex flex-col justify-center cursor-pointer">
+                  <div className="flex justify-center items-center h-48 p-2">
                     <img
                       src={previewImage}
                       alt="Thumbnail preview"
-                      className="max-w-full max-h-40 object-contain border rounded-md"
+                      className="max-w-full max-h-full object-contain rounded-md"
                     />
                   </div>
                 ) : (
-                  <div className="flex flex-col justify-center cursor-pointer h-40 items-center">
-                    <p className="ant-upload-drag-icon p-1 rounded-lg w-[162px]">
-                      <UploadOutlined
-                        style={{
-                          fontSize: "18px",
-                          color: "#697B8C",
-                          paddingRight: "10px",
-                        }}
-                      />
+                  <div className="flex flex-col justify-center items-center cursor-pointer h-48 p-4">
+                    <p className="ant-upload-drag-icon">
+                      <UploadOutlined className="text-2xl text-gray-500 mb-2" />
+                    </p>
+                    <p className="text-gray-700 font-semibold">
                       Click to upload
                     </p>
-                    <p className="text-gray-600">
-                      Click or drag a photo file in this area to upload
+                    <p className="text-gray-500 text-sm">
+                      or drag image file here
                     </p>
                   </div>
                 )}
@@ -338,7 +324,8 @@ const VideoModal: React.FC<VideoModalProps> = ({
         >
           <Input
             placeholder="Enter your video title"
-            className="p-2 border-none bg-[#F0F0F0]"
+            size="large"
+            className="!bg-[#F0F0F0] !border-none"
           />
         </Form.Item>
 
@@ -349,12 +336,10 @@ const VideoModal: React.FC<VideoModalProps> = ({
         >
           <Select
             showSearch
-            style={{ width: 363, height: 50 }}
-            className="border border-gray-300 rounded-md"
+            size="large"
             placeholder="Select a category"
             optionFilterProp="children"
-            suffixIcon={<DownOutlined style={{ color: "black" }} />}
-            defaultValue={categoryData?.id}
+            suffixIcon={<DownOutlined />}
             options={
               categoryData?.map((item) => ({
                 value: item.id,
@@ -376,7 +361,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
               style={{
                 backgroundColor: "#4B5320",
                 color: "white",
-                height: 50,
               }}
               loading={addResults.isLoading || updateResults.isLoading}
               type="primary"
