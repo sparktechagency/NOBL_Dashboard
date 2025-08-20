@@ -1,14 +1,14 @@
 import { Form, Input, Tabs, Upload, message } from "antd";
+import { useEffect, useState } from "react";
 import {
   useChangePasswordMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
 } from "../../redux/apiSlices/authApiSlices";
-import { useEffect, useState } from "react";
 
 import type { TabsProps } from "antd";
-import uplodIcon from "../assets/Images/dashboard/edit.png";
 import { useSearchParams } from "react-router-dom";
+import uplodIcon from "../assets/Images/dashboard/edit.png";
 
 // Tabs 1 type
 type FieldType = {

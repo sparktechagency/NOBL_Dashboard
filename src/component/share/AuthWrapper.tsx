@@ -1,3 +1,5 @@
+// src/components/share/AuthWrapper.tsx
+
 import React from "react";
 
 const AuthWrapper = ({
@@ -8,7 +10,15 @@ const AuthWrapper = ({
   className?: string;
 }) => {
   return (
-    <div className={` bg-[#ffffff] shadow-lg border rounded-xl ${className}`}>{children}</div>
+    <div
+      className={`
+        bg-white w-full
+        md:max-w-lg md:shadow-lg md:border md:rounded-xl 
+        ${className}
+      `}
+    >
+      {children}
+    </div>
   );
 };
 

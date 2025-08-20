@@ -6,51 +6,34 @@ import Swal from "sweetalert2";
 import { useVerifyOtpMutation } from "../../redux/apiSlices/authApiSlices";
 import AuthWrapper from "../component/share/AuthWrapper";
 
-// Assuming `Input.OTP` is a custom input component
-interface OTPInputProps {
-  size?: "large" | "small" | "middle";
-  className?: string;
-  style?: React.CSSProperties;
-  length: number;
-  formatter?: (str: string) => string;
-  onChange: (text: string) => void;
-}
-
 const VerifyEmail: React.FC = () => {
   const navigate = useNavigate();
-
   const [VerifyEmail] = useVerifyOtpMutation();
-
   const [searchData] = useSearchParams();
   const email = searchData.get("email");
 
-  // console.log(email);
-
-  // Define the `onChange` handler with the correct type
   const onChange = async (text: string) => {
-    // console.log("onChange:", text);
     try {
       const res = await VerifyEmail({
         email: email,
         otp: text,
       }).unwrap();
+
       if (res?.status) {
-        // console.log(res);
         Swal.fire({
           icon: "success",
           title: res?.message,
-          text: "Please check you mail",
+          text: "Please check your mail",
         });
         navigate(`/auth/set-new-password?token=${res?.data?.access_token}`);
       } else {
-        // console.log(res);
         Swal.fire({
           icon: "error",
           title: "Oops...",
           text: res?.message?.email,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -64,21 +47,21 @@ const VerifyEmail: React.FC = () => {
   };
 
   return (
-    <AuthWrapper className="py-32 px-20">
-      <div className="text-center mb-12 ">
-        <div className="flex py-8 justify-center ">
-          <h3 className="font-semibold text-2xl text-[#333333]">
-            Verification code
+    <AuthWrapper className="px-4 sm:px-8 md:px-16 lg:px-20 py-16 sm:py-24 md:py-32">
+      <div className="text-center mb-10 sm:mb-12">
+        <div className="flex justify-center py-6 sm:py-8">
+          <h3 className="font-semibold text-xl sm:text-2xl text-[#333333]">
+            Verification Code
           </h3>
         </div>
-        <p className="text-sm font-normal mb-6 text-[#5C5C5C] ">
-          We sent a reset link to {email}
-          <br />
-          enter 5 digit code that is mentioned in the email
+        <p className="text-xs sm:text-sm md:text-base font-normal mb-6 text-[#5C5C5C]">
+          We sent a reset link to <span className="font-medium">{email}</span>
+          <br className="hidden sm:block" />
+          Enter the 6-digit code mentioned in the email
         </p>
       </div>
 
-      {/* Assuming `Input.OTP` is a custom component */}
+      {/* OTP Input */}
       <Input.OTP
         size="large"
         className="otp-input"
@@ -88,9 +71,9 @@ const VerifyEmail: React.FC = () => {
         onChange={onChange}
       />
 
-      <div className="flex justify-center pt-11">
+      <div className="flex justify-center pt-8 sm:pt-11">
         <Button
-          className="bg-[#4B5320] h-12 text-sm text-white font-bold  "
+          className="bg-[#4B5320] w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base text-white font-bold"
           htmlType="submit"
           onClick={handleVerify}
         >
@@ -98,9 +81,9 @@ const VerifyEmail: React.FC = () => {
         </Button>
       </div>
 
-      <p className="text-center mt-10 text-sm font-normal mb-6 text-[#5C5C5C]">
+      <p className="text-center mt-8 sm:mt-10 text-xs sm:text-sm font-normal text-[#5C5C5C]">
         You have not received the email?
-        <Button className="pl-1 text-[#00B047] " type="link">
+        <Button className="pl-1 text-[#00B047]" type="link">
           Resend
         </Button>
       </p>

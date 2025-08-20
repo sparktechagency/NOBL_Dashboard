@@ -1,5 +1,6 @@
 import "./Styled_components.css";
 
+import { Button, Drawer, Layout, Menu, Popover } from "antd";
 import {
   Blocks,
   FileText,
@@ -18,13 +19,12 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { Button, Drawer, Layout, Menu, Popover } from "antd";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import SubMenu from "antd/es/menu/SubMenu";
-import logo from "../../assets/Images/NOBLLogo.png";
 import { useGetProfileQuery } from "../../../redux/apiSlices/authApiSlices";
+import logo from "../../assets/Images/NOBLLogo.png";
 
 const { Header, Sider, Content } = Layout;
 const SIDER_WIDTH = 300;
@@ -216,15 +216,15 @@ const Dashboard: React.FC = () => {
             }
           })}
         </Menu>
-      </div>
-      <div className="p-4">
-        <Button
-          onClick={handleLogout}
-          icon={<LogOut size={20} color="#FF0000" />}
-          className="gap-3 w-full flex justify-start items-center p-6 bg-[#FFE8E8] text-base font-popping font-semibold text-[#FF0000]"
-        >
-          Logout
-        </Button>
+        <div className="p-4">
+          <Button
+            onClick={handleLogout}
+            icon={<LogOut size={20} color="#FF0000" />}
+            className="gap-3 w-full flex justify-start items-center p-6 bg-[#FFE8E8] text-base font-popping font-semibold text-[#FF0000]"
+          >
+            Logout
+          </Button>
+        </div>
       </div>
     </div>
   );

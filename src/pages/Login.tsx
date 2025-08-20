@@ -19,13 +19,11 @@ const Login: React.FC = () => {
   const [login] = useLoginMutation();
 
   const onFinish = async (values: LoginFormValues) => {
-    // console.log(values);
     try {
       const res = await login(values).unwrap();
       console.log(res);
       if (res.status) {
         localStorage.setItem("token", res.data?.access_token);
-        // localStorage.setItem("user",res.data?.user)
         Swal.fire({
           icon: "success",
           title: "Success",
@@ -39,20 +37,23 @@ const Login: React.FC = () => {
           text: res?.message,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      // Added 'any' type for better error handling
       console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: error?.message,
+        // Accessing nested error message if it exists
+        text:
+          error?.data?.message || error?.message || "An unknown error occurred",
       });
     }
   };
 
   return (
-    <AuthWrapper className=" py-28 px-24">
-      <div className="text-center mb-12">
-        {/* <Title>Login</Title> */}
+    // CHANGE 1: Responsive padding for the wrapper
+    <AuthWrapper className="py-16 px-6 md:py-28 md:px-24">
+      <div className="text-center mb-10">
         <div className="flex py-6 justify-center">
           <h3 className="font-semibold text-2xl text-[#333333]">
             Log in to your account
@@ -62,21 +63,22 @@ const Login: React.FC = () => {
           Please enter your email and password to continue
         </p>
       </div>
-      <Form<LoginFormValues> layout="vertical" onFinish={onFinish}>
+      <Form<LoginFormValues>
+        layout="vertical"
+        onFinish={onFinish}
+        // Ensure the form itself doesn't have a fixed max-width unless intended
+        className="w-full max-w-md mx-auto"
+      >
         <Form.Item
           label="Email"
           name="email"
           rules={[{ required: true, message: "Please enter your email" }]}
         >
+          {/* CHANGE 2: Removed fixed width, using Tailwind classes */}
           <Input
             placeholder="example@gmail.com"
             type="email"
-            style={{
-              height: "50px",
-              width: "481px",
-              backgroundColor: "#fefefe",
-            }}
-            className="bg-[#fefefe]"
+            className="w-full h-12 bg-[#fefefe]"
           />
         </Form.Item>
         <Form.Item
@@ -84,10 +86,11 @@ const Login: React.FC = () => {
           name="password"
           rules={[{ required: true, message: "Please enter your password" }]}
         >
+          {/* CHANGE 2: Removed fixed width, using Tailwind classes */}
           <Input.Password
             iconRender={(visible) => (visible ? <FaEye /> : <FaEyeSlash />)}
             placeholder="**********"
-            style={{ height: "50px", width: "481px" }}
+            className="w-full h-12"
           />
         </Form.Item>
         <Form.Item>
@@ -97,7 +100,7 @@ const Login: React.FC = () => {
             </Form.Item>
 
             <Link
-              className="login-form-forgot text-[#4B5320]"
+              className="login-form-forgot text-[#4B5320] font-medium"
               to="/auth/forget-password"
             >
               Forgot password
@@ -106,8 +109,9 @@ const Login: React.FC = () => {
         </Form.Item>
         <Form.Item>
           <div className="flex justify-center">
+            {/* CHANGE 3: Responsive button width */}
             <Button
-              className="bg-[#4B5320] h-12 text-sm text-white font-bold  mt-6"
+              className="w-full md:w-auto md:px-16 bg-[#4B5320] h-12 text-sm text-white font-bold mt-6"
               htmlType="submit"
             >
               Sign in
