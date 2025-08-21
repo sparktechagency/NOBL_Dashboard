@@ -5,10 +5,10 @@ import {
 } from "../../redux/apiSlices/admin/photosSlices";
 
 import { DownOutlined } from "@ant-design/icons";
-import PhotoAddModal from "../component/PhotoLibary/PhotoAddModal";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import { useGetCategoryQuery } from "../../redux/apiSlices/admin/categorySlices";
-import { useState } from "react";
+import PhotoAddModal from "../component/PhotoLibary/PhotoAddModal";
 
 const PhotoLibrary = () => {
   const [selectedCate, setSelectedCate] = useState<string | null>(null);
@@ -50,6 +50,8 @@ const PhotoLibrary = () => {
       }
     }
   };
+
+  // console.log(photoLibraryData);
 
   return (
     <>
@@ -143,6 +145,9 @@ const PhotoLibrary = () => {
 
               <div className="absolute bottom-2 left-2 bg-white py-1 px-2 rounded-md">
                 <p className="text-sm font-medium">
+                  {item?.title || "Untitled"}
+                </p>
+                <p className="text-xs font-medium bg-primary rounded-lg px-1 text-center text-white">
                   {item?.category?.name || "Uncategorized"}
                 </p>
               </div>

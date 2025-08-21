@@ -3,7 +3,7 @@ import {
   DownOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Image, Modal, Select, Upload } from "antd";
+import { Button, Form, Image, Input, Modal, Select, Upload } from "antd";
 import React, { useState } from "react";
 import {
   useAddPhotosMutation,
@@ -61,6 +61,7 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
       if (file) {
         formData.append("photo", file);
       }
+      formData.append("category_id", categoryId || "");
       formData.append("category_id", categoryId || "");
       formData.append("_method", data ? "PUT" : "POST");
 
@@ -169,6 +170,19 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
                   label: item.name,
                 })) || []
               }
+            />
+          </Form.Item>
+
+          {/* add title here */}
+          <Form.Item
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: "Please enter a title!" }]}
+          >
+            <Input
+              style={{ height: 50 }}
+              className="border !w-full border-gray-300 rounded-md"
+              placeholder="Enter a title"
             />
           </Form.Item>
 
