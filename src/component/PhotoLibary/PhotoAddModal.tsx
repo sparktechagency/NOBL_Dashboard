@@ -55,14 +55,16 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
         return;
       }
 
-      const { categoryId } = values;
+      // console.log(values);
+
+      const { categoryId, title } = values;
 
       const formData = new FormData();
       if (file) {
         formData.append("photo", file);
       }
       formData.append("category_id", categoryId || "");
-      formData.append("category_id", categoryId || "");
+      formData.append("title", title || "");
       formData.append("_method", data ? "PUT" : "POST");
 
       if (data) {
@@ -150,7 +152,11 @@ const PhotoAddModal: React.FC<PhotoAddModalProps> = ({
         <Form
           form={form}
           layout="vertical"
-          initialValues={{ categoryId: categoryData[0]?.id || null }}
+          // onFinish={handleUpload}
+          initialValues={{
+            categoryId: categoryData[0]?.id,
+            title: data?.title || null,
+          }}
         >
           <Form.Item
             name="categoryId"
