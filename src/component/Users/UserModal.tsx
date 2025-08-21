@@ -13,7 +13,24 @@ const UserModal: React.FC<{
 
   const handleSubmit = async (values: any) => {
     try {
-      await addNewUser(values).unwrap();
+      const res = await addNewUser(values).unwrap();
+      if (!res.status) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            res?.message?.password ||
+            res?.message?.email ||
+            res?.message?.name ||
+            res?.message?.user_name ||
+            res?.message?.address ||
+            res?.message?.badge_number ||
+            res?.message?.number ||
+            "Failed to add user.",
+        });
+        return;
+      }
+
       Swal.fire({
         icon: "success",
         title: "Success!",
